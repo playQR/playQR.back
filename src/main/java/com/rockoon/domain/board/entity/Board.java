@@ -10,7 +10,7 @@ import org.antlr.v4.runtime.misc.NotNull;
 
 @Entity
 @Getter
-//@SuperBuilder
+@SuperBuilder
 @DiscriminatorColumn(name = "DTYPE")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Inheritance(strategy = InheritanceType.JOINED)
