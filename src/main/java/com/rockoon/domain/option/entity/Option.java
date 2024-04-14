@@ -1,7 +1,6 @@
 package com.rockoon.domain.option.entity;
 
 import com.rockoon.domain.board.entity.Board;
-import com.rockoon.domain.board.promotion.Promotion;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;

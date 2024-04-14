@@ -1,4 +1,4 @@
-package com.rockoon.domain.board.promotion;
+package com.rockoon.domain.board.promotion.entity;
 
 import com.rockoon.domain.board.entity.Board;
 import jakarta.persistence.DiscriminatorValue;
