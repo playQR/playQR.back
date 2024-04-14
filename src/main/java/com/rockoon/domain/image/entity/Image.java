@@ -1,16 +1,15 @@
 package com.rockoon.domain.image.entity;
 
 import com.rockoon.domain.board.entity.Board;
+import com.rockoon.web.dto.image.ImageRequest;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
+@Builder
 //@SuperBuilder
 public class Image {
     @Id
@@ -23,4 +22,11 @@ public class Image {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "board_id")
     private Board board;
+
+    public static Image of(Board board, ImageRequest request) {
+        return Image.builder()
+                .imageUrl(request.getImageUrl())
+                .board(board)
+                .build();
+    }
 }

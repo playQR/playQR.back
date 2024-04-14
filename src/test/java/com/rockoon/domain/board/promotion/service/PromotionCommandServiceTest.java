@@ -4,12 +4,16 @@ import com.rockoon.domain.board.promotion.entity.Promotion;
 import com.rockoon.domain.board.promotion.repository.PromotionRepository;
 import com.rockoon.domain.image.entity.Image;
 import com.rockoon.domain.image.repository.ImageRepository;
+import com.rockoon.domain.member.entity.Member;
+import com.rockoon.domain.member.entity.Role;
+import com.rockoon.domain.member.repository.MemberRepository;
 import com.rockoon.domain.music.repository.MusicRepository;
 import com.rockoon.domain.option.entity.Option;
 import com.rockoon.domain.option.repository.OptionRepository;
 import com.rockoon.global.test.DatabaseCleanUp;
 import com.rockoon.web.dto.promotion.PromotionRequest;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,7 +37,25 @@ class PromotionCommandServiceTest {
     @Autowired
     MusicRepository musicRepository;
     @Autowired
+    MemberRepository memberRepository;
+    @Autowired
     DatabaseCleanUp databaseCleanUp;
+
+    Member member1;
+
+    @BeforeEach
+    void registerMember() {
+        member1 = Member.builder()
+                .role(Role.USER)
+                .name("이정한")
+                .profileImg("img")
+                .kakaoEmail("kakao@naver.com")
+                .username("hann")
+                .position("guitar")
+                .nickname("hann")
+                .build();
+        memberRepository.save(member1);
+    }
 
     @AfterEach
     void cleanUp() {
@@ -42,7 +64,7 @@ class PromotionCommandServiceTest {
 
     @Test
     @DisplayName("promotion글을 작성한다. 연관 엔티티 작성 제외")
-    void createPromotion() {
+    void createPromotionWithoutRelationEntity() {
         //given
         PromotionRequest request = PromotionRequest.builder()
                 .title("promotion test")
@@ -51,7 +73,7 @@ class PromotionCommandServiceTest {
                 .build();
 
         //when
-        Long promotionId = promotionCommandService.createPromotion(request);
+        Long promotionId = promotionCommandService.createPromotion(member1, request);
 
         //then
         Promotion promotion = promotionRepository.findById(promotionId).get();

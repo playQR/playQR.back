@@ -8,6 +8,7 @@ import lombok.experimental.SuperBuilder;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
+@Builder
 //@SuperBuilder
 //@EqualsAndHashCode(of = "id", callSuper = false)
 public class Member {

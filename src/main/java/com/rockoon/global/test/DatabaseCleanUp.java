@@ -5,13 +5,14 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.InitializingBean;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
-
+@Profile("test")
 @RequiredArgsConstructor
 @Component
 public class DatabaseCleanUp implements InitializingBean {
