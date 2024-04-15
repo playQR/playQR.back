@@ -7,6 +7,7 @@ import com.rockoon.domain.image.repository.ImageRepository;
 import com.rockoon.domain.member.entity.Member;
 import com.rockoon.domain.option.entity.Option;
 import com.rockoon.domain.option.repository.OptionRepository;
+import com.rockoon.global.util.ListUtil;
 import com.rockoon.web.dto.promotion.PromotionRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -25,11 +26,11 @@ public class PromotionCommandServiceImpl implements PromotionCommandService {
     @Override
     public Long createPromotion(Member member, PromotionRequest request) {
         Promotion savePromotion = promotionRepository.save(Promotion.of(member, request));
-        if (request.getOptionList() != null && !request.getOptionList().isEmpty()) {
+        if (!ListUtil.isNullOrEmpty(request.getOptionList())) {
             optionRepository.saveAll(request.getOptionList().stream()
                     .map(optionRequest -> Option.of(savePromotion, optionRequest)).collect(Collectors.toList()));
         }
-        if (request.getImageList() != null && !request.getImageList().isEmpty()) {
+        if (!ListUtil.isNullOrEmpty(request.getImageList())) {
             imageRepository.saveAll(request.getImageList().stream()
                     .map(imageRequest -> Image.of(savePromotion, imageRequest)).collect(Collectors.toList()));
         }
