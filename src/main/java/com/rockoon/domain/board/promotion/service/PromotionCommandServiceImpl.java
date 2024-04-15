@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.stream.Collectors;
 
+
 @RequiredArgsConstructor
 @Transactional
 @Service
@@ -26,24 +27,39 @@ public class PromotionCommandServiceImpl implements PromotionCommandService {
     @Override
     public Long createPromotion(Member member, PromotionRequest request) {
         Promotion savePromotion = promotionRepository.save(Promotion.of(member, request));
-        if (!ListUtil.isNullOrEmpty(request.getOptionList())) {
-            optionRepository.saveAll(request.getOptionList().stream()
-                    .map(optionRequest -> Option.of(savePromotion, optionRequest)).collect(Collectors.toList()));
-        }
-        if (!ListUtil.isNullOrEmpty(request.getImageList())) {
-            imageRepository.saveAll(request.getImageList().stream()
-                    .map(imageRequest -> Image.of(savePromotion, imageRequest)).collect(Collectors.toList()));
-        }
+        saveOptionListInPromotion(request, savePromotion);
+        saveImageListInPromotion(request, savePromotion);
         return savePromotion.getId();
     }
 
     @Override
     public Long updatePromotion(Member member, Long promotionId, PromotionRequest request) {
-        return null;
+        Promotion promotion = promotionRepository.findById(promotionId)
+                .orElseThrow(() -> new RuntimeException("not found promotion"));
+        promotion.update(request);
+        optionRepository.deleteAllByBoardId(promotionId);
+        imageRepository.deleteAllByBoardId(promotionId);
+        saveImageListInPromotion(request, promotion);
+        saveOptionListInPromotion(request, promotion);
+        return promotion.getId();
     }
 
     @Override
     public void deletePromotion(Member member, Long promotionId) {
 
+    }
+
+    private void saveImageListInPromotion(PromotionRequest request, Promotion savePromotion) {
+        if (!ListUtil.isNullOrEmpty(request.getImageList())) {
+            imageRepository.saveAll(request.getImageList().stream()
+                    .map(imageRequest -> Image.of(savePromotion, imageRequest)).collect(Collectors.toList()));
+        }
+    }
+
+    private void saveOptionListInPromotion(PromotionRequest request, Promotion savePromotion) {
+        if (!ListUtil.isNullOrEmpty(request.getOptionList())) {
+            optionRepository.saveAll(request.getOptionList().stream()
+                    .map(optionRequest -> Option.of(savePromotion, optionRequest)).collect(Collectors.toList()));
+        }
     }
 }

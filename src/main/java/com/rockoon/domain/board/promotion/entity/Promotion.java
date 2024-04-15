@@ -26,4 +26,10 @@ public class Promotion extends Board {
                 .member(member)
                 .build();
     }
+
+    public void update(PromotionRequest updateRequest) {
+        this.maxAudience = updateRequest.getMaxAudience();
+        this.title = updateRequest.getTitle();
+        this.content = updateRequest.getContent();
+    }
 }

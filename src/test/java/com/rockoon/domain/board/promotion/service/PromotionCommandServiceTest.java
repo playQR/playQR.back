@@ -15,6 +15,7 @@ import com.rockoon.global.test.DatabaseCleanUp;
 import com.rockoon.web.dto.image.ImageRequest;
 import com.rockoon.web.dto.option.OptionRequest;
 import com.rockoon.web.dto.promotion.PromotionRequest;
+import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -26,8 +27,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+@Slf4j
 @SpringBootTest
 class PromotionCommandServiceTest {
     @Autowired
@@ -46,6 +48,11 @@ class PromotionCommandServiceTest {
     DatabaseCleanUp databaseCleanUp;
 
     Member member1;
+    List<OptionRequest> optionList = new ArrayList<>();
+
+    List<ImageRequest> imageList = new ArrayList<>();
+
+    PromotionRequest request;
 
     @BeforeEach
     void registerMember() {
@@ -59,6 +66,18 @@ class PromotionCommandServiceTest {
                 .nickname("hann")
                 .build();
         memberRepository.save(member1);
+        optionList.add(OptionRequest.builder()
+                .category(Category.TIME)
+                .content("content")
+                .build());
+        optionList.add(OptionRequest.builder()
+                .category(Category.FEE)
+                .content("content")
+                .build());
+        imageList.add(ImageRequest.builder()
+                .imageUrl("image.png")
+                .build());
+
     }
 
     @AfterEach
@@ -70,12 +89,11 @@ class PromotionCommandServiceTest {
     @DisplayName("promotion글을 작성한다. 연관 엔티티 작성 제외")
     void createPromotionWithoutRelationEntity() {
         //given
-        PromotionRequest request = PromotionRequest.builder()
+        request = PromotionRequest.builder()
                 .title("promotion test")
                 .content("promotion")
                 .maxAudience(3)
                 .build();
-
         //when
         Long promotionId = promotionCommandService.createPromotion(member1, request);
 
@@ -85,32 +103,18 @@ class PromotionCommandServiceTest {
         assertThat(promotion.getContent()).isEqualTo(request.getContent());
         assertThat(promotion.getTitle()).isEqualTo(request.getTitle());
     }
+
     @Test
     @DisplayName("promotion글을 작성한다. 연관 엔티티 포함(image, option)")
     void createPromotionWithRelationEntity() {
         //given
-        List<OptionRequest> optionList = new ArrayList<>();
-        optionList.add(OptionRequest.builder()
-                .category(Category.TIME)
-                .content("content")
-                .build());
-        optionList.add(OptionRequest.builder()
-                .category(Category.FEE)
-                .content("content")
-                .build());
-        List<ImageRequest> imageList = new ArrayList<>();
-        imageList.add(ImageRequest.builder()
-                .imageUrl("image.png")
-                .build());
-        PromotionRequest request = PromotionRequest.builder()
+        request = PromotionRequest.builder()
                 .title("promotion test")
                 .content("promotion")
                 .imageList(imageList)
                 .optionList(optionList)
                 .maxAudience(3)
                 .build();
-
-
         //when
         Long promotionId = promotionCommandService.createPromotion(member1, request);
 
@@ -119,6 +123,58 @@ class PromotionCommandServiceTest {
         List<Image> imagesByBoardId = imageRepository.findImagesByBoardId(promotionId);
         assertThat(optionsByBoardId).hasSize(2);
         assertThat(imagesByBoardId).hasSize(1);
+
+    }
+
+    @Test
+    @DisplayName("등록된 Promotion을 연관 데이터와 함께 수정합니다.")
+    void updatePromotion() {
+        //given
+        request = PromotionRequest.builder()
+                .title("promotion test")
+                .content("promotion")
+                .imageList(imageList)
+                .optionList(optionList)
+                .maxAudience(3)
+                .build();
+        Long promotionId = promotionCommandService.createPromotion(member1, request);
+        imageList.remove(0);
+        optionList.add(OptionRequest.builder().build());
+        PromotionRequest updateRequest = PromotionRequest.builder()
+                .title("promotion update test")
+                .content("promotion")
+                .imageList(imageList)
+                .optionList(optionList)
+                .maxAudience(3)
+                .build();
+
+        //when
+        Long updatePromotionId = promotionCommandService.updatePromotion(member1, promotionId, updateRequest);
+        //then
+        Promotion promotion = promotionRepository.findById(updatePromotionId).get();
+        log.info("title is {}", promotion.getTitle());
+        assertThat(promotion.getTitle()).isEqualTo(updateRequest.getTitle());
+        List<Option> optionsByBoardId = optionRepository.findOptionsByBoardId(updatePromotionId);
+        List<Image> imagesByBoardId = imageRepository.findImagesByBoardId(updatePromotionId);
+        assertThat(optionsByBoardId).hasSize(3);
+        assertThat(imagesByBoardId).hasSize(0);
+
+    }
+    @Test
+    @DisplayName("등록되지 않은 Promotion을 수정 할 때, board를 찾는 데 실패하는 예외를 확인합니다.")
+    void executeExceptionWhenUpdatePromotion() {
+        //given
+        PromotionRequest updateRequest = PromotionRequest.builder()
+                .title("promotion update test")
+                .content("promotion")
+                .imageList(imageList)
+                .optionList(optionList)
+                .maxAudience(3)
+                .build();
+
+        //when & then
+        assertThatThrownBy(()->promotionCommandService.updatePromotion(member1, 1L, updateRequest))
+                .isInstanceOf(RuntimeException.class);
 
     }
 }

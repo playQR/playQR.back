@@ -8,4 +8,6 @@ import java.util.Optional;
 
 public interface OptionRepository extends JpaRepository<Option, Long> {
     List<Option> findOptionsByBoardId(Long boardId);
+
+    void deleteAllByBoardId(Long boardId);
 }

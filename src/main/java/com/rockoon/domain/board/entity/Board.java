@@ -27,7 +27,7 @@ public abstract class Board {
 
     @Lob
     @Column(nullable = false)
-    private String content;
+    protected String content;
 
-    private String title;
+    protected String title;
 }
