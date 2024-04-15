@@ -7,12 +7,14 @@ import com.rockoon.domain.image.repository.ImageRepository;
 import com.rockoon.domain.member.entity.Member;
 import com.rockoon.domain.member.entity.Role;
 import com.rockoon.domain.member.repository.MemberRepository;
+import com.rockoon.domain.music.entity.Music;
 import com.rockoon.domain.music.repository.MusicRepository;
 import com.rockoon.domain.option.entity.Category;
 import com.rockoon.domain.option.entity.Option;
 import com.rockoon.domain.option.repository.OptionRepository;
 import com.rockoon.global.test.DatabaseCleanUp;
 import com.rockoon.web.dto.image.ImageRequest;
+import com.rockoon.web.dto.music.MusicRequest;
 import com.rockoon.web.dto.option.OptionRequest;
 import com.rockoon.web.dto.promotion.PromotionRequest;
 import lombok.extern.slf4j.Slf4j;
@@ -51,6 +53,7 @@ class PromotionCommandServiceTest {
     List<OptionRequest> optionList = new ArrayList<>();
 
     List<ImageRequest> imageList = new ArrayList<>();
+    List<MusicRequest> musicList = new ArrayList<>();
 
     PromotionRequest request;
 
@@ -76,6 +79,18 @@ class PromotionCommandServiceTest {
                 .build());
         imageList.add(ImageRequest.builder()
                 .imageUrl("image.png")
+                .build());
+        List<String> youtubeUrlList = new ArrayList<>();
+        youtubeUrlList.add("https://www.youtube.com/watch?v=A0yntW5zRg8&list=RDA0yntW5zRg8&start_radio=1");
+        musicList.add(MusicRequest.builder()
+                .artist("thornApple")
+                .title("blueSpring")
+                .youtubeUrlList(youtubeUrlList)
+                .build());
+        musicList.add(MusicRequest.builder()
+                .artist("silicagel")
+                .title("tiktaktok")
+                .youtubeUrlList(youtubeUrlList)
                 .build());
 
     }
@@ -105,7 +120,7 @@ class PromotionCommandServiceTest {
     }
 
     @Test
-    @DisplayName("promotion글을 작성한다. 연관 엔티티 포함(image, option)")
+    @DisplayName("promotion글을 작성한다. 연관 엔티티 포함(image, option, music)")
     void createPromotionWithRelationEntity() {
         //given
         request = PromotionRequest.builder()
@@ -113,6 +128,7 @@ class PromotionCommandServiceTest {
                 .content("promotion")
                 .imageList(imageList)
                 .optionList(optionList)
+                .musicList(musicList)
                 .maxAudience(3)
                 .build();
         //when
@@ -121,8 +137,10 @@ class PromotionCommandServiceTest {
         //then
         List<Option> optionsByBoardId = optionRepository.findOptionsByBoardId(promotionId);
         List<Image> imagesByBoardId = imageRepository.findImagesByBoardId(promotionId);
+        List<Music> musicsByBoardId = musicRepository.findMusicsByPromotionId(promotionId);
         assertThat(optionsByBoardId).hasSize(2);
         assertThat(imagesByBoardId).hasSize(1);
+        assertThat(musicsByBoardId).hasSize(2);
 
     }
 
@@ -135,6 +153,7 @@ class PromotionCommandServiceTest {
                 .content("promotion")
                 .imageList(imageList)
                 .optionList(optionList)
+                .musicList(musicList)
                 .maxAudience(3)
                 .build();
         Long promotionId = promotionCommandService.createPromotion(member1, request);
@@ -145,6 +164,7 @@ class PromotionCommandServiceTest {
                 .content("promotion")
                 .imageList(imageList)
                 .optionList(optionList)
+                .musicList(musicList)
                 .maxAudience(3)
                 .build();
 
@@ -156,9 +176,10 @@ class PromotionCommandServiceTest {
         assertThat(promotion.getTitle()).isEqualTo(updateRequest.getTitle());
         List<Option> optionsByBoardId = optionRepository.findOptionsByBoardId(updatePromotionId);
         List<Image> imagesByBoardId = imageRepository.findImagesByBoardId(updatePromotionId);
+        List<Music> musicsByBoardId = musicRepository.findMusicsByPromotionId(updatePromotionId);
         assertThat(optionsByBoardId).hasSize(3);
         assertThat(imagesByBoardId).hasSize(0);
-
+        assertThat(musicsByBoardId).hasSize(2);
     }
     @Test
     @DisplayName("등록되지 않은 Promotion을 수정 할 때, board를 찾는 데 실패하는 예외를 확인합니다.")
@@ -169,6 +190,7 @@ class PromotionCommandServiceTest {
                 .content("promotion")
                 .imageList(imageList)
                 .optionList(optionList)
+                .musicList(musicList)
                 .maxAudience(3)
                 .build();
 
