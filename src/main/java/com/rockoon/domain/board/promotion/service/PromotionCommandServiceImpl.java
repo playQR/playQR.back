@@ -12,12 +12,14 @@ import com.rockoon.domain.option.repository.OptionRepository;
 import com.rockoon.global.util.ListUtil;
 import com.rockoon.web.dto.promotion.PromotionRequest;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.stream.Collectors;
 
 
+@Slf4j
 @RequiredArgsConstructor
 @Transactional
 @Service
@@ -28,7 +30,7 @@ public class PromotionCommandServiceImpl implements PromotionCommandService {
     private final MusicRepository musicRepository;
 
     @Override
-    public Long createPromotion(Member member, PromotionRequest request) {
+    public Long savePromotion(Member member, PromotionRequest request) {
         Promotion savePromotion = promotionRepository.save(Promotion.of(member, request));
         saveOptionListInPromotion(request, savePromotion);
         saveImageListInPromotion(request, savePromotion);
@@ -37,13 +39,16 @@ public class PromotionCommandServiceImpl implements PromotionCommandService {
     }
 
     @Override
-    public Long updatePromotion(Member member, Long promotionId, PromotionRequest request) {
+    public Long modifyPromotion(Member member, Long promotionId, PromotionRequest request) {
         Promotion updatePromotion = promotionRepository.findById(promotionId)
                 .orElseThrow(() -> new RuntimeException("not found promotion"));
-        updatePromotion.update(request);
+        validateWriter(member, updatePromotion);
+
         optionRepository.deleteAllByBoardId(promotionId);
         imageRepository.deleteAllByBoardId(promotionId);
         musicRepository.deleteAllByPromotionId(promotionId);
+
+        updatePromotion.update(request);
         saveImageListInPromotion(request, updatePromotion);
         saveOptionListInPromotion(request, updatePromotion);
         saveMusicListInPromotion(request, updatePromotion);
@@ -51,8 +56,15 @@ public class PromotionCommandServiceImpl implements PromotionCommandService {
     }
 
     @Override
-    public void deletePromotion(Member member, Long promotionId) {
+    public void removePromotion(Member member, Long promotionId) {
+        Promotion removePromotion = promotionRepository.findById(promotionId)
+                .orElseThrow(() -> new RuntimeException("not found promotion"));
+        validateWriter(member, removePromotion);
 
+        optionRepository.deleteAllByBoardId(promotionId);
+        imageRepository.deleteAllByBoardId(promotionId);
+        musicRepository.deleteAllByPromotionId(promotionId);
+        promotionRepository.delete(removePromotion);
     }
 
     private void saveImageListInPromotion(PromotionRequest request, Promotion savePromotion) {
@@ -73,6 +85,14 @@ public class PromotionCommandServiceImpl implements PromotionCommandService {
         if (!ListUtil.isNullOrEmpty(request.getMusicList())) {
             musicRepository.saveAll(request.getMusicList().stream()
                     .map(musicRequest -> Music.of(savePromotion, musicRequest)).collect(Collectors.toList()));
+        }
+    }
+
+    private static void validateWriter(Member member, Promotion promotion) {
+        log.info("member = {}", member);
+        log.info("writer = {}", promotion.getMember());
+        if (!member.equals(promotion.getMember())) {
+            throw new RuntimeException("cannot touch it");
         }
     }
 }

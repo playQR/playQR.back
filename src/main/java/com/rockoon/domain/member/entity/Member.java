@@ -2,7 +2,6 @@ package com.rockoon.domain.member.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
-import lombok.experimental.SuperBuilder;
 
 @Entity
 @Getter
@@ -10,11 +9,11 @@ import lombok.experimental.SuperBuilder;
 @AllArgsConstructor
 @Builder
 //@SuperBuilder
-//@EqualsAndHashCode(of = "id", callSuper = false)
+@EqualsAndHashCode(of = "id", callSuper = false)
 public class Member {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "member_id", updatable = false, unique = true, nullable = false)
     private Long id;
 

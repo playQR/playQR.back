@@ -13,7 +13,7 @@ import lombok.*;
 //@SuperBuilder
 public class Image {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "image_id")
     private Long id;
 

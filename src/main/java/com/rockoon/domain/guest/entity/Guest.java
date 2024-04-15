@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 //@SuperBuilder
 public class Guest {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "guest_id")
     private Long id;
 

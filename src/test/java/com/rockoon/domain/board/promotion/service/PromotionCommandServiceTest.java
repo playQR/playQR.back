@@ -34,8 +34,10 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 @Slf4j
 @SpringBootTest
 class PromotionCommandServiceTest {
+    //command Service
     @Autowired
     PromotionCommandService promotionCommandService;
+    //repository
     @Autowired
     PromotionRepository promotionRepository;
     @Autowired
@@ -46,10 +48,13 @@ class PromotionCommandServiceTest {
     MusicRepository musicRepository;
     @Autowired
     MemberRepository memberRepository;
+    //else
     @Autowired
     DatabaseCleanUp databaseCleanUp;
 
+    //entity & requestDto
     Member member1;
+    Member member2;
     List<OptionRequest> optionList = new ArrayList<>();
 
     List<ImageRequest> imageList = new ArrayList<>();
@@ -58,7 +63,7 @@ class PromotionCommandServiceTest {
     PromotionRequest request;
 
     @BeforeEach
-    void registerMember() {
+    void setUp() {
         member1 = Member.builder()
                 .role(Role.USER)
                 .name("이정한")
@@ -68,7 +73,16 @@ class PromotionCommandServiceTest {
                 .position("guitar")
                 .nickname("hann")
                 .build();
-        memberRepository.save(member1);
+        member2 = Member.builder()
+                .role(Role.USER)
+                .name("이정한")
+                .profileImg("img")
+                .kakaoEmail("kakao1@naver.com")
+                .username("Hann")
+                .position("piano")
+                .nickname("Hann")
+                .build();
+
         optionList.add(OptionRequest.builder()
                 .category(Category.TIME)
                 .content("content")
@@ -93,6 +107,9 @@ class PromotionCommandServiceTest {
                 .youtubeUrlList(youtubeUrlList)
                 .build());
 
+        memberRepository.save(member1);
+        memberRepository.save(member2);
+
     }
 
     @AfterEach
@@ -110,7 +127,7 @@ class PromotionCommandServiceTest {
                 .maxAudience(3)
                 .build();
         //when
-        Long promotionId = promotionCommandService.createPromotion(member1, request);
+        Long promotionId = promotionCommandService.savePromotion(member1, request);
 
         //then
         Promotion promotion = promotionRepository.findById(promotionId).get();
@@ -132,7 +149,7 @@ class PromotionCommandServiceTest {
                 .maxAudience(3)
                 .build();
         //when
-        Long promotionId = promotionCommandService.createPromotion(member1, request);
+        Long promotionId = promotionCommandService.savePromotion(member1, request);
 
         //then
         List<Option> optionsByBoardId = optionRepository.findOptionsByBoardId(promotionId);
@@ -156,7 +173,7 @@ class PromotionCommandServiceTest {
                 .musicList(musicList)
                 .maxAudience(3)
                 .build();
-        Long promotionId = promotionCommandService.createPromotion(member1, request);
+        Long promotionId = promotionCommandService.savePromotion(member1, request);
         imageList.remove(0);
         optionList.add(OptionRequest.builder().build());
         PromotionRequest updateRequest = PromotionRequest.builder()
@@ -169,7 +186,7 @@ class PromotionCommandServiceTest {
                 .build();
 
         //when
-        Long updatePromotionId = promotionCommandService.updatePromotion(member1, promotionId, updateRequest);
+        Long updatePromotionId = promotionCommandService.modifyPromotion(member1, promotionId, updateRequest);
         //then
         Promotion promotion = promotionRepository.findById(updatePromotionId).get();
         log.info("title is {}", promotion.getTitle());
@@ -181,6 +198,7 @@ class PromotionCommandServiceTest {
         assertThat(imagesByBoardId).hasSize(0);
         assertThat(musicsByBoardId).hasSize(2);
     }
+
     @Test
     @DisplayName("등록되지 않은 Promotion을 수정 할 때, board를 찾는 데 실패하는 예외를 확인합니다.")
     void executeExceptionWhenUpdatePromotion() {
@@ -195,8 +213,48 @@ class PromotionCommandServiceTest {
                 .build();
 
         //when & then
-        assertThatThrownBy(()->promotionCommandService.updatePromotion(member1, 1L, updateRequest))
+        assertThatThrownBy(() -> promotionCommandService.modifyPromotion(member1, 1L, updateRequest))
                 .isInstanceOf(RuntimeException.class);
 
+    }
+    @Test
+    @DisplayName("등록된 Promotion을 수정 할 때, 수정자와 작성자 일치에 실패하는 예외를 확인합니다.")
+    void executeExceptionWhenUpdatePromotionByMember() {
+        //given
+        PromotionRequest createRequest = PromotionRequest.builder()
+                .title("promotion update test")
+                .content("promotion")
+                .imageList(imageList)
+                .optionList(optionList)
+                .musicList(musicList)
+                .maxAudience(3)
+                .build();
+        Long promotionId = promotionCommandService.savePromotion(member1, createRequest);
+
+        //when & then
+        assertThatThrownBy(() -> promotionCommandService.modifyPromotion(member2, promotionId, new PromotionRequest()))
+                .isInstanceOf(RuntimeException.class);
+
+    }
+
+    @Test
+    @DisplayName("등록된 promotion을 지우고 db의 결과를 확인합니다.")
+    void deletePromotion() {
+        //given
+        PromotionRequest createRequest = PromotionRequest.builder()
+                .title("promotion update test")
+                .content("promotion")
+                .imageList(imageList)
+                .optionList(optionList)
+                .musicList(musicList)
+                .maxAudience(3)
+                .build();
+        Long promotionId = promotionCommandService.savePromotion(member1, createRequest);
+        //when
+        log.info("db = {}", memberRepository.findById(member1.getId()).get());
+        promotionCommandService.removePromotion(member1, promotionId);
+        //then
+        List<Promotion> all = promotionRepository.findAll();
+        assertThat(all).hasSize(0);
     }
 }

@@ -5,9 +5,9 @@ import com.rockoon.web.dto.promotion.PromotionRequest;
 
 public interface PromotionCommandService {
 
-    Long createPromotion(Member member, PromotionRequest request);
+    Long savePromotion(Member member, PromotionRequest request);
 
-    Long updatePromotion(Member member, Long promotionId, PromotionRequest request);
+    Long modifyPromotion(Member member, Long promotionId, PromotionRequest request);
 
-    void deletePromotion(Member member, Long promotionId);
+    void removePromotion(Member member, Long promotionId);
 }

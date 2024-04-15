@@ -13,7 +13,7 @@ import lombok.*;
 //@SuperBuilder
 public class Option {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "option_id")
     private Long id;
 

@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 //@SuperBuilder
 public class TeamMember {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "team_member_id")
     private Long id;
 

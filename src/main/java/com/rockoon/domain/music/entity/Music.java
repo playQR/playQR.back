@@ -14,7 +14,7 @@ import lombok.*;
 public class Music {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "music_id")
     private Long id;
 
