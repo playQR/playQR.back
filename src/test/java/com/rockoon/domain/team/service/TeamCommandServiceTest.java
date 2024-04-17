@@ -4,6 +4,7 @@ import com.rockoon.domain.member.entity.Member;
 import com.rockoon.domain.member.entity.Role;
 import com.rockoon.domain.member.repository.MemberRepository;
 import com.rockoon.domain.team.entity.Team;
+import com.rockoon.domain.team.entity.TeamMember;
 import com.rockoon.domain.team.repository.TeamMemberRepository;
 import com.rockoon.domain.team.repository.TeamRepository;
 import com.rockoon.global.test.DatabaseCleanUp;
@@ -82,5 +83,21 @@ class TeamCommandServiceTest {
         Optional<Team> optionalTeam = teamRepository.findById(teamId);
         assertThat(optionalTeam).isPresent();
         assertThat(optionalTeam.get().getName()).isEqualTo(request.getTeamName());
+    }
+    @Test
+    @DisplayName("생성된 팀에 멤버를 추가합니다.")
+    void addMemberInTeam() {
+        //given
+        TeamRequest request = TeamRequest.builder()
+                .teamName("muje")
+                .build();
+        Long teamId = teamCommandService.createTeam(member1, request);
+
+        //when
+        teamCommandService.addMemberInTeam(member2, teamId);
+        //then
+        List<TeamMember> allByTeamId = teamMemberRepository.findAllByTeamId(teamId);
+        assertThat(allByTeamId).hasSize(2);
+
     }
 }
