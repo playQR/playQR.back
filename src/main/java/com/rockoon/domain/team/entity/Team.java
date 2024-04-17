@@ -21,6 +21,7 @@ public class Team {
     private Long id;
 
     private String name;
+    private String password;
 
     @Builder.Default
     @OneToMany(mappedBy = "team")

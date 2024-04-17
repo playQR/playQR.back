@@ -9,6 +9,8 @@ import com.rockoon.domain.music.entity.Music;
 import com.rockoon.domain.music.repository.MusicRepository;
 import com.rockoon.domain.option.entity.Option;
 import com.rockoon.domain.option.repository.OptionRepository;
+import com.rockoon.domain.team.entity.Team;
+import com.rockoon.domain.team.repository.TeamRepository;
 import com.rockoon.global.util.ListUtil;
 import com.rockoon.web.dto.promotion.PromotionRequest;
 import lombok.RequiredArgsConstructor;
@@ -25,13 +27,17 @@ import java.util.stream.Collectors;
 @Service
 public class PromotionCommandServiceImpl implements PromotionCommandService {
     private final PromotionRepository promotionRepository;
+    private final TeamRepository teamRepository;
     private final OptionRepository optionRepository;
     private final ImageRepository imageRepository;
     private final MusicRepository musicRepository;
 
     @Override
-    public Long savePromotion(Member member, PromotionRequest request) {
-        Promotion savePromotion = promotionRepository.save(Promotion.of(member, request));
+    public Long savePromotion(Member member, Long teamId, PromotionRequest request) {
+        Team team = teamRepository.findById(teamId)
+                .orElseThrow(() -> new RuntimeException("not found team"));
+        validateWriterIsTeamMember(member, team);
+        Promotion savePromotion = promotionRepository.save(Promotion.of(member, team, request));
         saveOptionListInPromotion(request, savePromotion);
         saveImageListInPromotion(request, savePromotion);
         saveMusicListInPromotion(request, savePromotion);
@@ -42,7 +48,7 @@ public class PromotionCommandServiceImpl implements PromotionCommandService {
     public Long modifyPromotion(Member member, Long promotionId, PromotionRequest request) {
         Promotion updatePromotion = promotionRepository.findById(promotionId)
                 .orElseThrow(() -> new RuntimeException("not found promotion"));
-        validateWriter(member, updatePromotion);
+        validateWriterIsTeamMember(member,updatePromotion.getTeam());
 
         optionRepository.deleteAllByBoardId(promotionId);
         imageRepository.deleteAllByBoardId(promotionId);
@@ -90,9 +96,14 @@ public class PromotionCommandServiceImpl implements PromotionCommandService {
 
     private static void validateWriter(Member member, Promotion promotion) {
         log.info("member = {}", member);
-        log.info("writer = {}", promotion.getMember());
-        if (!member.equals(promotion.getMember())) {
+        log.info("writer = {}", promotion.getWriter());
+        if (!member.equals(promotion.getWriter())) {
             throw new RuntimeException("cannot touch it");
+        }
+    }
+    private static void validateWriterIsTeamMember(Member member, Team team) {
+        if (!team.getTeamMembers().stream().anyMatch(teamMember -> teamMember.getMember().equals(member))) {
+            throw new RuntimeException("not belong this team");
         }
     }
 }

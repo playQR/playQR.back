@@ -2,6 +2,7 @@ package com.rockoon.domain.board.promotion.entity;
 
 import com.rockoon.domain.board.entity.Board;
 import com.rockoon.domain.member.entity.Member;
+import com.rockoon.domain.team.entity.Team;
 import com.rockoon.web.dto.promotion.PromotionRequest;
 import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
@@ -18,12 +19,13 @@ import lombok.experimental.SuperBuilder;
 public class Promotion extends Board {
     private int maxAudience;
 
-    public static Promotion of(Member member, PromotionRequest request) {
+    public static Promotion of(Member member, Team team,  PromotionRequest request) {
         return Promotion.builder()
                 .title(request.getTitle())
                 .content(request.getContent())
                 .maxAudience(request.getMaxAudience())
-                .member(member)
+                .writer(member)
+                .team(team)
                 .build();
     }
 

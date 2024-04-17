@@ -12,11 +12,13 @@ import com.rockoon.domain.music.repository.MusicRepository;
 import com.rockoon.domain.option.entity.Category;
 import com.rockoon.domain.option.entity.Option;
 import com.rockoon.domain.option.repository.OptionRepository;
+import com.rockoon.domain.team.service.TeamCommandService;
 import com.rockoon.global.test.DatabaseCleanUp;
 import com.rockoon.web.dto.image.ImageRequest;
 import com.rockoon.web.dto.music.MusicRequest;
 import com.rockoon.web.dto.option.OptionRequest;
 import com.rockoon.web.dto.promotion.PromotionRequest;
+import com.rockoon.web.dto.team.TeamRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -37,6 +39,8 @@ class PromotionCommandServiceTest {
     //command Service
     @Autowired
     PromotionCommandService promotionCommandService;
+    @Autowired
+    TeamCommandService teamCommandService;
     //repository
     @Autowired
     PromotionRepository promotionRepository;
@@ -55,12 +59,14 @@ class PromotionCommandServiceTest {
     //entity & requestDto
     Member member1;
     Member member2;
+    Long teamId;
     List<OptionRequest> optionList = new ArrayList<>();
 
     List<ImageRequest> imageList = new ArrayList<>();
     List<MusicRequest> musicList = new ArrayList<>();
 
     PromotionRequest request;
+    TeamRequest teamRequest;
 
     @BeforeEach
     void setUp() {
@@ -110,6 +116,12 @@ class PromotionCommandServiceTest {
         memberRepository.save(member1);
         memberRepository.save(member2);
 
+        teamRequest = TeamRequest.builder()
+                .teamName("muje")
+                .password("12345")
+                .build();
+        teamId = teamCommandService.createTeam(member1, teamRequest);
+
     }
 
     @AfterEach
@@ -118,7 +130,7 @@ class PromotionCommandServiceTest {
     }
 
     @Test
-    @DisplayName("promotion글을 작성한다. 연관 엔티티 작성 제외")
+    @DisplayName("팀에 소속된 회원이 promotion글을 작성한다. 연관 엔티티 작성 제외")
     void createPromotionWithoutRelationEntity() {
         //given
         request = PromotionRequest.builder()
@@ -127,7 +139,7 @@ class PromotionCommandServiceTest {
                 .maxAudience(3)
                 .build();
         //when
-        Long promotionId = promotionCommandService.savePromotion(member1, request);
+        Long promotionId = promotionCommandService.savePromotion(member1, teamId, request);
 
         //then
         Promotion promotion = promotionRepository.findById(promotionId).get();
@@ -137,7 +149,7 @@ class PromotionCommandServiceTest {
     }
 
     @Test
-    @DisplayName("promotion글을 작성한다. 연관 엔티티 포함(image, option, music)")
+    @DisplayName("팀에 소속된 회원이 promotion글을 작성한다. 연관 엔티티 포함(image, option, music)")
     void createPromotionWithRelationEntity() {
         //given
         request = PromotionRequest.builder()
@@ -148,8 +160,9 @@ class PromotionCommandServiceTest {
                 .musicList(musicList)
                 .maxAudience(3)
                 .build();
+
         //when
-        Long promotionId = promotionCommandService.savePromotion(member1, request);
+        Long promotionId = promotionCommandService.savePromotion(member1, teamId, request);
 
         //then
         List<Option> optionsByBoardId = optionRepository.findOptionsByBoardId(promotionId);
@@ -173,7 +186,7 @@ class PromotionCommandServiceTest {
                 .musicList(musicList)
                 .maxAudience(3)
                 .build();
-        Long promotionId = promotionCommandService.savePromotion(member1, request);
+        Long promotionId = promotionCommandService.savePromotion(member1, teamId, request);
         imageList.remove(0);
         optionList.add(OptionRequest.builder().build());
         PromotionRequest updateRequest = PromotionRequest.builder()
@@ -189,7 +202,6 @@ class PromotionCommandServiceTest {
         Long updatePromotionId = promotionCommandService.modifyPromotion(member1, promotionId, updateRequest);
         //then
         Promotion promotion = promotionRepository.findById(updatePromotionId).get();
-        log.info("title is {}", promotion.getTitle());
         assertThat(promotion.getTitle()).isEqualTo(updateRequest.getTitle());
         List<Option> optionsByBoardId = optionRepository.findOptionsByBoardId(updatePromotionId);
         List<Image> imagesByBoardId = imageRepository.findImagesByBoardId(updatePromotionId);
@@ -214,11 +226,12 @@ class PromotionCommandServiceTest {
 
         //when & then
         assertThatThrownBy(() -> promotionCommandService.modifyPromotion(member1, 1L, updateRequest))
-                .isInstanceOf(RuntimeException.class);
+                .isInstanceOf(RuntimeException.class)
+                .hasMessage("not found promotion");
 
     }
     @Test
-    @DisplayName("등록된 Promotion을 수정 할 때, 수정자와 작성자 일치에 실패하는 예외를 확인합니다.")
+    @DisplayName("등록된 Promotion을 수정 할 때, 수정자가 작성자와 같은 팀이 아닐때 예외를 확인합니다.")
     void executeExceptionWhenUpdatePromotionByMember() {
         //given
         PromotionRequest createRequest = PromotionRequest.builder()
@@ -229,11 +242,12 @@ class PromotionCommandServiceTest {
                 .musicList(musicList)
                 .maxAudience(3)
                 .build();
-        Long promotionId = promotionCommandService.savePromotion(member1, createRequest);
+        Long promotionId = promotionCommandService.savePromotion(member1, teamId, createRequest);
 
         //when & then
         assertThatThrownBy(() -> promotionCommandService.modifyPromotion(member2, promotionId, new PromotionRequest()))
-                .isInstanceOf(RuntimeException.class);
+                .isInstanceOf(RuntimeException.class)
+                .hasMessage("not belong this team");
 
     }
 
@@ -249,12 +263,31 @@ class PromotionCommandServiceTest {
                 .musicList(musicList)
                 .maxAudience(3)
                 .build();
-        Long promotionId = promotionCommandService.savePromotion(member1, createRequest);
+        Long promotionId = promotionCommandService.savePromotion(member1, teamId, createRequest);
         //when
         log.info("db = {}", memberRepository.findById(member1.getId()).get());
         promotionCommandService.removePromotion(member1, promotionId);
         //then
         List<Promotion> all = promotionRepository.findAll();
         assertThat(all).hasSize(0);
+    }
+    @Test
+    @DisplayName("등록된 promotion을 지울 때, 작성자가 아닐 경우에 예외를 확인합니다.")
+    void executeExceptionWhenRemovePromotion() {
+        //given
+        PromotionRequest createRequest = PromotionRequest.builder()
+                .title("promotion update test")
+                .content("promotion")
+                .imageList(imageList)
+                .optionList(optionList)
+                .musicList(musicList)
+                .maxAudience(3)
+                .build();
+        Long promotionId = promotionCommandService.savePromotion(member1, teamId, createRequest);
+        teamCommandService.addMemberInTeam(member2, teamId);
+        //when & then
+        assertThatThrownBy(() -> promotionCommandService.removePromotion(member2, promotionId))
+                .isInstanceOf(RuntimeException.class)
+                .hasMessage("cannot touch it");
     }
 }
