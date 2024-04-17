@@ -10,7 +10,7 @@ import java.util.List;
 public interface PromotionRepository extends JpaRepository<Promotion, Long> {
     Page<Promotion> findAll(Pageable pageable);
 
-    List<Promotion> findPromotionsByOrderByCreatedDateDesc();
+    List<Promotion> findPromotionsByOrderByCreatedDateAsc();
 
     List<Promotion> findPromotionsByTeamId(Long teamId);
 }

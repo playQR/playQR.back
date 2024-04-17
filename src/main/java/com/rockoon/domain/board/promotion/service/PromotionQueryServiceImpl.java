@@ -28,7 +28,7 @@ public class PromotionQueryServiceImpl implements PromotionQueryService{
 
     @Override
     public List<Promotion> getAllByLatest() {
-        return promotionRepository.findPromotionsByOrderByCreatedDateDesc();
+        return promotionRepository.findPromotionsByOrderByCreatedDateAsc();
     }
 
     @Override

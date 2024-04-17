@@ -15,10 +15,15 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @Slf4j
 @SpringBootTest
@@ -41,6 +46,9 @@ class PromotionQueryServiceTest {
     Member member2;
     Member member3;
     TeamRequest teamRequest;
+    Long teamId;
+
+    Long anotherTeamId;
 
 
     @BeforeEach
@@ -77,9 +85,9 @@ class PromotionQueryServiceTest {
                 .teamName("teamName")
                 .password("12345")
                 .build();
-        Long teamId = teamCommandService.createTeam(member1, teamRequest);
+        teamId = teamCommandService.createTeam(member1, teamRequest);
         teamCommandService.addMemberInTeam(member2, teamId);
-        Long anotherTeamId = teamCommandService.createTeam(member3, teamRequest);
+        anotherTeamId = teamCommandService.createTeam(member3, teamRequest);
         savePromotion(5, member1, teamId);
         savePromotion(5, member2, teamId);
         savePromotion(5, member3, anotherTeamId);
@@ -102,7 +110,7 @@ class PromotionQueryServiceTest {
     }
 
     @Test
-    @DisplayName("작성된 모든 promotion을 가져옵니다")
+    @DisplayName("작성된 모든 promotion을 가져옵니다.")
     void getAllPromotion() {
         //given
 
@@ -111,5 +119,76 @@ class PromotionQueryServiceTest {
         //then
         assertThat(all)
                 .hasSize(15);
+    }
+
+    @Test
+    @DisplayName("등록된 모든 promotion을 최신순으로 가져옵니다.")
+    void getAllPromotionByLatest() {
+        //given
+
+        //when
+        List<Promotion> allByLatest = promotionQueryService.getAllByLatest();
+        //then
+
+        for (int i = 1; i < allByLatest.size(); i++) {
+            log.info("time = {}", allByLatest.get(i).getCreatedDate());
+            assertThat(allByLatest.get(i).getCreatedDate())
+                    .isAfterOrEqualTo(allByLatest.get(i - 1).getCreatedDate());
+        }
+
+    }
+
+    @Test
+    @DisplayName("페이지네이션을 통해 글을 가장 오래된 순으로, 그리고 10개씩 잘라 가져옵니다.")
+    void getAllPromotionByPagination() {
+        //given
+
+        //when
+        Pageable pageable = PageRequest.of(0, 10, Sort.by("createdDate").descending());
+        Page<Promotion> paginationPromotion = promotionQueryService.getPaginationPromotion(pageable);
+        //then
+        assertThat(paginationPromotion.getSize()).isEqualTo(10);
+        assertThat(paginationPromotion.getTotalPages()).isEqualTo(2);
+        for (int i = 1; i < paginationPromotion.getSize(); i++) {
+            log.info("time = {}", paginationPromotion.getContent().get(i).getCreatedDate());
+            assertThat(paginationPromotion.getContent().get(i).getCreatedDate())
+                    .isBeforeOrEqualTo(paginationPromotion.getContent().get(i - 1).getCreatedDate());
+        }
+
+    }
+
+    @Test
+    @DisplayName("팀이 가지는 모든 promotion들을 조회합니다.")
+    void getPromotionsByTeam() {
+        //given
+
+        //when
+        List<Promotion> promotionByTeam = promotionQueryService.getByTeam(teamId);
+        //then
+        assertThat(promotionByTeam).hasSize(10);
+
+    }
+
+    @Test
+    @DisplayName("사용자가 소속한 팀이 가지는 모든 promotion을 조회합니다.")
+    void getPromotionsByMemberBelongToTeam() {
+        //given
+
+        //when
+        List<Promotion> promotions = promotionQueryService.getByMemberBelongToTeam(member1, teamId);
+        //then
+        assertThat(promotions).hasSize(10);
+
+    }
+
+    @Test
+    @DisplayName("사용자가 소속한 팀이 가지는 모든 promotion을 조회할때, 팀 소속이 아닌 경우 발생하는 예외를 확인합니다.")
+    void executeExceptionWhenReadTeamPromotions() {
+        //given
+
+        //when & then
+        assertThatThrownBy(() -> promotionQueryService.getByMemberBelongToTeam(member3, teamId))
+                .isInstanceOf(RuntimeException.class)
+                .hasMessage("cannot read team Promotion");
     }
 }
