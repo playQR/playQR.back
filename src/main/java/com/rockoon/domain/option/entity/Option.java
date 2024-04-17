@@ -1,17 +1,21 @@
 package com.rockoon.domain.option.entity;
 
 import com.rockoon.domain.board.entity.Board;
+import com.rockoon.global.entity.BaseTimeEntity;
 import com.rockoon.web.dto.option.OptionRequest;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
-@Builder
-//@SuperBuilder
-public class Option {
+@SuperBuilder
+public class Option extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "option_id")

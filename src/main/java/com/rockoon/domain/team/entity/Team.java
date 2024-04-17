@@ -1,9 +1,11 @@
 package com.rockoon.domain.team.entity;
 
 import com.rockoon.domain.member.entity.Member;
+import com.rockoon.global.entity.BaseTimeEntity;
 import com.rockoon.web.dto.team.TeamRequest;
 import jakarta.persistence.*;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,9 +14,8 @@ import java.util.List;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
-@Builder
-//@SuperBuilder
-public class Team {
+@SuperBuilder
+public class Team extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "team_id")

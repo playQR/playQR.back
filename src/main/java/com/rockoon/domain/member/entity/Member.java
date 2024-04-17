@@ -1,16 +1,17 @@
 package com.rockoon.domain.member.entity;
 
+import com.rockoon.global.entity.BaseTimeEntity;
 import jakarta.persistence.*;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
-@Builder
-//@SuperBuilder
+@SuperBuilder
 @EqualsAndHashCode(of = "id", callSuper = false)
-public class Member {
+public class Member extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

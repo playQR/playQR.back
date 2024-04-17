@@ -2,6 +2,7 @@ package com.rockoon.domain.board.entity;
 
 import com.rockoon.domain.member.entity.Member;
 import com.rockoon.domain.team.entity.Team;
+import com.rockoon.global.entity.BaseTimeEntity;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -14,7 +15,7 @@ import lombok.experimental.SuperBuilder;
 @DiscriminatorColumn(name = "DTYPE")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Inheritance(strategy = InheritanceType.JOINED)
-public abstract class Board {
+public abstract class Board extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

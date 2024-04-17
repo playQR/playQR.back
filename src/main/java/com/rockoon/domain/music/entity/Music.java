@@ -1,17 +1,18 @@
 package com.rockoon.domain.music.entity;
 
 import com.rockoon.domain.board.promotion.entity.Promotion;
+import com.rockoon.global.entity.BaseTimeEntity;
 import com.rockoon.web.dto.music.MusicRequest;
 import jakarta.persistence.*;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
-@Builder
-//@SuperBuilder
-public class Music {
+@SuperBuilder
+public class Music extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
