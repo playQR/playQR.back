@@ -95,8 +95,6 @@ public class PromotionCommandServiceImpl implements PromotionCommandService {
     }
 
     private static void validateWriter(Member member, Promotion promotion) {
-        log.info("member = {}", member);
-        log.info("writer = {}", promotion.getWriter());
         if (!member.equals(promotion.getWriter())) {
             throw new RuntimeException("cannot touch it");
         }
