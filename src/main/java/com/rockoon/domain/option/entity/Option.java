@@ -1,21 +1,23 @@
 package com.rockoon.domain.option.entity;
 
 import com.rockoon.domain.board.entity.Board;
-import com.rockoon.domain.board.promotion.Promotion;
+import com.rockoon.global.entity.BaseTimeEntity;
+import com.rockoon.web.dto.option.OptionRequest;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
-//@SuperBuilder
-public class Option {
+@SuperBuilder
+public class Option extends BaseTimeEntity {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "option_id")
     private Long id;
 
@@ -27,4 +29,12 @@ public class Option {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "board_id")
     private Board board;
+
+    public static Option of(Board board, OptionRequest request) {
+        return Option.builder()
+                .category(request.getCategory())
+                .content(request.getContent())
+                .board(board)
+                .build();
+    }
 }

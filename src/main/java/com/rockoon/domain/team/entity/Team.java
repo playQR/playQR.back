@@ -1,25 +1,41 @@
 package com.rockoon.domain.team.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import com.rockoon.domain.member.entity.Member;
+import com.rockoon.global.entity.BaseTimeEntity;
+import com.rockoon.web.dto.team.TeamRequest;
+import jakarta.persistence.*;
+import lombok.*;
+import lombok.experimental.SuperBuilder;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
-//@SuperBuilder
-public class Team {
+@SuperBuilder
+public class Team extends BaseTimeEntity {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "team_id")
     private Long id;
 
     private String name;
+    private String password;
 
+    @Builder.Default
+    @OneToMany(mappedBy = "team")
+    private List<TeamMember> teamMembers = new ArrayList<>();
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "leader_id")
+    private Member leader;
+
+    public static Team of(Member member, TeamRequest teamRequest) {
+        return Team.builder()
+                .leader(member)
+                .name(teamRequest.getTeamName())
+                .build();
+    }
 }
