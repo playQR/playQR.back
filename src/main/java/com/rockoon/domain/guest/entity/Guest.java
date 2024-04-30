@@ -1,20 +1,22 @@
 package com.rockoon.domain.guest.entity;
 
-import com.rockoon.domain.board.promotion.Promotion;
+import com.rockoon.domain.board.promotion.entity.Promotion;
+import com.rockoon.global.entity.BaseTimeEntity;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
-//@SuperBuilder
-public class Guest {
+@SuperBuilder
+public class Guest extends BaseTimeEntity {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "guest_id")
     private Long id;
 
