@@ -1,6 +1,7 @@
 package com.rockoon.domain.member.entity;
 
 import com.rockoon.global.entity.BaseTimeEntity;
+import com.rockoon.web.dto.member.MemberRequest.MemberReigsterDto;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
@@ -35,4 +36,17 @@ public class Member extends BaseTimeEntity {
 
     private String nickname;
 
+    public static Member of(MemberReigsterDto memberRequest) {
+        return Member.builder()
+                .profileImg(memberRequest.getProfileImg())
+                .name(memberRequest.getName())
+                .nickname(memberRequest.getNickname())
+                .position(memberRequest.getPosition())
+                .kakaoEmail(memberRequest.getKakaoEmail())
+                .build();
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
 }
