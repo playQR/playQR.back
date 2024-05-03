@@ -30,6 +30,6 @@ public class MemberQueryServiceImpl implements MemberQueryService{
 
     @Override
     public List<Member> getMembersByTeamId(Long teamId) {
-        return null;
+        return memberRepository.findByTeamId(teamId);
     }
 }
