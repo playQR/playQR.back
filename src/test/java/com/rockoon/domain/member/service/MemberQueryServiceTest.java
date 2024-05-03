@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @Slf4j
 @SpringBootTest
@@ -27,6 +28,7 @@ class MemberQueryServiceTest {
     //entity & dto & filed
     MemberReigsterDto build;
     Long memberId;
+    String notFoundNickname = "notFoundNickname";
 
     @BeforeEach
     void setUp() {
@@ -60,9 +62,10 @@ class MemberQueryServiceTest {
                         build.getProfileImg()
                 );
     }
+
     @Test
     @DisplayName("등록된 멤버를 nickname을 통해 조회합니다(nickname is unique value)")
-    void testMethodName() {
+    void readMemberByNickname() {
         //when
         Member memberByNickname = memberQueryService.getByNickname(build.getNickname());
         //then
@@ -75,6 +78,17 @@ class MemberQueryServiceTest {
                         build.getPosition(),
                         build.getProfileImg()
                 );
+    }
+    @Test
+    @DisplayName("멤버를 조회하는 메서드에서 [NOT_FOUND]상황에 발생하는 예외를 확인합니다.(byId, byNickname)")
+    void checkExceptionWhenNotFound() {
+        //when & then
+        assertThatThrownBy(() -> memberQueryService.getByMemberId(0L))
+                .isInstanceOf(RuntimeException.class)
+                .hasMessage("not found member");
+        assertThatThrownBy(() -> memberQueryService.getByNickname(notFoundNickname))
+                .isInstanceOf(RuntimeException.class)
+                .hasMessage("not found member");
     }
 
 }
