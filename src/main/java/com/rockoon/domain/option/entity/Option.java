@@ -2,7 +2,7 @@ package com.rockoon.domain.option.entity;
 
 import com.rockoon.domain.board.entity.Board;
 import com.rockoon.global.entity.BaseTimeEntity;
-import com.rockoon.web.dto.option.OptionRequest;
+import com.rockoon.domain.option.dto.OptionRequest;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;

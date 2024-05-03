@@ -1,4 +1,4 @@
-package com.rockoon.web.dto.music;
+package com.rockoon.domain.music.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

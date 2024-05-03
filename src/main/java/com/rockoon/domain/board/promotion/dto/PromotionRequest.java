@@ -1,8 +1,8 @@
-package com.rockoon.web.dto.promotion;
+package com.rockoon.domain.board.promotion.dto;
 
-import com.rockoon.web.dto.image.ImageRequest;
-import com.rockoon.web.dto.music.MusicRequest;
-import com.rockoon.web.dto.option.OptionRequest;
+import com.rockoon.domain.image.dto.ImageRequest;
+import com.rockoon.domain.music.dto.MusicRequest;
+import com.rockoon.domain.option.dto.OptionRequest;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

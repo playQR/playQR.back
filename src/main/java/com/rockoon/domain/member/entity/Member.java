@@ -1,12 +1,12 @@
 package com.rockoon.domain.member.entity;
 
 import com.rockoon.global.entity.BaseTimeEntity;
-import com.rockoon.web.dto.member.MemberRequest.MemberReigsterDto;
+import com.rockoon.domain.member.dto.MemberRequest.MemberReigsterDto;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
-import static com.rockoon.web.dto.member.MemberRequest.MemberModifyDto;
+import static com.rockoon.domain.member.dto.MemberRequest.MemberModifyDto;
 
 @Entity
 @Getter

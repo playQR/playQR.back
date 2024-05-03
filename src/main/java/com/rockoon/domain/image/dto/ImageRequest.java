@@ -1,4 +1,4 @@
-package com.rockoon.web.dto.image;
+package com.rockoon.domain.image.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

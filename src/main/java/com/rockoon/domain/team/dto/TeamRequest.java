@@ -1,4 +1,4 @@
-package com.rockoon.web.dto.team;
+package com.rockoon.domain.team.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

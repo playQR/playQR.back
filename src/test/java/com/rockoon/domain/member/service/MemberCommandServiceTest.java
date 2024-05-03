@@ -3,11 +3,10 @@ package com.rockoon.domain.member.service;
 import com.rockoon.domain.member.entity.Member;
 import com.rockoon.domain.member.repository.MemberRepository;
 import com.rockoon.global.test.DatabaseCleanUp;
-import com.rockoon.web.dto.member.MemberRequest.MemberModifyDto;
-import com.rockoon.web.dto.member.MemberRequest.MemberReigsterDto;
+import com.rockoon.domain.member.dto.MemberRequest.MemberModifyDto;
+import com.rockoon.domain.member.dto.MemberRequest.MemberReigsterDto;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,10 +29,6 @@ class MemberCommandServiceTest {
     @Autowired
     DatabaseCleanUp databaseCleanUp;
 
-    @BeforeEach
-    void setUp() {
-
-    }
 
     @AfterEach
     void cleanUp() {

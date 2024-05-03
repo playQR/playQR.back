@@ -8,7 +8,7 @@ import com.rockoon.domain.team.entity.TeamMember;
 import com.rockoon.domain.team.repository.TeamMemberRepository;
 import com.rockoon.domain.team.repository.TeamRepository;
 import com.rockoon.global.test.DatabaseCleanUp;
-import com.rockoon.web.dto.team.TeamRequest;
+import com.rockoon.domain.team.dto.TeamRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
