@@ -1,7 +1,13 @@
 package com.rockoon.domain.member.service;
 
-import com.rockoon.web.dto.member.MemberRequest;
+import com.rockoon.web.dto.member.MemberRequest.MemberModifyDto;
+import com.rockoon.web.dto.member.MemberRequest.MemberReigsterDto;
+
 
 public interface MemberCommandService {
-    Long saveMember(MemberRequest memberRequest);
+
+    Long registerMember(MemberReigsterDto memberRequest);
+
+    Long modifyMemberInfo(MemberModifyDto memberRequest);
+
 }
