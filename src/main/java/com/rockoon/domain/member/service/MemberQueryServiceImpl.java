@@ -7,8 +7,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-
 
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -26,10 +24,5 @@ public class MemberQueryServiceImpl implements MemberQueryService{
     public Member getByNickname(String nickname) {
         return memberRepository.findByNickname(nickname)
                 .orElseThrow(() -> new RuntimeException("not found member"));
-    }
-
-    @Override
-    public List<Member> getMembersByTeamId(Long teamId) {
-        return memberRepository.findByTeamId(teamId);
     }
 }
