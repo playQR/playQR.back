@@ -3,6 +3,7 @@ package com.rockoon.domain.member.service;
 import com.rockoon.domain.member.entity.Member;
 import com.rockoon.domain.member.repository.MemberRepository;
 import com.rockoon.global.test.DatabaseCleanUp;
+import com.rockoon.web.dto.member.MemberRequest.MemberModifyDto;
 import com.rockoon.web.dto.member.MemberRequest.MemberReigsterDto;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.AfterEach;
@@ -58,5 +59,38 @@ class MemberCommandServiceTest {
                 .get()
                 .extracting("nickname", "name", "profileImg", "kakaoEmail", "position")
                 .containsExactly("nickname", "name", "profileImg", "kakao", "position");
+    }
+    @Test
+    @DisplayName("member를 불러와 정보를 변경합니다.(kakaoEmail, username 제외)")
+    void testMethodName() {
+        //given
+        MemberReigsterDto build = MemberReigsterDto.builder()
+                .name("name")
+                .nickname("nickname")
+                .position("position")
+                .profileImg("profileImg")
+                .kakaoEmail("kakaoEmail")
+                .build();
+        Long memberId = memberCommandService.registerMember(build);
+        MemberModifyDto modifyInfo = MemberModifyDto.builder()
+                .name("modifiedName")
+                .nickname("modifiedNickname")
+                .position("modifiedPosition")
+                .profileImg("modifiedProfileImg")
+                .build();
+        Member member = memberRepository.findById(memberId).get();
+        //when
+        memberCommandService.modifyMemberInfo(member, modifyInfo);
+
+        //then
+        assertThat(member)
+                .extracting("name", "nickname", "position", "profileImg", "kakaoEmail")
+                .containsExactly(
+                        "modifiedName",
+                        "modifiedNickname",
+                        "modifiedPosition",
+                        "modifiedProfileImg",
+                        "kakaoEmail"
+                        );
     }
 }
