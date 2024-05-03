@@ -12,7 +12,7 @@ import com.rockoon.domain.option.repository.OptionRepository;
 import com.rockoon.domain.team.entity.Team;
 import com.rockoon.domain.team.repository.TeamRepository;
 import com.rockoon.global.util.ListUtil;
-import com.rockoon.web.dto.promotion.PromotionRequest;
+import com.rockoon.domain.board.promotion.dto.PromotionRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

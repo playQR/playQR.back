@@ -3,7 +3,7 @@ package com.rockoon.domain.board.promotion.entity;
 import com.rockoon.domain.board.entity.Board;
 import com.rockoon.domain.member.entity.Member;
 import com.rockoon.domain.team.entity.Team;
-import com.rockoon.web.dto.promotion.PromotionRequest;
+import com.rockoon.domain.board.promotion.dto.PromotionRequest;
 import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
 import lombok.AccessLevel;

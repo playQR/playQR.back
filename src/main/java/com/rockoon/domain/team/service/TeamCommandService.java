@@ -1,7 +1,7 @@
 package com.rockoon.domain.team.service;
 
 import com.rockoon.domain.member.entity.Member;
-import com.rockoon.web.dto.team.TeamRequest;
+import com.rockoon.domain.team.dto.TeamRequest;
 
 public interface TeamCommandService {
 

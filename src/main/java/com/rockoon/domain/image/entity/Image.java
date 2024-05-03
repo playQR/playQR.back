@@ -2,7 +2,7 @@ package com.rockoon.domain.image.entity;
 
 import com.rockoon.domain.board.entity.Board;
 import com.rockoon.global.entity.BaseTimeEntity;
-import com.rockoon.web.dto.image.ImageRequest;
+import com.rockoon.domain.image.dto.ImageRequest;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;

@@ -2,7 +2,7 @@ package com.rockoon.domain.team.entity;
 
 import com.rockoon.domain.member.entity.Member;
 import com.rockoon.global.entity.BaseTimeEntity;
-import com.rockoon.web.dto.team.TeamRequest;
+import com.rockoon.domain.team.dto.TeamRequest;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;

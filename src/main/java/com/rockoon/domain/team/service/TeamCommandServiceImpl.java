@@ -5,7 +5,7 @@ import com.rockoon.domain.team.entity.Team;
 import com.rockoon.domain.team.entity.TeamMember;
 import com.rockoon.domain.team.repository.TeamMemberRepository;
 import com.rockoon.domain.team.repository.TeamRepository;
-import com.rockoon.web.dto.team.TeamRequest;
+import com.rockoon.domain.team.dto.TeamRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
