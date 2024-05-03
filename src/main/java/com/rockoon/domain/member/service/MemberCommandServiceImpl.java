@@ -23,8 +23,8 @@ public class MemberCommandServiceImpl implements MemberCommandService {
     }
 
     @Override
-    public Long modifyMemberInfo(MemberModifyDto memberRequest) {
-
-        return null;
+    public Long modifyMemberInfo(Member member, MemberModifyDto memberRequest) {
+        member.modifyInfo(memberRequest);
+        return member.getId();
     }
 }

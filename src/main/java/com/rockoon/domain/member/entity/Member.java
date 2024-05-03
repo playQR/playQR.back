@@ -6,6 +6,8 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
+import static com.rockoon.web.dto.member.MemberRequest.MemberModifyDto;
+
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -48,5 +50,12 @@ public class Member extends BaseTimeEntity {
 
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    public void modifyInfo(MemberModifyDto memberRequest) {
+        this.name = memberRequest.getName();
+        this.nickname = memberRequest.getNickname();
+        this.profileImg = memberRequest.getProfileImg();
+        this.position = memberRequest.getPosition();
     }
 }
