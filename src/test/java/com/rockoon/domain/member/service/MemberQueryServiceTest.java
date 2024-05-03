@@ -60,5 +60,21 @@ class MemberQueryServiceTest {
                         build.getProfileImg()
                 );
     }
+    @Test
+    @DisplayName("등록된 멤버를 nickname을 통해 조회합니다(nickname is unique value)")
+    void testMethodName() {
+        //when
+        Member memberByNickname = memberQueryService.getByNickname(build.getNickname());
+        //then
+        assertThat(memberByNickname)
+                .extracting("name", "nickname", "kakaoEmail", "position", "profileImg")
+                .containsExactly(
+                        build.getName(),
+                        build.getNickname(),
+                        build.getKakaoEmail(),
+                        build.getPosition(),
+                        build.getProfileImg()
+                );
+    }
 
 }
