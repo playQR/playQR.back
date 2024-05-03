@@ -57,7 +57,7 @@ class MemberCommandServiceTest {
     }
     @Test
     @DisplayName("member를 불러와 정보를 변경합니다.(kakaoEmail, username 제외)")
-    void testMethodName() {
+    void modifyMember() {
         //given
         MemberReigsterDto build = MemberReigsterDto.builder()
                 .name("name")
