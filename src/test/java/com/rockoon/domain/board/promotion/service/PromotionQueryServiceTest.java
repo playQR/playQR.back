@@ -1,13 +1,12 @@
 package com.rockoon.domain.board.promotion.service;
 
+import com.rockoon.domain.board.promotion.dto.PromotionRequest;
 import com.rockoon.domain.board.promotion.entity.Promotion;
 import com.rockoon.domain.member.entity.Member;
 import com.rockoon.domain.member.entity.Role;
 import com.rockoon.domain.member.repository.MemberRepository;
 import com.rockoon.domain.team.service.TeamCommandService;
 import com.rockoon.global.test.DatabaseCleanUp;
-import com.rockoon.domain.board.promotion.dto.PromotionRequest;
-import com.rockoon.domain.team.dto.TeamRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -23,7 +22,6 @@ import org.springframework.data.domain.Sort;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @Slf4j
 @SpringBootTest
@@ -45,10 +43,6 @@ class PromotionQueryServiceTest {
     Member member1;
     Member member2;
     Member member3;
-    TeamRequest teamRequest;
-    Long teamId;
-
-    Long anotherTeamId;
 
 
     @BeforeEach
@@ -78,21 +72,14 @@ class PromotionQueryServiceTest {
                 .nickname("HHH")
                 .build();
         memberRepository.saveAll(List.of(member1, member2, member3));
-        teamRequest = TeamRequest.builder()
-                .teamName("teamName")
-                .password("12345")
-                .build();
-        teamId = teamCommandService.createTeam(member1, teamRequest);
-        teamCommandService.addMemberInTeam(member2, teamId);
-        anotherTeamId = teamCommandService.createTeam(member3, teamRequest);
-        savePromotion(5, member1, teamId);
-        savePromotion(5, member2, teamId);
-        savePromotion(5, member3, anotherTeamId);
+        savePromotion(5, member1);
+        savePromotion(5, member2);
+        savePromotion(5, member3);
     }
 
-    private void savePromotion(int count, Member member, Long teamId) {
+    private void savePromotion(int count, Member member) {
         for (int i = 0; i < count; i++) {
-            promotionCommandService.savePromotion(member, teamId,
+            promotionCommandService.savePromotion(member,
                     PromotionRequest.builder()
                             .title("title" + i)
                             .content("content")
@@ -152,40 +139,5 @@ class PromotionQueryServiceTest {
                     .isBeforeOrEqualTo(paginationPromotion.getContent().get(i - 1).getCreatedDate());
         }
 
-    }
-
-    @Test
-    @DisplayName("팀이 가지는 모든 promotion들을 조회합니다.")
-    void getPromotionsByTeam() {
-        //given
-
-        //when
-        List<Promotion> promotionByTeam = promotionQueryService.getByTeam(teamId);
-        //then
-        assertThat(promotionByTeam).hasSize(10);
-
-    }
-
-    @Test
-    @DisplayName("사용자가 소속한 팀이 가지는 모든 promotion을 조회합니다.")
-    void getPromotionsByMemberBelongToTeam() {
-        //given
-
-        //when
-        List<Promotion> promotions = promotionQueryService.getByMemberBelongToTeam(member1, teamId);
-        //then
-        assertThat(promotions).hasSize(10);
-
-    }
-
-    @Test
-    @DisplayName("사용자가 소속한 팀이 가지는 모든 promotion을 조회할때, 팀 소속이 아닌 경우 발생하는 예외를 확인합니다.")
-    void executeExceptionWhenReadTeamPromotions() {
-        //given
-
-        //when & then
-        assertThatThrownBy(() -> promotionQueryService.getByMemberBelongToTeam(member3, teamId))
-                .isInstanceOf(RuntimeException.class)
-                .hasMessage("cannot read team Promotion");
     }
 }
