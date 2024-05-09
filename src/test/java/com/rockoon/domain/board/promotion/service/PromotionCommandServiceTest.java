@@ -76,7 +76,6 @@ class PromotionCommandServiceTest {
                 .profileImg("img")
                 .kakaoEmail("kakao@naver.com")
                 .username("hann")
-                .position("guitar")
                 .nickname("hann")
                 .build();
         member2 = Member.builder()
@@ -85,7 +84,6 @@ class PromotionCommandServiceTest {
                 .profileImg("img")
                 .kakaoEmail("kakao1@naver.com")
                 .username("Hann")
-                .position("piano")
                 .nickname("Hann")
                 .build();
 

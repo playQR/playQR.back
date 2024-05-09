@@ -11,9 +11,8 @@ public class MemberRequest {
     @Builder
     @NoArgsConstructor
     @AllArgsConstructor
-    public static class MemberReigsterDto{
+    public static class MemberRegisterDto{
         private String kakaoEmail;
-        private String position;
         private String profileImg;
         private String nickname;
         private String name;
@@ -23,7 +22,6 @@ public class MemberRequest {
     @NoArgsConstructor
     @AllArgsConstructor
     public static class MemberModifyDto{
-        private String position;
         private String profileImg;
         private String nickname;
         private String name;

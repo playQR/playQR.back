@@ -59,7 +59,6 @@ class PromotionQueryServiceTest {
                 .profileImg("img")
                 .kakaoEmail("kakao@naver.com")
                 .username("hann")
-                .position("guitar")
                 .nickname("hann")
                 .build();
         member2 = Member.builder()
@@ -68,7 +67,6 @@ class PromotionQueryServiceTest {
                 .profileImg("img")
                 .kakaoEmail("kakao1@naver.com")
                 .username("Hann")
-                .position("piano")
                 .nickname("Hann")
                 .build();
         member3 = Member.builder()
@@ -77,7 +75,6 @@ class PromotionQueryServiceTest {
                 .profileImg("img")
                 .kakaoEmail("kakao2@naver.com")
                 .username("Hannw")
-                .position("sing")
                 .nickname("HHH")
                 .build();
         memberRepository.saveAll(List.of(member1, member2, member3));
