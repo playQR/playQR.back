@@ -1,7 +1,6 @@
 package com.rockoon.domain.board.entity;
 
 import com.rockoon.domain.member.entity.Member;
-import com.rockoon.domain.team.entity.Team;
 import com.rockoon.global.entity.BaseTimeEntity;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -26,9 +25,6 @@ public abstract class Board extends BaseTimeEntity {
     @JoinColumn(name = "writer_id")
     private Member writer;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "team_id")
-    private Team team;
 
     @Lob
     @Column(nullable = false)

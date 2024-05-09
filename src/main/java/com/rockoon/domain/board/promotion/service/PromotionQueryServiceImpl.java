@@ -36,18 +36,6 @@ public class PromotionQueryServiceImpl implements PromotionQueryService{
         return promotionRepository.findAll(pageable);
     }
 
-    @Override
-    public List<Promotion> getByTeam(Long teamId) {
-        return promotionRepository.findPromotionsByTeamId(teamId);
-    }
-
-    @Override
-    public List<Promotion> getByMemberBelongToTeam(Member member, Long teamId) {
-        Team team = teamRepository.findById(teamId)
-                .orElseThrow(() -> new RuntimeException("not found team"));
-        validateReaderIsTeamMember(member, team);
-        return promotionRepository.findPromotionsByTeamId(teamId);
-    }
 
     private static void validateReaderIsTeamMember(Member member, Team team) {
         if (team.getTeamMembers().stream().noneMatch(teamMember -> teamMember.getMember().equals(member))) {

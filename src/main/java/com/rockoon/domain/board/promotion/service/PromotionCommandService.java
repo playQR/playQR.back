@@ -5,7 +5,7 @@ import com.rockoon.domain.board.promotion.dto.PromotionRequest;
 
 public interface PromotionCommandService {
 
-    Long savePromotion(Member member, Long teamId, PromotionRequest request);
+    Long savePromotion(Member member, PromotionRequest request);
 
     Long modifyPromotion(Member member, Long promotionId, PromotionRequest request);
 

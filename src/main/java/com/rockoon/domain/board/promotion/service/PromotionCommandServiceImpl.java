@@ -1,5 +1,6 @@
 package com.rockoon.domain.board.promotion.service;
 
+import com.rockoon.domain.board.promotion.dto.PromotionRequest;
 import com.rockoon.domain.board.promotion.entity.Promotion;
 import com.rockoon.domain.board.promotion.repository.PromotionRepository;
 import com.rockoon.domain.image.entity.Image;
@@ -9,10 +10,7 @@ import com.rockoon.domain.music.entity.Music;
 import com.rockoon.domain.music.repository.MusicRepository;
 import com.rockoon.domain.option.entity.Option;
 import com.rockoon.domain.option.repository.OptionRepository;
-import com.rockoon.domain.team.entity.Team;
-import com.rockoon.domain.team.repository.TeamRepository;
 import com.rockoon.global.util.ListUtil;
-import com.rockoon.domain.board.promotion.dto.PromotionRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -27,17 +25,13 @@ import java.util.stream.Collectors;
 @Service
 public class PromotionCommandServiceImpl implements PromotionCommandService {
     private final PromotionRepository promotionRepository;
-    private final TeamRepository teamRepository;
     private final OptionRepository optionRepository;
     private final ImageRepository imageRepository;
     private final MusicRepository musicRepository;
 
     @Override
-    public Long savePromotion(Member member, Long teamId, PromotionRequest request) {
-        Team team = teamRepository.findById(teamId)
-                .orElseThrow(() -> new RuntimeException("not found team"));
-        validateWriterIsTeamMember(member, team);
-        Promotion savePromotion = promotionRepository.save(Promotion.of(member, team, request));
+    public Long savePromotion(Member member, PromotionRequest request) {
+        Promotion savePromotion = promotionRepository.save(Promotion.of(member, request));
         saveOptionListInPromotion(request, savePromotion);
         saveImageListInPromotion(request, savePromotion);
         saveMusicListInPromotion(request, savePromotion);
@@ -48,7 +42,7 @@ public class PromotionCommandServiceImpl implements PromotionCommandService {
     public Long modifyPromotion(Member member, Long promotionId, PromotionRequest request) {
         Promotion updatePromotion = promotionRepository.findById(promotionId)
                 .orElseThrow(() -> new RuntimeException("not found promotion"));
-        validateWriterIsTeamMember(member,updatePromotion.getTeam());
+        validateWriter(member, updatePromotion);
 
         optionRepository.deleteAllByBoardId(promotionId);
         imageRepository.deleteAllByBoardId(promotionId);
@@ -97,11 +91,6 @@ public class PromotionCommandServiceImpl implements PromotionCommandService {
     private static void validateWriter(Member member, Promotion promotion) {
         if (!member.equals(promotion.getWriter())) {
             throw new RuntimeException("cannot touch it");
-        }
-    }
-    private static void validateWriterIsTeamMember(Member member, Team team) {
-        if (!team.getTeamMembers().stream().anyMatch(teamMember -> teamMember.getMember().equals(member))) {
-            throw new RuntimeException("not belong this team");
         }
     }
 }
