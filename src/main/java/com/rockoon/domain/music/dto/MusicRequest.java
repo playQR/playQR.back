@@ -5,8 +5,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
-
 @Data
 @Builder
 @NoArgsConstructor
@@ -14,5 +12,4 @@ import java.util.List;
 public class MusicRequest {
     private String title;
     private String artist;
-    private List<String> youtubeUrlList;
 }

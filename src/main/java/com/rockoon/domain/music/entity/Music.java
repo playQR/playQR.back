@@ -21,7 +21,6 @@ public class Music extends BaseTimeEntity {
 
     private String title;
     private String artist;
-    private String url;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "promotion_id")
