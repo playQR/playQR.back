@@ -1,6 +1,6 @@
 package com.rockoon.domain.member.service;
 
-import com.rockoon.domain.member.dto.MemberRequest.MemberReigsterDto;
+import com.rockoon.domain.member.dto.MemberRequest.MemberRegisterDto;
 import com.rockoon.domain.member.entity.Member;
 import com.rockoon.global.test.DatabaseCleanUp;
 import lombok.extern.slf4j.Slf4j;
@@ -26,17 +26,16 @@ class MemberQueryServiceTest {
     @Autowired
     DatabaseCleanUp databaseCleanUp;
     //entity & dto & filed
-    MemberReigsterDto build;
+    MemberRegisterDto build;
     Long memberId;
     String notFoundNickname = "notFoundNickname";
 
     @BeforeEach
     void setUp() {
-        build = MemberReigsterDto.builder()
+        build = MemberRegisterDto.builder()
                 .name("name")
                 .nickname("nickname")
                 .kakaoEmail("kakaoEmail")
-                .position("position")
                 .profileImg("profileImg")
                 .build();
         memberId = memberCommandService.registerMember(build);
@@ -53,12 +52,11 @@ class MemberQueryServiceTest {
         Member member = memberQueryService.getByMemberId(memberId);
         //then
         assertThat(member)
-                .extracting("name", "nickname", "kakaoEmail", "position", "profileImg")
+                .extracting("name", "nickname", "kakaoEmail", "profileImg")
                 .containsExactly(
                         build.getName(),
                         build.getNickname(),
                         build.getKakaoEmail(),
-                        build.getPosition(),
                         build.getProfileImg()
                 );
     }
@@ -70,12 +68,11 @@ class MemberQueryServiceTest {
         Member memberByNickname = memberQueryService.getByNickname(build.getNickname());
         //then
         assertThat(memberByNickname)
-                .extracting("name", "nickname", "kakaoEmail", "position", "profileImg")
+                .extracting("name", "nickname", "kakaoEmail", "profileImg")
                 .containsExactly(
                         build.getName(),
                         build.getNickname(),
                         build.getKakaoEmail(),
-                        build.getPosition(),
                         build.getProfileImg()
                 );
     }

@@ -49,7 +49,6 @@ class TeamCommandServiceTest {
                 .profileImg("img")
                 .kakaoEmail("kakao@naver.com")
                 .username("hann")
-                .position("guitar")
                 .nickname("hann")
                 .build();
         member2 = Member.builder()
@@ -58,7 +57,6 @@ class TeamCommandServiceTest {
                 .profileImg("img")
                 .kakaoEmail("kakao1@naver.com")
                 .username("Hann")
-                .position("piano")
                 .nickname("Hann")
                 .build();
         memberRepository.saveAll(List.of(member1, member2));

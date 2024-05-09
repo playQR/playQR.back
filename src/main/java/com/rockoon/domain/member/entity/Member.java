@@ -1,7 +1,7 @@
 package com.rockoon.domain.member.entity;
 
+import com.rockoon.domain.member.dto.MemberRequest.MemberRegisterDto;
 import com.rockoon.global.entity.BaseTimeEntity;
-import com.rockoon.domain.member.dto.MemberRequest.MemberReigsterDto;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
@@ -27,8 +27,6 @@ public class Member extends BaseTimeEntity {
     @Column(unique = true, nullable = false)
     private String username;
 
-    private String position;
-
     @Enumerated(EnumType.STRING)
     private Role role;
 
@@ -38,12 +36,11 @@ public class Member extends BaseTimeEntity {
 
     private String nickname;
 
-    public static Member of(MemberReigsterDto memberRequest) {
+    public static Member of(MemberRegisterDto memberRequest) {
         return Member.builder()
                 .profileImg(memberRequest.getProfileImg())
                 .name(memberRequest.getName())
                 .nickname(memberRequest.getNickname())
-                .position(memberRequest.getPosition())
                 .kakaoEmail(memberRequest.getKakaoEmail())
                 .build();
     }
@@ -56,6 +53,5 @@ public class Member extends BaseTimeEntity {
         this.name = memberRequest.getName();
         this.nickname = memberRequest.getNickname();
         this.profileImg = memberRequest.getProfileImg();
-        this.position = memberRequest.getPosition();
     }
 }

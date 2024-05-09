@@ -37,7 +37,6 @@ class MemberRepositoryTest {
                 .username("username")
                 .profileImg("profileImg")
                 .kakaoEmail("kakaoEmail")
-                .position("position")
                 .build();
         memberRepository.save(member);
         //when
@@ -46,15 +45,14 @@ class MemberRepositoryTest {
         assertThat(memberOptional).isPresent()
                 .get()
                 .extracting(
-                        "nickname", "name", "username", "profileImg", "kakaoEmail", "position"
+                        "nickname", "name", "username", "profileImg", "kakaoEmail"
                 )
                 .containsExactly(
                         member.getNickname(),
                         member.getName(),
                         member.getUsername(),
                         member.getProfileImg(),
-                        member.getKakaoEmail(),
-                        member.getPosition()
+                        member.getKakaoEmail()
                 );
     }
 

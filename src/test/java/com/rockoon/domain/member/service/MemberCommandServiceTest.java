@@ -1,10 +1,10 @@
 package com.rockoon.domain.member.service;
 
+import com.rockoon.domain.member.dto.MemberRequest.MemberModifyDto;
+import com.rockoon.domain.member.dto.MemberRequest.MemberRegisterDto;
 import com.rockoon.domain.member.entity.Member;
 import com.rockoon.domain.member.repository.MemberRepository;
 import com.rockoon.global.test.DatabaseCleanUp;
-import com.rockoon.domain.member.dto.MemberRequest.MemberModifyDto;
-import com.rockoon.domain.member.dto.MemberRequest.MemberReigsterDto;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
@@ -39,10 +39,9 @@ class MemberCommandServiceTest {
     @DisplayName("멤버를 등록하여 데이터베이스의 내용과 일치하는지 확인합니다.")
     void registerMember() {
         //given
-        MemberReigsterDto build = MemberReigsterDto.builder()
+        MemberRegisterDto build = MemberRegisterDto.builder()
                 .profileImg("profileImg")
                 .name("name")
-                .position("position")
                 .nickname("nickname")
                 .kakaoEmail("kakao")
                 .build();
@@ -52,17 +51,16 @@ class MemberCommandServiceTest {
         Optional<Member> memberOptional = memberRepository.findById(memberId);
         assertThat(memberOptional).isPresent()
                 .get()
-                .extracting("nickname", "name", "profileImg", "kakaoEmail", "position")
-                .containsExactly("nickname", "name", "profileImg", "kakao", "position");
+                .extracting("nickname", "name", "profileImg", "kakaoEmail")
+                .containsExactly("nickname", "name", "profileImg", "kakao");
     }
     @Test
     @DisplayName("member를 불러와 정보를 변경합니다.(kakaoEmail, username 제외)")
     void modifyMember() {
         //given
-        MemberReigsterDto build = MemberReigsterDto.builder()
+        MemberRegisterDto build = MemberRegisterDto.builder()
                 .name("name")
                 .nickname("nickname")
-                .position("position")
                 .profileImg("profileImg")
                 .kakaoEmail("kakaoEmail")
                 .build();
@@ -70,7 +68,6 @@ class MemberCommandServiceTest {
         MemberModifyDto modifyInfo = MemberModifyDto.builder()
                 .name("modifiedName")
                 .nickname("modifiedNickname")
-                .position("modifiedPosition")
                 .profileImg("modifiedProfileImg")
                 .build();
         Member member = memberRepository.findById(memberId).get();
@@ -79,11 +76,10 @@ class MemberCommandServiceTest {
 
         //then
         assertThat(member)
-                .extracting("name", "nickname", "position", "profileImg", "kakaoEmail")
+                .extracting("name", "nickname", "profileImg", "kakaoEmail")
                 .containsExactly(
                         "modifiedName",
                         "modifiedNickname",
-                        "modifiedPosition",
                         "modifiedProfileImg",
                         "kakaoEmail"
                         );
