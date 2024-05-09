@@ -1,8 +1,8 @@
-package com.rockoon.domain.board.promotion.service;
+package com.rockoon.domain.board.service.promotion;
 
-import com.rockoon.domain.board.promotion.dto.PromotionRequest;
-import com.rockoon.domain.board.promotion.entity.Promotion;
-import com.rockoon.domain.board.promotion.repository.PromotionRepository;
+import com.rockoon.domain.board.dto.promotion.PromotionRequest;
+import com.rockoon.domain.board.entity.Promotion;
+import com.rockoon.domain.board.repository.PromotionRepository;
 import com.rockoon.domain.image.entity.Image;
 import com.rockoon.domain.image.repository.ImageRepository;
 import com.rockoon.domain.member.entity.Member;

@@ -1,7 +1,7 @@
-package com.rockoon.domain.board.promotion.service;
+package com.rockoon.domain.board.service.promotion;
 
 import com.rockoon.domain.member.entity.Member;
-import com.rockoon.domain.board.promotion.dto.PromotionRequest;
+import com.rockoon.domain.board.dto.promotion.PromotionRequest;
 
 public interface PromotionCommandService {
 

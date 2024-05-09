@@ -1,6 +1,6 @@
-package com.rockoon.domain.board.promotion.repository;
+package com.rockoon.domain.board.repository;
 
-import com.rockoon.domain.board.promotion.entity.Promotion;
+import com.rockoon.domain.board.entity.Promotion;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;

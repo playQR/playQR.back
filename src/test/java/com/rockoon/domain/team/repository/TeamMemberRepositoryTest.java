@@ -4,7 +4,7 @@ import com.rockoon.domain.member.entity.Member;
 import com.rockoon.domain.member.repository.MemberRepository;
 import com.rockoon.domain.team.entity.Team;
 import com.rockoon.domain.team.entity.TeamMember;
-import com.rockoon.global.test.DatabaseCleanUp;
+import com.rockoon.global.config.test.DatabaseCleanUp;
 import lombok.extern.slf4j.Slf4j;
 import org.assertj.core.groups.Tuple;
 import org.junit.jupiter.api.AfterEach;

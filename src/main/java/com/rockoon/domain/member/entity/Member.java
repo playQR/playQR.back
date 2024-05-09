@@ -1,7 +1,7 @@
 package com.rockoon.domain.member.entity;
 
 import com.rockoon.domain.member.dto.MemberRequest.MemberRegisterDto;
-import com.rockoon.global.entity.BaseTimeEntity;
+import com.rockoon.domain.auditing.entity.BaseTimeEntity;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;

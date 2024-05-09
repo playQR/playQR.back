@@ -1,12 +1,14 @@
 package com.rockoon.domain.board.promotion.service;
 
-import com.rockoon.domain.board.promotion.dto.PromotionRequest;
-import com.rockoon.domain.board.promotion.entity.Promotion;
+import com.rockoon.domain.board.dto.promotion.PromotionRequest;
+import com.rockoon.domain.board.entity.Promotion;
+import com.rockoon.domain.board.service.promotion.PromotionCommandService;
+import com.rockoon.domain.board.service.promotion.PromotionQueryService;
 import com.rockoon.domain.member.entity.Member;
 import com.rockoon.domain.member.entity.Role;
 import com.rockoon.domain.member.repository.MemberRepository;
 import com.rockoon.domain.team.service.TeamCommandService;
-import com.rockoon.global.test.DatabaseCleanUp;
+import com.rockoon.global.config.test.DatabaseCleanUp;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;

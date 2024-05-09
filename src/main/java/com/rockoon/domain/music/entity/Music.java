@@ -1,7 +1,7 @@
 package com.rockoon.domain.music.entity;
 
-import com.rockoon.domain.board.promotion.entity.Promotion;
-import com.rockoon.global.entity.BaseTimeEntity;
+import com.rockoon.domain.board.entity.Promotion;
+import com.rockoon.domain.auditing.entity.BaseTimeEntity;
 import com.rockoon.domain.music.dto.MusicRequest;
 import jakarta.persistence.*;
 import lombok.*;
