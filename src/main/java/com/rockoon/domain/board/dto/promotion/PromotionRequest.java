@@ -1,4 +1,4 @@
-package com.rockoon.domain.board.promotion.dto;
+package com.rockoon.domain.board.dto.promotion;
 
 import com.rockoon.domain.image.dto.ImageRequest;
 import com.rockoon.domain.music.dto.MusicRequest;

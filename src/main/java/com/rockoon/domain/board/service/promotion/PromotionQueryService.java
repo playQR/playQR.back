@@ -1,6 +1,6 @@
-package com.rockoon.domain.board.promotion.service;
+package com.rockoon.domain.board.service.promotion;
 
-import com.rockoon.domain.board.promotion.entity.Promotion;
+import com.rockoon.domain.board.entity.Promotion;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 

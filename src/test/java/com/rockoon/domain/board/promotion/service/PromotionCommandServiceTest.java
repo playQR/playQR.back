@@ -1,8 +1,9 @@
 package com.rockoon.domain.board.promotion.service;
 
-import com.rockoon.domain.board.promotion.dto.PromotionRequest;
-import com.rockoon.domain.board.promotion.entity.Promotion;
-import com.rockoon.domain.board.promotion.repository.PromotionRepository;
+import com.rockoon.domain.board.dto.promotion.PromotionRequest;
+import com.rockoon.domain.board.entity.Promotion;
+import com.rockoon.domain.board.repository.PromotionRepository;
+import com.rockoon.domain.board.service.promotion.PromotionCommandService;
 import com.rockoon.domain.image.dto.ImageRequest;
 import com.rockoon.domain.image.entity.Image;
 import com.rockoon.domain.image.repository.ImageRepository;
@@ -17,7 +18,7 @@ import com.rockoon.domain.option.entity.Category;
 import com.rockoon.domain.option.entity.Option;
 import com.rockoon.domain.option.repository.OptionRepository;
 import com.rockoon.domain.team.service.TeamCommandService;
-import com.rockoon.global.test.DatabaseCleanUp;
+import com.rockoon.global.config.test.DatabaseCleanUp;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;

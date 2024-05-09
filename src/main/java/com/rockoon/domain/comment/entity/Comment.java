@@ -1,7 +1,7 @@
 package com.rockoon.domain.comment.entity;
 
-import com.rockoon.domain.board.promotion.entity.Promotion;
-import com.rockoon.global.entity.BaseTimeEntity;
+import com.rockoon.domain.board.entity.Promotion;
+import com.rockoon.domain.auditing.entity.BaseTimeEntity;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;

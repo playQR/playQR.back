@@ -1,7 +1,6 @@
-package com.rockoon.domain.board.promotion.entity;
+package com.rockoon.domain.board.entity;
 
-import com.rockoon.domain.board.entity.Board;
-import com.rockoon.domain.board.promotion.dto.PromotionRequest;
+import com.rockoon.domain.board.dto.promotion.PromotionRequest;
 import com.rockoon.domain.member.entity.Member;
 import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;

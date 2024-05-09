@@ -1,4 +1,4 @@
-package com.rockoon.global.entity;
+package com.rockoon.domain.auditing.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.EntityListeners;

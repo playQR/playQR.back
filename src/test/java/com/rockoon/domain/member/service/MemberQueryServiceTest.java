@@ -2,7 +2,7 @@ package com.rockoon.domain.member.service;
 
 import com.rockoon.domain.member.dto.MemberRequest.MemberRegisterDto;
 import com.rockoon.domain.member.entity.Member;
-import com.rockoon.global.test.DatabaseCleanUp;
+import com.rockoon.global.config.test.DatabaseCleanUp;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;

@@ -1,4 +1,4 @@
-package com.rockoon.global.test;
+package com.rockoon.global.config.test;
 
 import com.google.common.base.CaseFormat;
 import jakarta.persistence.Entity;
