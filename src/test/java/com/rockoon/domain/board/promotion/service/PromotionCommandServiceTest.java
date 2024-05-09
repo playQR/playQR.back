@@ -98,17 +98,13 @@ class PromotionCommandServiceTest {
         imageList.add(ImageRequest.builder()
                 .imageUrl("image.png")
                 .build());
-        List<String> youtubeUrlList = new ArrayList<>();
-        youtubeUrlList.add("https://www.youtube.com/watch?v=A0yntW5zRg8&list=RDA0yntW5zRg8&start_radio=1");
         musicList.add(MusicRequest.builder()
                 .artist("thornApple")
                 .title("blueSpring")
-                .youtubeUrlList(youtubeUrlList)
                 .build());
         musicList.add(MusicRequest.builder()
                 .artist("silicagel")
                 .title("tiktaktok")
-                .youtubeUrlList(youtubeUrlList)
                 .build());
 
         memberRepository.save(member1);
