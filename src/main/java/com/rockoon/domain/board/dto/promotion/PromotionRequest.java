@@ -2,7 +2,7 @@ package com.rockoon.domain.board.dto.promotion;
 
 import com.rockoon.domain.image.dto.ImageRequest;
 import com.rockoon.domain.music.dto.MusicRequest;
-import com.rockoon.domain.option.dto.OptionRequest;
+import com.rockoon.domain.showOption.dto.OptionRequest;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
