@@ -13,10 +13,10 @@ import com.rockoon.domain.member.repository.MemberRepository;
 import com.rockoon.domain.music.dto.MusicRequest;
 import com.rockoon.domain.music.entity.Music;
 import com.rockoon.domain.music.repository.MusicRepository;
-import com.rockoon.domain.option.dto.OptionRequest;
-import com.rockoon.domain.option.entity.Category;
-import com.rockoon.domain.option.entity.Option;
-import com.rockoon.domain.option.repository.OptionRepository;
+import com.rockoon.domain.showOption.dto.OptionRequest;
+import com.rockoon.domain.showOption.entity.Category;
+import com.rockoon.domain.showOption.entity.ShowOption;
+import com.rockoon.domain.showOption.repository.showOptionRepository;
 import com.rockoon.domain.team.service.TeamCommandService;
 import com.rockoon.global.config.test.DatabaseCleanUp;
 import lombok.extern.slf4j.Slf4j;
@@ -45,7 +45,7 @@ class PromotionCommandServiceTest {
     @Autowired
     PromotionRepository promotionRepository;
     @Autowired
-    OptionRepository optionRepository;
+    showOptionRepository showOptionRepository;
     @Autowired
     ImageRepository imageRepository;
     @Autowired
@@ -151,7 +151,7 @@ class PromotionCommandServiceTest {
         Long promotionId = promotionCommandService.savePromotion(member1, request);
 
         //then
-        List<Option> optionsByBoardId = optionRepository.findOptionsByBoardId(promotionId);
+        List<ShowOption> optionsByBoardId = showOptionRepository.findOptionsByBoardId(promotionId);
         List<Image> imagesByBoardId = imageRepository.findImagesByBoardId(promotionId);
         List<Music> musicsByBoardId = musicRepository.findMusicsByPromotionId(promotionId);
         assertThat(optionsByBoardId).hasSize(2);
@@ -189,7 +189,7 @@ class PromotionCommandServiceTest {
         //then
         Promotion promotion = promotionRepository.findById(updatePromotionId).get();
         assertThat(promotion.getTitle()).isEqualTo(updateRequest.getTitle());
-        List<Option> optionsByBoardId = optionRepository.findOptionsByBoardId(updatePromotionId);
+        List<ShowOption> optionsByBoardId = showOptionRepository.findOptionsByBoardId(updatePromotionId);
         List<Image> imagesByBoardId = imageRepository.findImagesByBoardId(updatePromotionId);
         List<Music> musicsByBoardId = musicRepository.findMusicsByPromotionId(updatePromotionId);
         assertThat(optionsByBoardId).hasSize(3);

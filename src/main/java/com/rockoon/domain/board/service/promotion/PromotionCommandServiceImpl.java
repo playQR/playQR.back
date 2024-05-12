@@ -8,8 +8,8 @@ import com.rockoon.domain.image.repository.ImageRepository;
 import com.rockoon.domain.member.entity.Member;
 import com.rockoon.domain.music.entity.Music;
 import com.rockoon.domain.music.repository.MusicRepository;
-import com.rockoon.domain.option.entity.Option;
-import com.rockoon.domain.option.repository.OptionRepository;
+import com.rockoon.domain.showOption.entity.ShowOption;
+import com.rockoon.domain.showOption.repository.showOptionRepository;
 import com.rockoon.global.util.ListUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,7 +25,7 @@ import java.util.stream.Collectors;
 @Service
 public class PromotionCommandServiceImpl implements PromotionCommandService {
     private final PromotionRepository promotionRepository;
-    private final OptionRepository optionRepository;
+    private final showOptionRepository showOptionRepository;
     private final ImageRepository imageRepository;
     private final MusicRepository musicRepository;
 
@@ -44,7 +44,7 @@ public class PromotionCommandServiceImpl implements PromotionCommandService {
                 .orElseThrow(() -> new RuntimeException("not found promotion"));
         validateWriter(member, updatePromotion);
 
-        optionRepository.deleteAllByBoardId(promotionId);
+        showOptionRepository.deleteAllByBoardId(promotionId);
         imageRepository.deleteAllByBoardId(promotionId);
         musicRepository.deleteAllByPromotionId(promotionId);
 
@@ -61,7 +61,7 @@ public class PromotionCommandServiceImpl implements PromotionCommandService {
                 .orElseThrow(() -> new RuntimeException("not found promotion"));
         validateWriter(member, removePromotion);
 
-        optionRepository.deleteAllByBoardId(promotionId);
+        showOptionRepository.deleteAllByBoardId(promotionId);
         imageRepository.deleteAllByBoardId(promotionId);
         musicRepository.deleteAllByPromotionId(promotionId);
         promotionRepository.delete(removePromotion);
@@ -76,8 +76,8 @@ public class PromotionCommandServiceImpl implements PromotionCommandService {
 
     private void saveOptionListInPromotion(PromotionRequest request, Promotion savePromotion) {
         if (!ListUtil.isNullOrEmpty(request.getOptionList())) {
-            optionRepository.saveAll(request.getOptionList().stream()
-                    .map(optionRequest -> Option.of(savePromotion, optionRequest)).collect(Collectors.toList()));
+            showOptionRepository.saveAll(request.getOptionList().stream()
+                    .map(optionRequest -> ShowOption.of(savePromotion, optionRequest)).collect(Collectors.toList()));
         }
     }
 

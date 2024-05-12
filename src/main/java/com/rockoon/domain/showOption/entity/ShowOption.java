@@ -1,8 +1,8 @@
-package com.rockoon.domain.option.entity;
+package com.rockoon.domain.showOption.entity;
 
 import com.rockoon.domain.board.entity.Board;
 import com.rockoon.domain.auditing.entity.BaseTimeEntity;
-import com.rockoon.domain.option.dto.OptionRequest;
+import com.rockoon.domain.showOption.dto.OptionRequest;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -15,10 +15,10 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @SuperBuilder
-public class Option extends BaseTimeEntity {
+public class ShowOption extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "option_id")
+    @Column(name = "show_option_id")
     private Long id;
 
     @Enumerated(EnumType.STRING)
@@ -30,8 +30,8 @@ public class Option extends BaseTimeEntity {
     @JoinColumn(name = "board_id")
     private Board board;
 
-    public static Option of(Board board, OptionRequest request) {
-        return Option.builder()
+    public static ShowOption of(Board board, OptionRequest request) {
+        return ShowOption.builder()
                 .category(request.getCategory())
                 .content(request.getContent())
                 .board(board)

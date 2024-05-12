@@ -1,6 +1,6 @@
-package com.rockoon.domain.option.dto;
+package com.rockoon.domain.showOption.dto;
 
-import com.rockoon.domain.option.entity.Category;
+import com.rockoon.domain.showOption.entity.Category;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

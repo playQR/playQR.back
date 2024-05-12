@@ -1,4 +1,4 @@
-package com.rockoon.domain.option.entity;
+package com.rockoon.domain.showOption.entity;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

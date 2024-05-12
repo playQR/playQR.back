@@ -22,9 +22,14 @@ public class MemberApiController {
     }
 
     @PutMapping("/{memberId}")          //TODO path -> memberId 삭제, jwt token을 사용해서 member 바로 조회
-    public Long modifyMemberInfo(@PathVariable Long memberId,
+    public void modifyMemberInfo(@PathVariable Long memberId,
                                  @RequestBody MemberRequest.MemberModifyDto memberModifyDto) {
         Member member = memberQueryService.getByMemberId(memberId);
-        return memberCommandService.modifyMemberInfo(member, memberModifyDto);
+        memberCommandService.modifyMemberInfo(member, memberModifyDto);
+    }
+
+    @GetMapping("/{memberId}")
+    public Member getMemberInfo(@PathVariable Long memberId) {
+        return memberQueryService.getByMemberId(memberId);
     }
 }
