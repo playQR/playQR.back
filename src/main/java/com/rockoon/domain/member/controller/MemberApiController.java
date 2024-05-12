@@ -16,8 +16,9 @@ public class MemberApiController {
     private final MemberQueryService memberQueryService;
 
     @PostMapping
-    public Long registerMember(@RequestBody MemberRegisterDto memberRegisterDto) {
-        return memberCommandService.registerMember(memberRegisterDto);
+    public void registerMember(@RequestBody MemberRegisterDto memberRegisterDto) {
+        //TODO return memberId
+        memberCommandService.registerMember(memberRegisterDto);
     }
 
     @PutMapping("/{memberId}")          //TODO path -> memberId 삭제, jwt token을 사용해서 member 바로 조회
