@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.rockoon.domain.member.dto.MemberRequest.MemberModifyDto;
 import com.rockoon.domain.member.dto.MemberRequest.MemberRegisterDto;
 import com.rockoon.domain.member.entity.Member;
-import com.rockoon.domain.member.repository.MemberRepository;
 import com.rockoon.domain.member.service.MemberCommandService;
 import com.rockoon.domain.member.service.MemberQueryService;
 import com.rockoon.global.config.test.DatabaseCleanUp;
@@ -20,11 +19,12 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 
 import java.nio.charset.StandardCharsets;
 
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -41,8 +41,6 @@ class MemberApiControllerTest {
     private MemberQueryService memberQueryService;
     @MockBean
     private MemberCommandService memberCommandService;
-    @MockBean
-    private MemberRepository memberRepository;
     @MockBean
     private DatabaseCleanUp databaseCleanUp;
 
@@ -69,7 +67,7 @@ class MemberApiControllerTest {
                 .content(objectMapper.writeValueAsString(request)));
         //then
         perform
-                .andDo(MockMvcResultHandlers.print())
+                .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.code").value(2000))
                 .andExpect(jsonPath("$.result").value(memberId));
@@ -79,60 +77,53 @@ class MemberApiControllerTest {
     @Test
     @DisplayName("유저가 memberId를 통해 등록된 멤버 정보를 수정합니다")
     void modifyMemberInfo() throws Exception {
-        //given
-        //1. register
-        MemberRegisterDto memberRegisterDto = MemberRegisterDto.builder()
+        // given: 멤버 객체와 수정 DTO 준비
+        Member member = Member.builder()
+                .id(1L)
                 .name("name")
-                .kakaoEmail("kakaoEmail@naver.com")
-                .nickname("nickname")
-                .profileImg("profileImg")
                 .build();
-        Long memberId = 1L;
-        when(memberCommandService.registerMember(memberRegisterDto)).thenReturn(memberId);
-        //2. get --> when jwt accepted, skip this line
-        Member member = Member.builder().build();
-        when(memberQueryService.getByMemberId(memberId)).thenReturn(member);
-        //3. modify
         MemberModifyDto request = MemberModifyDto.builder()
                 .name("modify")
                 .nickname("modifiedNickname")
                 .profileImg("modifiedProfileImg")
                 .build();
-        Long modifiedMemberId = memberId;
-        when(memberCommandService.modifyMemberInfo(member, request)).thenReturn(modifiedMemberId);
-        // when
-        ResultActions perform = mockMvc.perform(MockMvcRequestBuilders.put("/api/members/" + memberId)
+
+        // mocking behavior
+        when(memberQueryService.getByMemberId(member.getId())).thenReturn(member);
+        when(memberCommandService.modifyMemberInfo(member, request)).thenReturn(member.getId());
+
+        // when: API 엔드포인트를 통한 멤버 정보 수정 요청
+        ResultActions resultActions = mockMvc.perform(put("/api/members/" + member.getId())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request)));
-        //then
-        perform
-                .andDo(MockMvcResultHandlers.print())
+
+        // then: 응답 검증
+        resultActions.andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.code").value(2000))
-                .andExpect(jsonPath("$.result").value(modifiedMemberId));
+                .andExpect(jsonPath("$.result").value(member.getId()));
     }
 
     @Test
     @DisplayName("유저가 memberid를 통해 등록된 회원 정보를 가져옵니다.")
     void getMemberInfo() throws Exception {
         //given
-        MemberRegisterDto request = MemberRegisterDto.builder()
-                .name("name")
-                .kakaoEmail("kakaoEmail@naver.com")
+        Long memberId = 3L;
+        Member registerMember = Member.builder()
+                .name("hi")
                 .nickname("nickname")
-                .profileImg("profileImg")
+                .kakaoEmail("kakaoEmail")
                 .build();
-        Long memberId = 1L;
-        when(memberCommandService.registerMember(request)).thenReturn(memberId);
-        Member registerMember = Member.builder().name("hi").build();
         when(memberQueryService.getByMemberId(memberId)).thenReturn(registerMember);
         //when & then
         mockMvc.perform(MockMvcRequestBuilders.get("/api/members/" + memberId)
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8))
-                .andDo(MockMvcResultHandlers.print())
+                .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.result.name").value(registerMember.getName()));
+                .andExpect(jsonPath("$.result.name").value(registerMember.getName()))
+                .andExpect(jsonPath("$.result.nickname").value(registerMember.getNickname()))
+                .andExpect(jsonPath("$.result.kakaoEmail").value(registerMember.getKakaoEmail()));
 
     }
 
