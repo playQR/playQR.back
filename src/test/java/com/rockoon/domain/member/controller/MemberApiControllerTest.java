@@ -18,14 +18,15 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.nio.charset.StandardCharsets;
 
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 
 @Slf4j
@@ -60,12 +61,18 @@ class MemberApiControllerTest {
                 .nickname("nickname")
                 .profileImg("profileImg")
                 .build();
-        //when & then
-        mockMvc.perform(MockMvcRequestBuilders.post("/api/members")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(request)))
+        Long memberId = 5L;     // 개발자가 명시하는 변수
+        when(memberCommandService.registerMember(request)).thenReturn(memberId);
+        //when
+        ResultActions perform = mockMvc.perform(MockMvcRequestBuilders.post("/api/members")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request)));
+        //then
+        perform
                 .andDo(MockMvcResultHandlers.print())
-                .andExpect(MockMvcResultMatchers.status().isOk());
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.code").value(2000))
+                .andExpect(jsonPath("$.result").value(memberId));
     }
 
     //TODO @WithMockUser 사용
@@ -73,24 +80,36 @@ class MemberApiControllerTest {
     @DisplayName("유저가 memberId를 통해 등록된 멤버 정보를 수정합니다")
     void modifyMemberInfo() throws Exception {
         //given
+        //1. register
         MemberRegisterDto memberRegisterDto = MemberRegisterDto.builder()
                 .name("name")
                 .kakaoEmail("kakaoEmail@naver.com")
                 .nickname("nickname")
                 .profileImg("profileImg")
                 .build();
-        Long memberId = memberCommandService.registerMember(memberRegisterDto);
+        Long memberId = 1L;
+        when(memberCommandService.registerMember(memberRegisterDto)).thenReturn(memberId);
+        //2. get --> when jwt accepted, skip this line
+        Member member = Member.builder().build();
+        when(memberQueryService.getByMemberId(memberId)).thenReturn(member);
+        //3. modify
         MemberModifyDto request = MemberModifyDto.builder()
                 .name("modify")
                 .nickname("modifiedNickname")
                 .profileImg("modifiedProfileImg")
                 .build();
-        //when & then
-        mockMvc.perform(MockMvcRequestBuilders.put("/api/members/" + memberId)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(request)))
+        Long modifiedMemberId = memberId;
+        when(memberCommandService.modifyMemberInfo(member, request)).thenReturn(modifiedMemberId);
+        // when
+        ResultActions perform = mockMvc.perform(MockMvcRequestBuilders.put("/api/members/" + memberId)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request)));
+        //then
+        perform
                 .andDo(MockMvcResultHandlers.print())
-                .andExpect(MockMvcResultMatchers.status().isOk());
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.code").value(2000))
+                .andExpect(jsonPath("$.result").value(modifiedMemberId));
     }
 
     @Test
@@ -103,22 +122,17 @@ class MemberApiControllerTest {
                 .nickname("nickname")
                 .profileImg("profileImg")
                 .build();
-        Long memberId = memberCommandService.registerMember(request);
-        Member member = Member.builder()
-                .id(memberId)
-                .name(request.getName())
-                .nickname(request.getNickname())
-                .kakaoEmail(request.getKakaoEmail())
-                .profileImg(request.getProfileImg())
-                .build();
-        when(memberQueryService.getByMemberId(any())).thenReturn(member);
+        Long memberId = 1L;
+        when(memberCommandService.registerMember(request)).thenReturn(memberId);
+        Member registerMember = Member.builder().name("hi").build();
+        when(memberQueryService.getByMemberId(memberId)).thenReturn(registerMember);
         //when & then
         mockMvc.perform(MockMvcRequestBuilders.get("/api/members/" + memberId)
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8))
                 .andDo(MockMvcResultHandlers.print())
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.name").value(member.getName()));
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.result.name").value(registerMember.getName()));
 
     }
 
