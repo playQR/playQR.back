@@ -11,6 +11,8 @@ import com.rockoon.domain.music.repository.MusicRepository;
 import com.rockoon.domain.showOption.entity.ShowOption;
 import com.rockoon.domain.showOption.repository.showOptionRepository;
 import com.rockoon.global.util.ListUtil;
+import com.rockoon.presentation.payload.code.ErrorStatus;
+import com.rockoon.presentation.payload.exception.PromotionHandler;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -41,7 +43,7 @@ public class PromotionCommandServiceImpl implements PromotionCommandService {
     @Override
     public Long modifyPromotion(Member member, Long promotionId, PromotionRequest request) {
         Promotion updatePromotion = promotionRepository.findById(promotionId)
-                .orElseThrow(() -> new RuntimeException("not found promotion"));
+                .orElseThrow(() -> new PromotionHandler(ErrorStatus.PROMOTION_NOT_FOUND));
         validateWriter(member, updatePromotion);
 
         showOptionRepository.deleteAllByBoardId(promotionId);
@@ -58,7 +60,7 @@ public class PromotionCommandServiceImpl implements PromotionCommandService {
     @Override
     public void removePromotion(Member member, Long promotionId) {
         Promotion removePromotion = promotionRepository.findById(promotionId)
-                .orElseThrow(() -> new RuntimeException("not found promotion"));
+                .orElseThrow(() -> new PromotionHandler(ErrorStatus.PROMOTION_NOT_FOUND));
         validateWriter(member, removePromotion);
 
         showOptionRepository.deleteAllByBoardId(promotionId);
@@ -90,7 +92,7 @@ public class PromotionCommandServiceImpl implements PromotionCommandService {
 
     private static void validateWriter(Member member, Promotion promotion) {
         if (!member.equals(promotion.getWriter())) {
-            throw new RuntimeException("cannot touch it");
+            throw new PromotionHandler(ErrorStatus.PROMOTION_ONLY_CAN_BE_TOUCHED_BY_WRITER);
         }
     }
 }
