@@ -134,7 +134,7 @@ class MemberApiControllerTest {
         Member registerMember = Member.builder()
                 .name("hi")
                 .nickname("nickname")
-                .kakaoEmail("kakaoEmail")
+                .profileImg("profileImg")
                 .build();
         when(memberQueryService.getByMemberId(memberId)).thenReturn(registerMember);
         //when & then
@@ -145,7 +145,7 @@ class MemberApiControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.result.name").value(registerMember.getName()))
                 .andExpect(jsonPath("$.result.nickname").value(registerMember.getNickname()))
-                .andExpect(jsonPath("$.result.kakaoEmail").value(registerMember.getKakaoEmail()));
+                .andExpect(jsonPath("$.result.profileImg").value(registerMember.getProfileImg()));
 
     }
 

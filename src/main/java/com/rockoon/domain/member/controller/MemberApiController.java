@@ -1,7 +1,9 @@
 package com.rockoon.domain.member.controller;
 
+import com.rockoon.domain.member.converter.MemberConverter;
 import com.rockoon.domain.member.dto.MemberRequest;
 import com.rockoon.domain.member.dto.MemberRequest.MemberRegisterDto;
+import com.rockoon.domain.member.dto.MemberResponse;
 import com.rockoon.domain.member.entity.Member;
 import com.rockoon.domain.member.service.MemberCommandService;
 import com.rockoon.domain.member.service.MemberQueryService;
@@ -29,7 +31,11 @@ public class MemberApiController {
     }
 
     @GetMapping("/{memberId}")
-    public ApiResponseDto<Member> getMemberInfo(@PathVariable Long memberId) {
-        return ApiResponseDto.onSuccess(memberQueryService.getByMemberId(memberId));
+    public ApiResponseDto<MemberResponse> getMemberInfo(@PathVariable Long memberId) {
+        return ApiResponseDto.onSuccess(
+                MemberConverter.toResponse(
+                        memberQueryService.getByMemberId(memberId)
+                )
+        );
     }
 }
