@@ -7,6 +7,9 @@ import com.rockoon.domain.member.entity.Member;
 import com.rockoon.domain.member.service.MemberCommandService;
 import com.rockoon.domain.member.service.MemberQueryService;
 import com.rockoon.global.config.test.DatabaseCleanUp;
+import com.rockoon.presentation.advice.ExceptionAdvice;
+import com.rockoon.presentation.payload.code.ErrorStatus;
+import com.rockoon.presentation.payload.exception.MemberHandler;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
@@ -15,6 +18,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.FilterType;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
@@ -31,7 +36,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @Slf4j
 @AutoConfigureMockMvc(addFilters = false)
-@WebMvcTest(controllers = MemberApiController.class)
+@WebMvcTest(controllers = MemberApiController.class,
+        includeFilters = @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = ExceptionAdvice.class))
 class MemberApiControllerTest {
     @Autowired
     private MockMvc mockMvc;
@@ -102,6 +108,22 @@ class MemberApiControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.code").value(2000))
                 .andExpect(jsonPath("$.result").value(member.getId()));
+    }
+
+    @Test
+    @DisplayName("멤버 ID가 일치한 데이터가 존재하지 않을 경우 예외를 반환합니다.")
+    void executeExceptionWhenGetMemberInfoById() throws Exception {
+        //given
+        Long nonMatchMemberId = 2L;
+        when(memberQueryService.getByMemberId(nonMatchMemberId)).thenThrow(new MemberHandler(ErrorStatus.MEMBER_NOT_FOUND));
+        //when
+        ResultActions perform = mockMvc.perform(MockMvcRequestBuilders.get("/api/members/" + nonMatchMemberId)
+                .contentType(MediaType.APPLICATION_JSON)
+                .characterEncoding(StandardCharsets.UTF_8.name()));
+        //then
+        perform
+                .andDo(print())
+                .andExpect(jsonPath("$.code").value(ErrorStatus.MEMBER_NOT_FOUND.getCode()));
     }
 
     @Test
