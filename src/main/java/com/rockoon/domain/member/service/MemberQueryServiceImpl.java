@@ -2,7 +2,6 @@ package com.rockoon.domain.member.service;
 
 import com.rockoon.domain.member.entity.Member;
 import com.rockoon.domain.member.repository.MemberRepository;
-import com.rockoon.domain.team.repository.TeamRepository;
 import com.rockoon.presentation.payload.code.ErrorStatus;
 import com.rockoon.presentation.payload.exception.MemberHandler;
 import lombok.RequiredArgsConstructor;
@@ -15,7 +14,6 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class MemberQueryServiceImpl implements MemberQueryService{
     private final MemberRepository memberRepository;
-    private final TeamRepository teamRepository;
     @Override
     public Member getByMemberId(Long memberId) {
         return memberRepository.findById(memberId)
