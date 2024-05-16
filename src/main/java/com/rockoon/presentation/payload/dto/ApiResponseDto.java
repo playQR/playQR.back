@@ -9,7 +9,7 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 @JsonPropertyOrder({"isSuccess", "code", "message", "result"})
-public class ApiResponseDto {
+public class ApiResponseDto<T> {
     private final Boolean isSuccess;
     private final Integer code;
     private final String message;
@@ -25,4 +25,5 @@ public class ApiResponseDto {
 
     public static <T> ApiResponseDto<T> onFailure(Integer code, String message, T data) {
         return new ApiResponseDto<>(false, code, message, data);
+    }
 }
