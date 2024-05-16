@@ -9,6 +9,12 @@ import lombok.Getter;
 @AllArgsConstructor
 public class GeneralException extends RuntimeException{
     private BaseCode code;
+
+    @Override
+    public String getMessage() {
+        return code.getReason().getMessage();
+    }
+
     public Reason getErrorReason() {
         return this.code.getReason();
     }
