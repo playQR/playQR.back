@@ -3,6 +3,8 @@ package com.rockoon.domain.member.service;
 import com.rockoon.domain.member.dto.MemberRequest.MemberRegisterDto;
 import com.rockoon.domain.member.entity.Member;
 import com.rockoon.global.config.test.DatabaseCleanUp;
+import com.rockoon.presentation.payload.code.ErrorStatus;
+import com.rockoon.presentation.payload.exception.MemberHandler;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -81,11 +83,11 @@ class MemberQueryServiceTest {
     void checkExceptionWhenNotFound() {
         //when & then
         assertThatThrownBy(() -> memberQueryService.getByMemberId(0L))
-                .isInstanceOf(RuntimeException.class)
-                .hasMessage("not found member");
+                .isInstanceOf(MemberHandler.class)
+                .hasMessage(ErrorStatus.MEMBER_NOT_FOUND.getMessage());
         assertThatThrownBy(() -> memberQueryService.getByNickname(notFoundNickname))
-                .isInstanceOf(RuntimeException.class)
-                .hasMessage("not found member");
+                .isInstanceOf(MemberHandler.class)
+                .hasMessage(ErrorStatus.MEMBER_NOT_FOUND.getMessage());
     }
 
 }

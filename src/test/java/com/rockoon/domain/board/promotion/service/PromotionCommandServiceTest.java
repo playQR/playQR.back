@@ -19,6 +19,8 @@ import com.rockoon.domain.showOption.entity.ShowOption;
 import com.rockoon.domain.showOption.repository.showOptionRepository;
 import com.rockoon.domain.team.service.TeamCommandService;
 import com.rockoon.global.config.test.DatabaseCleanUp;
+import com.rockoon.presentation.payload.code.ErrorStatus;
+import com.rockoon.presentation.payload.exception.PromotionHandler;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -212,8 +214,8 @@ class PromotionCommandServiceTest {
 
         //when & then
         assertThatThrownBy(() -> promotionCommandService.modifyPromotion(member1, 0L, updateRequest))
-                .isInstanceOf(RuntimeException.class)
-                .hasMessage("not found promotion");
+                .isInstanceOf(PromotionHandler.class)
+                .hasMessage(ErrorStatus.MEMBER_NOT_FOUND.getMessage());
 
     }
 
@@ -250,9 +252,9 @@ class PromotionCommandServiceTest {
                 .maxAudience(3)
                 .build();
         Long promotionId = promotionCommandService.savePromotion(member1, createRequest);
-        //when & then
+        //when
         assertThatThrownBy(() -> promotionCommandService.removePromotion(member2, promotionId))
-                .isInstanceOf(RuntimeException.class)
-                .hasMessage("cannot touch it");
+                .isInstanceOf(PromotionHandler.class)
+                .hasMessage(ErrorStatus.PROMOTION_ONLY_CAN_BE_TOUCHED_BY_WRITER.getMessage());
     }
 }
