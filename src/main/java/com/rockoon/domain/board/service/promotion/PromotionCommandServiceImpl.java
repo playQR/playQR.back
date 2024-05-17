@@ -52,7 +52,7 @@ public class PromotionCommandServiceImpl implements PromotionCommandService {
 
         showOptionRepository.deleteAllByBoardId(promotionId);
         imageRepository.deleteAllByBoardId(promotionId);
-        musicRepository.deleteAllByPromotionId(promotionId);
+        promotionMusicRepository.deleteAllByPromotionId(promotionId);
 
         updatePromotion.update(request);
         saveImageListInPromotion(request, updatePromotion);
@@ -69,7 +69,7 @@ public class PromotionCommandServiceImpl implements PromotionCommandService {
 
         showOptionRepository.deleteAllByBoardId(promotionId);
         imageRepository.deleteAllByBoardId(promotionId);
-        musicRepository.deleteAllByPromotionId(promotionId);
+        promotionMusicRepository.deleteAllByPromotionId(promotionId);
         promotionRepository.delete(removePromotion);
     }
 

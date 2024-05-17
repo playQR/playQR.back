@@ -11,8 +11,9 @@ import com.rockoon.domain.member.entity.Member;
 import com.rockoon.domain.member.entity.Role;
 import com.rockoon.domain.member.repository.MemberRepository;
 import com.rockoon.domain.music.dto.MusicRequest;
-import com.rockoon.domain.music.entity.Music;
+import com.rockoon.domain.music.entity.PromotionMusic;
 import com.rockoon.domain.music.repository.MusicRepository;
+import com.rockoon.domain.music.repository.PromotionMusicRepository;
 import com.rockoon.domain.showOption.dto.ShowOptionRequest;
 import com.rockoon.domain.showOption.entity.Category;
 import com.rockoon.domain.showOption.entity.ShowOption;
@@ -49,6 +50,8 @@ class PromotionCommandServiceTest {
     ImageRepository imageRepository;
     @Autowired
     MusicRepository musicRepository;
+    @Autowired
+    PromotionMusicRepository promotionMusicRepository;
     @Autowired
     MemberRepository memberRepository;
     //else
@@ -152,7 +155,7 @@ class PromotionCommandServiceTest {
         //then
         List<ShowOption> optionsByBoardId = showOptionRepository.findOptionsByBoardId(promotionId);
         List<Image> imagesByBoardId = imageRepository.findImagesByBoardId(promotionId);
-        List<Music> musicsByBoardId = musicRepository.findMusicsByPromotionId(promotionId);
+        List<PromotionMusic> musicsByBoardId = promotionMusicRepository.findMusicsByPromotionId(promotionId);
         assertThat(optionsByBoardId).hasSize(2);
         assertThat(imagesByBoardId).hasSize(1);
         assertThat(musicsByBoardId).hasSize(2);
@@ -190,7 +193,7 @@ class PromotionCommandServiceTest {
         assertThat(promotion.getTitle()).isEqualTo(updateRequest.getTitle());
         List<ShowOption> optionsByBoardId = showOptionRepository.findOptionsByBoardId(updatePromotionId);
         List<Image> imagesByBoardId = imageRepository.findImagesByBoardId(updatePromotionId);
-        List<Music> musicsByBoardId = musicRepository.findMusicsByPromotionId(updatePromotionId);
+        List<PromotionMusic> musicsByBoardId = promotionMusicRepository.findMusicsByPromotionId(updatePromotionId);
         assertThat(optionsByBoardId).hasSize(3);
         assertThat(imagesByBoardId).hasSize(0);
         assertThat(musicsByBoardId).hasSize(2);

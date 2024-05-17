@@ -50,6 +50,10 @@ public class PromotionApiController {
     @GetMapping
     public ApiResponseDto<PromotionListDto> getPromotionList(@RequestParam(defaultValue = "0") int currentPage) {
         Pageable pageable = PageRequest.of(currentPage, 5);
-        return ApiResponseDto.onSuccess(PromotionConverter.toListDto(promotionQueryService.getPaginationPromotion(pageable)));
+        return ApiResponseDto.onSuccess(
+                PromotionConverter.toListDto(
+                        promotionQueryService.getPaginationPromotion(pageable)
+                )
+        );
     }
 }
