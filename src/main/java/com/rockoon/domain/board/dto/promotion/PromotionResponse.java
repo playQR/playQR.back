@@ -31,13 +31,16 @@ public class PromotionResponse {
     @NoArgsConstructor
     @AllArgsConstructor
     public static class PromotionSummaryDto{
-
+        private Long promotionId;
+        private String title;
+        private String team;
+        private MemberResponse writer;
     }
     @Data
     @Builder
     @NoArgsConstructor
     @AllArgsConstructor
     public static class PromotionListDto{
-
+        private List<PromotionSummaryDto> promotionList;
     }
 }
