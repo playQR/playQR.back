@@ -32,7 +32,7 @@ public class PromotionCommandServiceImpl implements PromotionCommandService {
     private final MusicRepository musicRepository;
 
     @Override
-    public Long savePromotion(Member member, PromotionRequest request) {
+    public Long createPromotion(Member member, PromotionRequest request) {
         Promotion savePromotion = promotionRepository.save(Promotion.of(member, request));
         saveOptionListInPromotion(request, savePromotion);
         saveImageListInPromotion(request, savePromotion);

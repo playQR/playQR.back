@@ -17,7 +17,6 @@ import com.rockoon.domain.showOption.dto.OptionRequest;
 import com.rockoon.domain.showOption.entity.Category;
 import com.rockoon.domain.showOption.entity.ShowOption;
 import com.rockoon.domain.showOption.repository.showOptionRepository;
-import com.rockoon.domain.team.service.TeamCommandService;
 import com.rockoon.global.config.test.DatabaseCleanUp;
 import com.rockoon.presentation.payload.code.ErrorStatus;
 import com.rockoon.presentation.payload.exception.PromotionHandler;
@@ -41,8 +40,6 @@ class PromotionCommandServiceTest {
     //command Service
     @Autowired
     PromotionCommandService promotionCommandService;
-    @Autowired
-    TeamCommandService teamCommandService;
     //repository
     @Autowired
     PromotionRepository promotionRepository;
@@ -127,7 +124,7 @@ class PromotionCommandServiceTest {
                 .maxAudience(3)
                 .build();
         //when
-        Long promotionId = promotionCommandService.savePromotion(member1, request);
+        Long promotionId = promotionCommandService.createPromotion(member1, request);
 
         //then
         Promotion promotion = promotionRepository.findById(promotionId).get();
@@ -150,7 +147,7 @@ class PromotionCommandServiceTest {
                 .build();
 
         //when
-        Long promotionId = promotionCommandService.savePromotion(member1, request);
+        Long promotionId = promotionCommandService.createPromotion(member1, request);
 
         //then
         List<ShowOption> optionsByBoardId = showOptionRepository.findOptionsByBoardId(promotionId);
@@ -174,7 +171,7 @@ class PromotionCommandServiceTest {
                 .musicList(musicList)
                 .maxAudience(3)
                 .build();
-        Long promotionId = promotionCommandService.savePromotion(member1, request);
+        Long promotionId = promotionCommandService.createPromotion(member1, request);
         imageList.remove(0);
         optionList.add(OptionRequest.builder().build());
         PromotionRequest updateRequest = PromotionRequest.builder()
@@ -231,7 +228,7 @@ class PromotionCommandServiceTest {
                 .musicList(musicList)
                 .maxAudience(3)
                 .build();
-        Long promotionId = promotionCommandService.savePromotion(member1, createRequest);
+        Long promotionId = promotionCommandService.createPromotion(member1, createRequest);
         //when
         log.info("db = {}", memberRepository.findById(member1.getId()).get());
         promotionCommandService.removePromotion(member1, promotionId);
@@ -251,7 +248,7 @@ class PromotionCommandServiceTest {
                 .musicList(musicList)
                 .maxAudience(3)
                 .build();
-        Long promotionId = promotionCommandService.savePromotion(member1, createRequest);
+        Long promotionId = promotionCommandService.createPromotion(member1, createRequest);
         //when
         assertThatThrownBy(() -> promotionCommandService.removePromotion(member2, promotionId))
                 .isInstanceOf(PromotionHandler.class)
