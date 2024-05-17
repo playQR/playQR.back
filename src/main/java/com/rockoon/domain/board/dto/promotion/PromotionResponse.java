@@ -1,9 +1,12 @@
 package com.rockoon.domain.board.dto.promotion;
 
+import com.rockoon.domain.member.dto.MemberResponse;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.util.List;
 
 public class PromotionResponse {
     @Data
@@ -12,8 +15,14 @@ public class PromotionResponse {
     @AllArgsConstructor
     public static class PromotionDetailDto{
         private Long promotionId;
-        private
+        private String title;
+        private String content;
+        private String team;
+        private MemberResponse writer;
 
+        private List<MusicResponse> musicList;
+        private List<ShowOptionResponse> optionList;
+        private List<String> imageList;
     }
     @Data
     @Builder
