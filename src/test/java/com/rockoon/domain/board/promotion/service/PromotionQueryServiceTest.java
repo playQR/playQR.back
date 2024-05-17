@@ -93,6 +93,21 @@ class PromotionQueryServiceTest {
     }
 
     @Test
+    @DisplayName("특정 id값을 가진 promotion을 가져옵니다.")
+    void getPromotionById() {
+        //given
+        PromotionRequest request = PromotionRequest.builder()
+                .title("title")
+                .content("content")
+                .build();
+        Long promotionId = promotionCommandService.createPromotion(member1, request);
+        //when
+        Promotion promotionById = promotionQueryService.getPromotionById(promotionId);
+        //then
+        assertThat(promotionById.getContent()).isEqualTo(request.getContent());
+        assertThat(promotionById.getTitle()).isEqualTo(request.getTitle());
+    }
+    @Test
     @DisplayName("작성된 모든 promotion을 가져옵니다.")
     void getAllPromotion() {
         //given
