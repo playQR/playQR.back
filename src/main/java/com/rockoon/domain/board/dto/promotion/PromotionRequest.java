@@ -18,6 +18,7 @@ public class PromotionRequest {
     private int maxAudience;
     private String content;
     private String title;
+    private String team;
     private List<OptionRequest> optionList;
     private List<ImageRequest> imageList;
     private List<MusicRequest> musicList;
