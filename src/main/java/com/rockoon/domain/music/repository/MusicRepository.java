@@ -9,4 +9,6 @@ public interface MusicRepository extends JpaRepository<Music, Long> {
     void deleteAllByPromotionId(Long promotionId);
 
     List<Music> findMusicsByPromotionId(Long promotionId);
+
+    List<Music> findMusicsByTitleIn(List<String> titles);
 }

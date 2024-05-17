@@ -1,10 +1,12 @@
 package com.rockoon.domain.music.entity;
 
-import com.rockoon.domain.board.entity.Promotion;
 import com.rockoon.domain.auditing.entity.BaseTimeEntity;
 import com.rockoon.domain.music.dto.MusicRequest;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
 @Entity
@@ -22,15 +24,10 @@ public class Music extends BaseTimeEntity {
     private String title;
     private String artist;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "promotion_id")
-    private Promotion promotion;
-
-    public static Music of(Promotion savePromotion, MusicRequest musicRequest) {
+    public static Music of(MusicRequest musicRequest) {
         return Music.builder()
                 .artist(musicRequest.getArtist())
                 .title(musicRequest.getTitle())
-                .promotion(savePromotion)
                 .build();
     }
 }
