@@ -2,7 +2,7 @@ package com.rockoon.domain.showOption.entity;
 
 import com.rockoon.domain.board.entity.Board;
 import com.rockoon.domain.auditing.entity.BaseTimeEntity;
-import com.rockoon.domain.showOption.dto.OptionRequest;
+import com.rockoon.domain.showOption.dto.ShowOptionRequest;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -30,7 +30,7 @@ public class ShowOption extends BaseTimeEntity {
     @JoinColumn(name = "board_id")
     private Board board;
 
-    public static ShowOption of(Board board, OptionRequest request) {
+    public static ShowOption of(Board board, ShowOptionRequest request) {
         return ShowOption.builder()
                 .category(request.getCategory())
                 .content(request.getContent())

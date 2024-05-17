@@ -13,7 +13,7 @@ import com.rockoon.domain.member.repository.MemberRepository;
 import com.rockoon.domain.music.dto.MusicRequest;
 import com.rockoon.domain.music.entity.Music;
 import com.rockoon.domain.music.repository.MusicRepository;
-import com.rockoon.domain.showOption.dto.OptionRequest;
+import com.rockoon.domain.showOption.dto.ShowOptionRequest;
 import com.rockoon.domain.showOption.entity.Category;
 import com.rockoon.domain.showOption.entity.ShowOption;
 import com.rockoon.domain.showOption.repository.showOptionRepository;
@@ -59,7 +59,7 @@ class PromotionCommandServiceTest {
     Member member1;
     Member member2;
     Long teamId;
-    List<OptionRequest> optionList = new ArrayList<>();
+    List<ShowOptionRequest> optionList = new ArrayList<>();
 
     List<ImageRequest> imageList = new ArrayList<>();
     List<MusicRequest> musicList = new ArrayList<>();
@@ -84,11 +84,11 @@ class PromotionCommandServiceTest {
                 .nickname("Hann")
                 .build();
 
-        optionList.add(OptionRequest.builder()
+        optionList.add(ShowOptionRequest.builder()
                 .category(Category.TIME)
                 .content("content")
                 .build());
-        optionList.add(OptionRequest.builder()
+        optionList.add(ShowOptionRequest.builder()
                 .category(Category.FEE)
                 .content("content")
                 .build());
@@ -173,7 +173,7 @@ class PromotionCommandServiceTest {
                 .build();
         Long promotionId = promotionCommandService.createPromotion(member1, request);
         imageList.remove(0);
-        optionList.add(OptionRequest.builder().build());
+        optionList.add(ShowOptionRequest.builder().build());
         PromotionRequest updateRequest = PromotionRequest.builder()
                 .title("promotion update test")
                 .content("promotion")

@@ -1,6 +1,8 @@
 package com.rockoon.domain.board.dto.promotion;
 
 import com.rockoon.domain.member.dto.MemberResponse;
+import com.rockoon.domain.music.dto.MusicResponse;
+import com.rockoon.domain.showOption.dto.ShowOptionResponse;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

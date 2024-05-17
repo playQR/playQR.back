@@ -92,9 +92,10 @@ public class PromotionCommandServiceImpl implements PromotionCommandService {
             List<Music> musicList = musicRepository.saveAll(request.getMusicList().stream()
                     .map(musicRequest -> Music.of(musicRequest)).collect(Collectors.toList()));
             musicList.forEach(music -> promotionMusicRepository.save(
-                    PromotionMusic.of(savePromotion, music))
+                    PromotionMusic.of(savePromotion, music, true))
             );
             //TODO search -> whiteList music get & newly insert music -> save PromotionMusic
+            //TODO setting each isOpen value
         }
     }
 

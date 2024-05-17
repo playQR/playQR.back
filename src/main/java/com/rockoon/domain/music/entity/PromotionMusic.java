@@ -19,6 +19,8 @@ public class PromotionMusic {
     @Column(name = "promotion_music_id")
     private Long id;
 
+    private boolean isOpen;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "promotion_id")
     private Promotion promotion;
@@ -27,10 +29,11 @@ public class PromotionMusic {
     @JoinColumn(name = "music_id")
     private Music music;
 
-    public static PromotionMusic of(Promotion promotion, Music music) {
+    public static PromotionMusic of(Promotion promotion, Music music, boolean isOpen) {
         return PromotionMusic.builder()
                 .music(music)
                 .promotion(promotion)
+                .isOpen(isOpen)
                 .build();
     }
 }
