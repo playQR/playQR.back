@@ -1,6 +1,8 @@
 package com.rockoon.domain.board.controller;
 
+import com.rockoon.domain.board.converter.PromotionConverter;
 import com.rockoon.domain.board.dto.promotion.PromotionRequest;
+import com.rockoon.domain.board.dto.promotion.PromotionResponse;
 import com.rockoon.domain.board.service.promotion.PromotionCommandService;
 import com.rockoon.domain.board.service.promotion.PromotionQueryService;
 import com.rockoon.domain.member.entity.Member;
@@ -10,6 +12,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
+
+import static com.rockoon.domain.board.dto.promotion.PromotionResponse.*;
 
 @RequestMapping("/api/promotions")
 @RequiredArgsConstructor
@@ -35,12 +39,16 @@ public class PromotionApiController {
     }
 
     @GetMapping("/{promotionId}")
-    public ApiResponseDto<PromotionResponse.PromotionDetailDto> getPromotionById(@PathVariable Long promotionId) {
-        return ApiResponseDto.onSuccess(promotionQueryService.getPromotionById(promotionId));
+    public ApiResponseDto<PromotionDetailDto> getPromotionById(@PathVariable Long promotionId) {
+        return ApiResponseDto.onSuccess(
+                PromotionConverter.toDetailDto(
+                        promotionQueryService.getPromotionById(promotionId)
+                )
+        );
     }
 
     @GetMapping
-    public ApiResponseDto<PromotionResponse.PromotionListDto> getPromotionList(
+    public ApiResponseDto<PromotionListDto> getPromotionList(
             @RequestParam(defaultValue = "0") int currentPage
     ) {
         Pageable pageable = PageRequest.of(currentPage, 5);

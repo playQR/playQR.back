@@ -13,4 +13,5 @@ public interface PromotionQueryService {
 
     Page<Promotion> getPaginationPromotion(Pageable pageable);
 
+    Promotion getPromotionById(Long promotionId);
 }
