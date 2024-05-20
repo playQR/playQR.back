@@ -20,7 +20,6 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.security.Key;
@@ -39,7 +38,6 @@ public class TokenServiceImpl implements TokenService{
 
     public TokenServiceImpl(@Value("${app.jwt.secret}") String key,
                             AuthenticationManagerBuilder authenticationManagerBuilder,
-                            PasswordEncoder passwordEncoder,
                             RedisService redisService,
                             MemberQueryService memberQueryService) {
         byte[] keyBytes = Decoders.BASE64.decode(key);
@@ -51,7 +49,7 @@ public class TokenServiceImpl implements TokenService{
     @Override       //TODO oauth2적용시 필요 없음
     public JwtToken login(String kakaoEmail) {
         Member member = memberQueryService.getByKakaoEmail(kakaoEmail);
-        authentication = new UsernamePasswordAuthenticationToken(member, "",
+        Authentication authentication = new UsernamePasswordAuthenticationToken(member, "",
                 member.getAuthorities());
         return generateToken(authentication);
     }
