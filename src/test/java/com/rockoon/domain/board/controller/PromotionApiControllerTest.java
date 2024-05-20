@@ -21,10 +21,14 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.FilterType;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+
+import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
@@ -185,6 +189,38 @@ class PromotionApiControllerTest {
                 .andExpect(jsonPath("$.message").value(ErrorStatus.PROMOTION_NOT_FOUND.getMessage()))
                 .andExpect(jsonPath("$.code").value(ErrorStatus.PROMOTION_NOT_FOUND.getCode()))
                 .andExpect(jsonPath("$.isSuccess").value(false));
+
+    }
+
+    @Test
+    @DisplayName("페이징을 사용하여 5개의 게시글을 조회합니다.")
+    void getPromotionList() throws Exception {
+        //given
+        List<Promotion> promotionList = List.of(Promotion.builder().id(6L).writer(Member.builder().build()).build(),
+                Promotion.builder().id(1L).writer(Member.builder().build()).build(),
+                Promotion.builder().id(2L).writer(Member.builder().build()).build(),
+                Promotion.builder().id(3L).writer(Member.builder().build()).build(),
+                Promotion.builder().id(4L).writer(Member.builder().build()).build(),
+                Promotion.builder().id(5L).writer(Member.builder().build()).build()
+        );
+        PageRequest pageRequest = PageRequest.of(0, 5);
+        int start = (int) pageRequest.getOffset();
+        int end = Math.min((start + pageRequest.getPageSize()), promotionList.size());
+        PageImpl<Promotion> promotions = new PageImpl<>(promotionList.subList(start, end), pageRequest, promotionList.size());
+        for (Promotion promotion : promotions.getContent()) {
+            log.info("promotion id = {}", promotion.getId());
+        }
+
+        when(promotionQueryService.getPaginationPromotion(any())).thenReturn(promotions);
+        //when
+        ResultActions perform = mockMvc.perform(MockMvcRequestBuilders.get("/api/promotions")
+                .contentType(MediaType.APPLICATION_JSON)
+                .param("currentPage", "0"));
+
+        //then
+        perform.andDo(print())
+                .andExpect(jsonPath("$.isSuccess").value(true))
+                .andExpect(jsonPath("$.result.promotionList.size()").value(5));
 
     }
 
