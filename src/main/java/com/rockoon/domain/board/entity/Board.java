@@ -14,6 +14,7 @@ import lombok.experimental.SuperBuilder;
 @DiscriminatorColumn(name = "DTYPE")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Inheritance(strategy = InheritanceType.JOINED)
+@Table(name = "board")
 public abstract class Board extends BaseTimeEntity {
 
     @Id

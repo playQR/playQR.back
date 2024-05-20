@@ -1,5 +1,7 @@
 package com.rockoon.security.config;
 
+import com.rockoon.security.filter.JwtAuthenticationFilter;
+import com.rockoon.security.filter.JwtExceptionFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -11,16 +13,21 @@ import org.springframework.security.config.annotation.web.configurers.HeadersCon
 import org.springframework.security.config.annotation.web.configurers.HttpBasicConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @RequiredArgsConstructor
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
 
+    private final JwtAuthenticationFilter jwtAuthenticationFilter;
+    private final JwtExceptionFilter jwtExceptionFilter;
+
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
         configureCorsAndSecurity(httpSecurity);
         configureAuth(httpSecurity);
+        addFilter(httpSecurity);
 
         return httpSecurity.build();
     }
@@ -58,5 +65,11 @@ public class SecurityConfig {
 //                            .requestMatchers(authorizationGuest()).hasRole("GUEST")
 //                            .requestMatchers(authorizationUser()).hasRole("USER");
                 });
+    }
+
+    private void addFilter(HttpSecurity httpSecurity) {
+        httpSecurity
+                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(jwtExceptionFilter, JwtAuthenticationFilter.class);
     }
 }
