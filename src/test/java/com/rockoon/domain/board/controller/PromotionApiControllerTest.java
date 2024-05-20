@@ -130,7 +130,9 @@ class PromotionApiControllerTest {
 
         //then
         perform.andDo(print())
-                .andExpect(jsonPath("$.message").value("존재하지 않는 회원입니다."));
+                .andExpect(jsonPath("$.message").value(ErrorStatus.PROMOTION_NOT_FOUND.getMessage()))
+                .andExpect(jsonPath("$.code").value(ErrorStatus.PROMOTION_NOT_FOUND.getCode()))
+                .andExpect(jsonPath("$.isSuccess").value(false));
     }
 
     @Test
@@ -165,6 +167,25 @@ class PromotionApiControllerTest {
         perform.andExpect(jsonPath("$.result.writer.name").value(promotion.getWriter().getName()))
                 .andExpect(jsonPath("$.result.writer.nickname").value(promotion.getWriter().getNickname()))
                 .andExpect(jsonPath("$.result.writer.profileImg").value(promotion.getWriter().getProfileImg()));
+    }
+
+    @Test
+    @DisplayName("입력한 promotion id에 해당하는 정보가 존재하지 않아 조회에 실패합니다.")
+    void executeExceptionWhenNotFoundPromotion() throws Exception{
+        //given
+        Long promotionId = 3L;
+        when(promotionQueryService.getPromotionById(promotionId))
+                .thenThrow(new PromotionHandler(ErrorStatus.PROMOTION_NOT_FOUND));
+        //when
+        ResultActions perform = mockMvc.perform(MockMvcRequestBuilders.get("/api/promotions/" + promotionId)
+                .contentType(MediaType.APPLICATION_JSON));
+
+        //then
+        perform.andDo(print())
+                .andExpect(jsonPath("$.message").value(ErrorStatus.PROMOTION_NOT_FOUND.getMessage()))
+                .andExpect(jsonPath("$.code").value(ErrorStatus.PROMOTION_NOT_FOUND.getCode()))
+                .andExpect(jsonPath("$.isSuccess").value(false));
+
     }
 
 
