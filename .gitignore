@@ -35,3 +35,6 @@ out/
 
 ### VS Code ###
 .vscode/
+
+### JWT Secret Key ###
+application-security.yml
