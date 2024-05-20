@@ -30,7 +30,7 @@ public class PromotionApiController {
         return ApiResponseDto.onSuccess(promotionCommandService.createPromotion(member, promotionRequest));
     }
 
-    @PutMapping("/{promotionId}/member/{memberId}/")       //TODO remove memberId pathVariable
+    @PutMapping("/{promotionId}/members/{memberId}")       //TODO remove memberId pathVariable
     public ApiResponseDto<Long> modifyPromotion(@PathVariable Long memberId,
                                                 @PathVariable Long promotionId,
                                                 @RequestBody PromotionRequest promotionRequest) {
