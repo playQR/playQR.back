@@ -25,4 +25,16 @@ public class MemberQueryServiceImpl implements MemberQueryService{
         return memberRepository.findByNickname(nickname)
                 .orElseThrow(() -> new MemberHandler(ErrorStatus.MEMBER_NOT_FOUND));
     }
+
+    @Override
+    public Member getByKakaoEmail(String kakaoEmail) {
+        return memberRepository.findByKakaoEmail(kakaoEmail)
+                .orElseThrow(() -> new MemberHandler(ErrorStatus.MEMBER_NOT_FOUND));
+    }
+
+    @Override
+    public Member getMemberByUsername(String username) {
+        return memberRepository.findByUsername(username)
+                .orElseThrow(() -> new MemberHandler(ErrorStatus.MEMBER_NOT_FOUND));
+    }
 }
