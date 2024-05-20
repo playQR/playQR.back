@@ -20,6 +20,7 @@ import static com.rockoon.domain.member.dto.MemberRequest.MemberModifyDto;
 @AllArgsConstructor
 @SuperBuilder
 @EqualsAndHashCode(of = "id", callSuper = false)
+@Table(name = "member")
 public class Member extends BaseTimeEntity implements UserDetails {
 
     @Id
@@ -89,5 +90,9 @@ public class Member extends BaseTimeEntity implements UserDetails {
     @Override
     public boolean isEnabled() {
         return false;
+    }
+
+    public void convertRole(Role role) {
+        this.role = role;
     }
 }

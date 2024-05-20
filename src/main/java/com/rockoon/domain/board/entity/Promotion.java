@@ -6,6 +6,7 @@ import com.rockoon.domain.music.entity.PromotionMusic;
 import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -20,6 +21,7 @@ import java.util.List;
 @SuperBuilder
 @DiscriminatorValue("type_promotion")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Table(name = "promotion")
 public class Promotion extends Board {
     private int maxAudience;
     private String team;

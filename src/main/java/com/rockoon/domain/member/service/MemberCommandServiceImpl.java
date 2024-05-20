@@ -3,6 +3,7 @@ package com.rockoon.domain.member.service;
 import com.rockoon.domain.member.dto.MemberRequest.MemberModifyDto;
 import com.rockoon.domain.member.dto.MemberRequest.MemberRegisterDto;
 import com.rockoon.domain.member.entity.Member;
+import com.rockoon.domain.member.entity.Role;
 import com.rockoon.domain.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -19,6 +20,7 @@ public class MemberCommandServiceImpl implements MemberCommandService {
     public Long registerMember(MemberRegisterDto memberRequest) {
         Member member = Member.of(memberRequest);
         member.setUsername(String.valueOf(UUID.randomUUID()));      //TODO USERNAME UTIL
+        member.convertRole(Role.USER);
         return memberRepository.save(member).getId();
     }
 

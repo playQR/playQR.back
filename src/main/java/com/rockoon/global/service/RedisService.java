@@ -34,9 +34,4 @@ public class RedisService {
         }
         redisTemplate.delete(token);
     }
-
-    public void setValueWithExpiration(String token, String value, long expireInMillis) {
-        ValueOperations<String, String> values = redisTemplate.opsForValue();
-        values.set(token, value, Duration.ofMillis(expireInMillis));
-    }
 }
