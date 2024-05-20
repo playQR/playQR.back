@@ -2,8 +2,10 @@ package com.rockoon.domain.board.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.rockoon.domain.board.dto.promotion.PromotionRequest;
+import com.rockoon.domain.board.entity.Promotion;
 import com.rockoon.domain.board.service.promotion.PromotionCommandService;
 import com.rockoon.domain.board.service.promotion.PromotionQueryService;
+import com.rockoon.domain.member.entity.Member;
 import com.rockoon.domain.member.service.MemberQueryService;
 import com.rockoon.global.config.test.DatabaseCleanUp;
 import com.rockoon.presentation.advice.ExceptionAdvice;
@@ -129,6 +131,40 @@ class PromotionApiControllerTest {
         //then
         perform.andDo(print())
                 .andExpect(jsonPath("$.message").value("존재하지 않는 회원입니다."));
+    }
+
+    @Test
+    @DisplayName("promotion id를 통해 원하는 promotion 정보를 가져옵니다.")
+    void getPromotion() throws Exception{
+        //given
+        Long promotionId = 3L;
+        Promotion promotion = Promotion.builder()
+                .team("team")
+                .content("content")
+                .title("title")
+                .maxAudience(3)
+                .writer(Member.builder()
+                        .id(4L)
+                        .name("name")
+                        .nickname("nickname")
+                        .profileImg("profileImg")
+                        .build())
+                .build();
+        when(promotionQueryService.getPromotionById(promotionId)).thenReturn(promotion);
+        //when
+        ResultActions perform = mockMvc.perform(MockMvcRequestBuilders.get("/api/promotions/" + promotionId)
+                .contentType(MediaType.APPLICATION_JSON));
+
+        //then
+        perform.andDo(print())
+                .andExpect(jsonPath("$.result.team").value(promotion.getTeam()))
+                .andExpect(jsonPath("$.result.content").value(promotion.getContent()))
+                .andExpect(jsonPath("$.result.title").value(promotion.getTitle()))
+                .andExpect(jsonPath("$.result.maxAudience").value(promotion.getMaxAudience()));
+
+        perform.andExpect(jsonPath("$.result.writer.name").value(promotion.getWriter().getName()))
+                .andExpect(jsonPath("$.result.writer.nickname").value(promotion.getWriter().getNickname()))
+                .andExpect(jsonPath("$.result.writer.profileImg").value(promotion.getWriter().getProfileImg()));
     }
 
 

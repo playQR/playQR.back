@@ -20,6 +20,7 @@ public class PromotionResponse {
         private String title;
         private String content;
         private String team;
+        private int maxAudience;
         private MemberResponse writer;
 
         private List<MusicResponse> musicList;

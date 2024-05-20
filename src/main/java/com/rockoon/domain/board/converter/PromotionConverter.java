@@ -16,6 +16,7 @@ public class PromotionConverter {
                 .title(promotion.getTitle())
                 .team(promotion.getTeam())
                 .content(promotion.getContent())
+                .maxAudience(promotion.getMaxAudience())
                 .writer(MemberConverter.toResponse(promotion.getWriter()))
                 .build();
     }
