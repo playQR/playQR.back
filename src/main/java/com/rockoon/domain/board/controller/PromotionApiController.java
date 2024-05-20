@@ -56,4 +56,12 @@ public class PromotionApiController {
                 )
         );
     }
+
+    @DeleteMapping("/{promotionId}/members/{memberId}")
+    public ApiResponseDto<Boolean> deletePromotion(@PathVariable Long memberId,
+                                                   @PathVariable Long promotionId) {
+        Member member = memberQueryService.getByMemberId(memberId);
+        promotionCommandService.removePromotion(member, promotionId);
+        return ApiResponseDto.onSuccess(true);
+    }
 }
