@@ -20,7 +20,11 @@ public enum ErrorStatus implements BaseCode{
     _FORBIDDEN(FORBIDDEN, 4002, "금지된 요청입니다."),
 
     //인증 관련 오류(4050 ~ 4099)
-
+    AUTH_INVALID_TOKEN(BAD_REQUEST, 4050, "유효하지 않은 토큰입니다."),
+    AUTH_INVALID_REFRESH_TOKEN(BAD_REQUEST,4051, "유효하지 않은 리프레시토큰입니다"),
+    AUTH_TOKEN_HAS_EXPIRED(BAD_REQUEST, 4053, "토큰의 유효기간이 만료되었습니다."),
+    AUTH_TOKEN_IS_UNSUPPORTED(BAD_REQUEST,4054, "서버에서 지원하는 형식의 토큰이 아닙니다."),
+    AUTH_IS_NULL(BAD_REQUEST,4055, "토큰 값이 존재하지 않습니다.(null)"),
     //회원 관련 오류(4100 ~ 4149)
     MEMBER_NOT_FOUND(NOT_FOUND, 4100, "존재하지 않는 회원입니다."),
 
