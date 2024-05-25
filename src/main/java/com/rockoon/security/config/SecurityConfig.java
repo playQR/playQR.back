@@ -84,6 +84,7 @@ public class SecurityConfig {
         List<RequestMatcher> requestMatchers = List.of(
                 antMatcher(HttpMethod.GET, "/"),
                 antMatcher(HttpMethod.POST, "/api/members"),
+                antMatcher(HttpMethod.GET,"/api/members/**"),
                 antMatcher(HttpMethod.GET, "/api/tokens/login")
         );
         return requestMatchers.toArray(RequestMatcher[]::new);
