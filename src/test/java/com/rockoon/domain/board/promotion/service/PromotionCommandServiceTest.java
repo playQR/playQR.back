@@ -11,13 +11,13 @@ import com.rockoon.domain.member.entity.Member;
 import com.rockoon.domain.member.entity.Role;
 import com.rockoon.domain.member.repository.MemberRepository;
 import com.rockoon.domain.music.dto.MusicRequest;
-import com.rockoon.domain.music.entity.Music;
+import com.rockoon.domain.music.entity.PromotionMusic;
 import com.rockoon.domain.music.repository.MusicRepository;
-import com.rockoon.domain.showOption.dto.OptionRequest;
+import com.rockoon.domain.music.repository.PromotionMusicRepository;
+import com.rockoon.domain.showOption.dto.ShowOptionRequest;
 import com.rockoon.domain.showOption.entity.Category;
 import com.rockoon.domain.showOption.entity.ShowOption;
 import com.rockoon.domain.showOption.repository.showOptionRepository;
-import com.rockoon.domain.team.service.TeamCommandService;
 import com.rockoon.global.config.test.DatabaseCleanUp;
 import com.rockoon.presentation.payload.code.ErrorStatus;
 import com.rockoon.presentation.payload.exception.PromotionHandler;
@@ -41,8 +41,6 @@ class PromotionCommandServiceTest {
     //command Service
     @Autowired
     PromotionCommandService promotionCommandService;
-    @Autowired
-    TeamCommandService teamCommandService;
     //repository
     @Autowired
     PromotionRepository promotionRepository;
@@ -53,6 +51,8 @@ class PromotionCommandServiceTest {
     @Autowired
     MusicRepository musicRepository;
     @Autowired
+    PromotionMusicRepository promotionMusicRepository;
+    @Autowired
     MemberRepository memberRepository;
     //else
     @Autowired
@@ -62,7 +62,7 @@ class PromotionCommandServiceTest {
     Member member1;
     Member member2;
     Long teamId;
-    List<OptionRequest> optionList = new ArrayList<>();
+    List<ShowOptionRequest> optionList = new ArrayList<>();
 
     List<ImageRequest> imageList = new ArrayList<>();
     List<MusicRequest> musicList = new ArrayList<>();
@@ -87,11 +87,11 @@ class PromotionCommandServiceTest {
                 .nickname("Hann")
                 .build();
 
-        optionList.add(OptionRequest.builder()
+        optionList.add(ShowOptionRequest.builder()
                 .category(Category.TIME)
                 .content("content")
                 .build());
-        optionList.add(OptionRequest.builder()
+        optionList.add(ShowOptionRequest.builder()
                 .category(Category.FEE)
                 .content("content")
                 .build());
@@ -127,7 +127,7 @@ class PromotionCommandServiceTest {
                 .maxAudience(3)
                 .build();
         //when
-        Long promotionId = promotionCommandService.savePromotion(member1, request);
+        Long promotionId = promotionCommandService.createPromotion(member1, request);
 
         //then
         Promotion promotion = promotionRepository.findById(promotionId).get();
@@ -150,12 +150,12 @@ class PromotionCommandServiceTest {
                 .build();
 
         //when
-        Long promotionId = promotionCommandService.savePromotion(member1, request);
+        Long promotionId = promotionCommandService.createPromotion(member1, request);
 
         //then
         List<ShowOption> optionsByBoardId = showOptionRepository.findOptionsByBoardId(promotionId);
         List<Image> imagesByBoardId = imageRepository.findImagesByBoardId(promotionId);
-        List<Music> musicsByBoardId = musicRepository.findMusicsByPromotionId(promotionId);
+        List<PromotionMusic> musicsByBoardId = promotionMusicRepository.findMusicsByPromotionId(promotionId);
         assertThat(optionsByBoardId).hasSize(2);
         assertThat(imagesByBoardId).hasSize(1);
         assertThat(musicsByBoardId).hasSize(2);
@@ -174,9 +174,9 @@ class PromotionCommandServiceTest {
                 .musicList(musicList)
                 .maxAudience(3)
                 .build();
-        Long promotionId = promotionCommandService.savePromotion(member1, request);
+        Long promotionId = promotionCommandService.createPromotion(member1, request);
         imageList.remove(0);
-        optionList.add(OptionRequest.builder().build());
+        optionList.add(ShowOptionRequest.builder().build());
         PromotionRequest updateRequest = PromotionRequest.builder()
                 .title("promotion update test")
                 .content("promotion")
@@ -193,7 +193,7 @@ class PromotionCommandServiceTest {
         assertThat(promotion.getTitle()).isEqualTo(updateRequest.getTitle());
         List<ShowOption> optionsByBoardId = showOptionRepository.findOptionsByBoardId(updatePromotionId);
         List<Image> imagesByBoardId = imageRepository.findImagesByBoardId(updatePromotionId);
-        List<Music> musicsByBoardId = musicRepository.findMusicsByPromotionId(updatePromotionId);
+        List<PromotionMusic> musicsByBoardId = promotionMusicRepository.findMusicsByPromotionId(updatePromotionId);
         assertThat(optionsByBoardId).hasSize(3);
         assertThat(imagesByBoardId).hasSize(0);
         assertThat(musicsByBoardId).hasSize(2);
@@ -231,7 +231,7 @@ class PromotionCommandServiceTest {
                 .musicList(musicList)
                 .maxAudience(3)
                 .build();
-        Long promotionId = promotionCommandService.savePromotion(member1, createRequest);
+        Long promotionId = promotionCommandService.createPromotion(member1, createRequest);
         //when
         log.info("db = {}", memberRepository.findById(member1.getId()).get());
         promotionCommandService.removePromotion(member1, promotionId);
@@ -251,7 +251,7 @@ class PromotionCommandServiceTest {
                 .musicList(musicList)
                 .maxAudience(3)
                 .build();
-        Long promotionId = promotionCommandService.savePromotion(member1, createRequest);
+        Long promotionId = promotionCommandService.createPromotion(member1, createRequest);
         //when
         assertThatThrownBy(() -> promotionCommandService.removePromotion(member2, promotionId))
                 .isInstanceOf(PromotionHandler.class)

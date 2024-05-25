@@ -7,7 +7,6 @@ import com.rockoon.domain.board.service.promotion.PromotionQueryService;
 import com.rockoon.domain.member.entity.Member;
 import com.rockoon.domain.member.entity.Role;
 import com.rockoon.domain.member.repository.MemberRepository;
-import com.rockoon.domain.team.service.TeamCommandService;
 import com.rockoon.global.config.test.DatabaseCleanUp;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.AfterEach;
@@ -33,8 +32,6 @@ class PromotionQueryServiceTest {
     PromotionQueryService promotionQueryService;
     @Autowired
     PromotionCommandService promotionCommandService;
-    @Autowired
-    TeamCommandService teamCommandService;
     //repository
     @Autowired
     MemberRepository memberRepository;
@@ -74,14 +71,14 @@ class PromotionQueryServiceTest {
                 .nickname("HHH")
                 .build();
         memberRepository.saveAll(List.of(member1, member2, member3));
-        savePromotion(5, member1);
-        savePromotion(5, member2);
-        savePromotion(5, member3);
+        createPromotion(5, member1);
+        createPromotion(5, member2);
+        createPromotion(5, member3);
     }
 
-    private void savePromotion(int count, Member member) {
+    private void createPromotion(int count, Member member) {
         for (int i = 0; i < count; i++) {
-            promotionCommandService.savePromotion(member,
+            promotionCommandService.createPromotion(member,
                     PromotionRequest.builder()
                             .title("title" + i)
                             .content("content")
@@ -95,6 +92,21 @@ class PromotionQueryServiceTest {
         databaseCleanUp.truncateAllEntity();
     }
 
+    @Test
+    @DisplayName("특정 id값을 가진 promotion을 가져옵니다.")
+    void getPromotionById() {
+        //given
+        PromotionRequest request = PromotionRequest.builder()
+                .title("title")
+                .content("content")
+                .build();
+        Long promotionId = promotionCommandService.createPromotion(member1, request);
+        //when
+        Promotion promotionById = promotionQueryService.getPromotionById(promotionId);
+        //then
+        assertThat(promotionById.getContent()).isEqualTo(request.getContent());
+        assertThat(promotionById.getTitle()).isEqualTo(request.getTitle());
+    }
     @Test
     @DisplayName("작성된 모든 promotion을 가져옵니다.")
     void getAllPromotion() {

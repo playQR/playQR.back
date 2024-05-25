@@ -7,7 +7,9 @@ import com.rockoon.domain.image.entity.Image;
 import com.rockoon.domain.image.repository.ImageRepository;
 import com.rockoon.domain.member.entity.Member;
 import com.rockoon.domain.music.entity.Music;
+import com.rockoon.domain.music.entity.PromotionMusic;
 import com.rockoon.domain.music.repository.MusicRepository;
+import com.rockoon.domain.music.repository.PromotionMusicRepository;
 import com.rockoon.domain.showOption.entity.ShowOption;
 import com.rockoon.domain.showOption.repository.showOptionRepository;
 import com.rockoon.global.util.ListUtil;
@@ -18,6 +20,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.stream.Collectors;
 
 
@@ -30,9 +33,10 @@ public class PromotionCommandServiceImpl implements PromotionCommandService {
     private final showOptionRepository showOptionRepository;
     private final ImageRepository imageRepository;
     private final MusicRepository musicRepository;
+    private final PromotionMusicRepository promotionMusicRepository;
 
     @Override
-    public Long savePromotion(Member member, PromotionRequest request) {
+    public Long createPromotion(Member member, PromotionRequest request) {
         Promotion savePromotion = promotionRepository.save(Promotion.of(member, request));
         saveOptionListInPromotion(request, savePromotion);
         saveImageListInPromotion(request, savePromotion);
@@ -48,7 +52,7 @@ public class PromotionCommandServiceImpl implements PromotionCommandService {
 
         showOptionRepository.deleteAllByBoardId(promotionId);
         imageRepository.deleteAllByBoardId(promotionId);
-        musicRepository.deleteAllByPromotionId(promotionId);
+        promotionMusicRepository.deleteAllByPromotionId(promotionId);
 
         updatePromotion.update(request);
         saveImageListInPromotion(request, updatePromotion);
@@ -65,7 +69,7 @@ public class PromotionCommandServiceImpl implements PromotionCommandService {
 
         showOptionRepository.deleteAllByBoardId(promotionId);
         imageRepository.deleteAllByBoardId(promotionId);
-        musicRepository.deleteAllByPromotionId(promotionId);
+        promotionMusicRepository.deleteAllByPromotionId(promotionId);
         promotionRepository.delete(removePromotion);
     }
 
@@ -85,8 +89,13 @@ public class PromotionCommandServiceImpl implements PromotionCommandService {
 
     private void saveMusicListInPromotion(PromotionRequest request, Promotion savePromotion) {
         if (!ListUtil.isNullOrEmpty(request.getMusicList())) {
-            musicRepository.saveAll(request.getMusicList().stream()
-                    .map(musicRequest -> Music.of(savePromotion, musicRequest)).collect(Collectors.toList()));
+            List<Music> musicList = musicRepository.saveAll(request.getMusicList().stream()
+                    .map(musicRequest -> Music.of(musicRequest)).collect(Collectors.toList()));
+            musicList.forEach(music -> promotionMusicRepository.save(
+                    PromotionMusic.of(savePromotion, music, true))
+            );
+            //TODO search -> whiteList music get & newly insert music -> save PromotionMusic
+            //TODO setting each isOpen value
         }
     }
 

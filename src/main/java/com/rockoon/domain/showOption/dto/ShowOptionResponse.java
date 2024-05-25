@@ -8,9 +8,9 @@ import lombok.NoArgsConstructor;
 
 @Data
 @Builder
-@NoArgsConstructor
 @AllArgsConstructor
-public class OptionRequest {
+@NoArgsConstructor
+public class ShowOptionResponse {
     private String content;
     private Category category;
 }
