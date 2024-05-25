@@ -6,10 +6,14 @@ import com.rockoon.domain.member.dto.MemberRequest.MemberRegisterDto;
 import com.rockoon.domain.member.entity.Member;
 import com.rockoon.domain.member.service.MemberCommandService;
 import com.rockoon.domain.member.service.MemberQueryService;
+import com.rockoon.global.annotation.auth.AuthUser;
+import com.rockoon.global.config.spring.WebMvcConfig;
 import com.rockoon.global.config.test.DatabaseCleanUp;
 import com.rockoon.presentation.advice.ExceptionAdvice;
 import com.rockoon.presentation.payload.code.ErrorStatus;
 import com.rockoon.presentation.payload.exception.MemberHandler;
+import com.rockoon.security.config.SecurityConfig;
+import com.rockoon.security.jwt.service.TokenService;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
@@ -37,7 +41,12 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @Slf4j
 @AutoConfigureMockMvc(addFilters = false)
 @WebMvcTest(controllers = MemberApiController.class,
-        includeFilters = @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = ExceptionAdvice.class))
+        includeFilters = {
+                @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = ExceptionAdvice.class),
+                @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = SecurityConfig.class),
+                @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = WebMvcConfig.class),
+                @ComponentScan.Filter(type = FilterType.ANNOTATION, classes = AuthUser.class)
+        })
 class MemberApiControllerTest {
     @Autowired
     private MockMvc mockMvc;
@@ -45,6 +54,8 @@ class MemberApiControllerTest {
     private ObjectMapper objectMapper;
     @MockBean
     private MemberQueryService memberQueryService;
+    @MockBean
+    private TokenService tokenService;
     @MockBean
     private MemberCommandService memberCommandService;
     @MockBean
