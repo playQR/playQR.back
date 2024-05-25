@@ -1,3 +1,11 @@
 spring:
   profiles:
     default: test
+
+  redis:
+    host: localhost
+    port: 6379
+
+app:
+  jwt:
+    secret: ${JWT_SECRET_KEY}
