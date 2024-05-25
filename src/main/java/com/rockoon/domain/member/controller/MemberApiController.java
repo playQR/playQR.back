@@ -10,10 +10,8 @@ import com.rockoon.domain.member.service.MemberQueryService;
 import com.rockoon.global.annotation.auth.AuthUser;
 import com.rockoon.presentation.payload.dto.ApiResponseDto;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
-@Slf4j
 @RequestMapping("/api/members")
 @RequiredArgsConstructor
 @RestController
@@ -29,7 +27,6 @@ public class MemberApiController {
     @PutMapping
     public ApiResponseDto<Long> modifyMemberInfo(@AuthUser Member member,
                                                  @RequestBody MemberModifyDto memberModifyDto) {
-        log.info("member = {}", member.getNickname());
         return ApiResponseDto.onSuccess(memberCommandService.modifyMemberInfo(member, memberModifyDto));
     }
 
