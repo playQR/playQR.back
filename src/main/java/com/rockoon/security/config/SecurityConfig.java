@@ -5,6 +5,7 @@ import com.rockoon.security.filter.JwtExceptionFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -14,6 +15,11 @@ import org.springframework.security.config.annotation.web.configurers.HttpBasicC
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.util.matcher.RequestMatcher;
+
+import java.util.List;
+
+import static org.springframework.security.web.util.matcher.AntPathRequestMatcher.antMatcher;
 
 @RequiredArgsConstructor
 @Configuration
@@ -59,7 +65,8 @@ public class SecurityConfig {
                     authorizeRequest
                             .requestMatchers("/ws/**", "/subscribe/**", "/publish/**").permitAll()
                             .requestMatchers("/", "/.well-known/**", "/css/**", "/*.ico", "/error", "/images/**").permitAll()
-                            .anyRequest().permitAll();
+                            .requestMatchers(permitAllRequest()).permitAll()
+                            .anyRequest().authenticated();
 //                            .requestMatchers(authorizationAdmin()).hasRole("ADMIN")
 //                            .requestMatchers(authorizationDormant()).hasRole("DORMANT")
 //                            .requestMatchers(authorizationGuest()).hasRole("GUEST")
@@ -71,5 +78,14 @@ public class SecurityConfig {
         httpSecurity
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .addFilterBefore(jwtExceptionFilter, JwtAuthenticationFilter.class);
+    }
+
+    private RequestMatcher[] permitAllRequest() {
+        List<RequestMatcher> requestMatchers = List.of(
+                antMatcher(HttpMethod.GET, "/"),
+                antMatcher(HttpMethod.POST, "/api/members"),
+                antMatcher(HttpMethod.GET, "/api/tokens/login")
+        );
+        return requestMatchers.toArray(RequestMatcher[]::new);
     }
 }

@@ -5,10 +5,12 @@ import com.rockoon.domain.member.repository.MemberRepository;
 import com.rockoon.presentation.payload.code.ErrorStatus;
 import com.rockoon.presentation.payload.exception.MemberHandler;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 
+@Slf4j
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 @Service
@@ -34,6 +36,7 @@ public class MemberQueryServiceImpl implements MemberQueryService{
 
     @Override
     public Member getMemberByUsername(String username) {
+        log.info("execute login");
         return memberRepository.findByUsername(username)
                 .orElseThrow(() -> new MemberHandler(ErrorStatus.MEMBER_NOT_FOUND));
     }

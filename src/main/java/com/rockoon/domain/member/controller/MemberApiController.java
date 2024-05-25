@@ -1,16 +1,19 @@
 package com.rockoon.domain.member.controller;
 
 import com.rockoon.domain.member.converter.MemberConverter;
-import com.rockoon.domain.member.dto.MemberRequest;
+import com.rockoon.domain.member.dto.MemberRequest.MemberModifyDto;
 import com.rockoon.domain.member.dto.MemberRequest.MemberRegisterDto;
 import com.rockoon.domain.member.dto.MemberResponse;
 import com.rockoon.domain.member.entity.Member;
 import com.rockoon.domain.member.service.MemberCommandService;
 import com.rockoon.domain.member.service.MemberQueryService;
+import com.rockoon.global.annotation.auth.AuthUser;
 import com.rockoon.presentation.payload.dto.ApiResponseDto;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
+@Slf4j
 @RequestMapping("/api/members")
 @RequiredArgsConstructor
 @RestController
@@ -23,10 +26,10 @@ public class MemberApiController {
         return ApiResponseDto.onSuccess(memberCommandService.registerMember(memberRegisterDto));
     }
 
-    @PutMapping("/{memberId}")          //TODO path -> memberId 삭제, jwt token을 사용해서 member 바로 조회
-    public ApiResponseDto<Long> modifyMemberInfo(@PathVariable Long memberId,
-                                 @RequestBody MemberRequest.MemberModifyDto memberModifyDto) {
-        Member member = memberQueryService.getByMemberId(memberId);
+    @PutMapping
+    public ApiResponseDto<Long> modifyMemberInfo(@AuthUser Member member,
+                                                 @RequestBody MemberModifyDto memberModifyDto) {
+        log.info("member = {}", member.getNickname());
         return ApiResponseDto.onSuccess(memberCommandService.modifyMemberInfo(member, memberModifyDto));
     }
 
