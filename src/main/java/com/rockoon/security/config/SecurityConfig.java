@@ -66,6 +66,7 @@ public class SecurityConfig {
                             .requestMatchers("/ws/**", "/subscribe/**", "/publish/**").permitAll()
                             .requestMatchers("/", "/.well-known/**", "/css/**", "/*.ico", "/error", "/images/**").permitAll()
                             .requestMatchers(permitAllRequest()).permitAll()
+                            .requestMatchers(additionalSwaggerRequests()).permitAll()
                             .anyRequest().authenticated();
 //                            .requestMatchers(authorizationAdmin()).hasRole("ADMIN")
 //                            .requestMatchers(authorizationDormant()).hasRole("DORMANT")
@@ -86,6 +87,19 @@ public class SecurityConfig {
                 antMatcher(HttpMethod.POST, "/api/members"),
                 antMatcher(HttpMethod.GET,"/api/members/**"),
                 antMatcher(HttpMethod.GET, "/api/tokens/login")
+        );
+        return requestMatchers.toArray(RequestMatcher[]::new);
+    }
+    private RequestMatcher[] additionalSwaggerRequests() {
+        List<RequestMatcher> requestMatchers = List.of(
+                antMatcher("/swagger-ui/**"),
+                antMatcher("/swagger-ui"),
+                antMatcher("/swagger-ui.html"),
+                antMatcher("/swagger/**"),
+                antMatcher("/swagger-resources/**"),
+                antMatcher("/v3/api-docs/**"),
+                antMatcher("/profile")
+
         );
         return requestMatchers.toArray(RequestMatcher[]::new);
     }
