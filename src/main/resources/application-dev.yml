@@ -1,0 +1,14 @@
+spring:
+  datasource:
+    url: ${MYSQL_URL}
+    username: root
+    password: springproject
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+
+  redis:
+    host: ${REDIS_HOST}
+    port: 6379
