@@ -1,14 +1,5 @@
 spring:
-  datasource:
-    url: jdbc:mysql://localhost:3306/rockoon?useSSL=true&useUnicode=true&serverTimezone=Asia/Seoul
-    username: root
-    password: springproject
-    driver-class-name: com.mysql.cj.jdbc.Driver
-
   jpa:
-    hibernate:
-      ddl-auto: create
-      #나중에 update로 변경
     properties:
       hibernate:
         #show_sql: true
@@ -16,17 +7,16 @@ spring:
         default_batch_fetch_size: 100
         dialect: org.hibernate.dialect.MySQLDialect
 
+
   logging.level:
     org.hibernate.SQL: debug
     org.hibernate.type: trace
 
   profiles:
+    active: ${SPRING_ACTIVE_PROFILE}
     include:
       - security
 
-  redis:
-    host: localhost
-    port: 6379
 
 springdoc:
   swagger-ui:

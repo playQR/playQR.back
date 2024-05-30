@@ -1,0 +1,15 @@
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/rockoon?useSSL=true&useUnicode=true&serverTimezone=Asia/Seoul
+    username: root
+    password: springproject
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: create
+
+  redis:
+    host: localhost
+    port: 6379
+
