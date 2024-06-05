@@ -61,9 +61,10 @@ jobs:
           chmod u+x ./kustomize
 
       - name: GKE Deploy
+        working-directory: ./k8s
         run: |
           gcloud container clusters get-credentials $GKE_CLUSTER --zone $GKE_ZONE
-          ./kustomize build k8s | kubectl apply -f -
+          ./kustomize build . | kubectl apply -f -
           kubectl rollout status deployment/$DEPLOYMENT_NAME
           kubectl get services -o wide
         env:
