@@ -62,3 +62,7 @@ jobs:
           ./kustomize build . | kubectl apply -f -
           kubectl rollout status deployment/$DEPLOYMENT_NAME
           kubectl get services -o wide
+        env:
+          USE_GKE_GCLOUD_AUTH_PLUGIN: True
+        working-directory: ./path/to/your/kustomization
+
