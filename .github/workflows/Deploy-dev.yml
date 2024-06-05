@@ -1,12 +1,3 @@
-# This workflow uses actions that are not certified by GitHub.
-# They are provided by a third-party and are governed by
-# separate terms of service, privacy policy, and support
-# documentation.
-
-# GitHub recommends pinning actions to a commit SHA.
-# To get a newer version, you will need to update the SHA.
-# You can also reference a tag or branch, but the action may change without warning.
-
 name: Build and Deploy to GKE
 
 on:
@@ -43,26 +34,30 @@ jobs:
       #   run: ./gradlew jib
       ## 데이터베이스 연결 문제로 빌드가 안 되는 것 같음. 나중에 제대로 연결해서 빌드해볼 것.
 
-      - name: Setup Google Cloud CLI    # Google Cloud와 연결
+      - name: Setup Google Cloud CLI
         uses: GoogleCloudPlatform/github-actions/setup-gcloud@0.1.3
         env:
           ACTIONS_ALLOW_UNSECURE_COMMANDS: true
         with:
-          service_account_key: ${{secrets.GCP_SA_KEY}} # json으로 저장했던 key
-          project_id: ${{secrets.GCP_PROJECT_ID}} # secrets 환경 변수에 설정했던 프로젝트 ID
+          service_account_key: ${{secrets.GCP_SA_KEY}}
+          project_id: ${{secrets.GCP_PROJECT_ID}}
 
-      - name: Set up Kustomize # Kustomize 설치
+      - name: Install gke-gcloud-auth-plugin
+        run: |
+          sudo apt-get update && sudo apt-get install google-cloud-sdk-gke-gcloud-auth-plugin
+        env:
+          CLOUDSDK_CORE_PROJECT: ${{ secrets.GCP_PROJECT_ID }}
+
+      - name: Set up Kustomize
         run: |
           curl -o kustomize --location https://github.com/kubernetes-sigs/kustomize/releases/download/v3.1.0/kustomize_3.1.0_linux_amd64
           chmod u+x ./kustomize
 
-      - name: GKE Deploy # deployment와 service(LoadBalancer) 구축
+      - name: GKE Deploy
         run: |
           gcloud container clusters get-credentials $GKE_CLUSTER --zone $GKE_ZONE
-          ./kustomize build . | kubectl apply -f -
+          ./kustomize build k8s | kubectl apply -f -
           kubectl rollout status deployment/$DEPLOYMENT_NAME
           kubectl get services -o wide
         env:
           USE_GKE_GCLOUD_AUTH_PLUGIN: True
-        working-directory: ./path/to/your/kustomization
-

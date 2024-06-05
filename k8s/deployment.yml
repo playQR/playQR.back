@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: play-barcode-dev
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: play-barcode-dev
+  template:
+    metadata:
+      labels:
+        app: play-barcode-dev
+    spec:
+      containers:
+        - name: play-barcode-dev
+          image: gcr.io/${PROJECT_ID}/play-barcode-dev:latest
+          ports:
+            - containerPort: 8080
+          env:
+            - name: JWT_SECRET_KEY
+              value: "$(JWT_SECRET_KEY)"
+            - name: SPRING_ACTIVE_PROFILE
+              value: "$(SPRING_ACTIVE_PROFILE)"
+            - name: MYSQL_URL
+              value: "$(MYSQL_URL)"
+            - name: REDIS_HOST
+              value: "$(REDIS_HOST)"
