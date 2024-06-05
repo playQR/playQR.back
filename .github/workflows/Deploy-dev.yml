@@ -10,7 +10,6 @@ permissions:
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
 
     steps:
@@ -26,22 +25,42 @@ jobs:
         with:
           java-version: '17'
           distribution: 'temurin'
-      # 환경 변수 설정
-      - name: Set environment values
-        run: |
-          cd ./src/main/resources
-          touch ./env.properties
-          echo "${{ secrets.ENV }}" > ./env.properties
-        shell: bash
-      # Gradle build (Test 제외)
-      - name: Build with Gradle
-        uses: gradle/gradle-build-action@67421db6bd0bf253fb4bd25b31ebb98943c375e1
+      - name: Docker hub login
+        uses: docker/login-action@v3
         with:
-          arguments: clean build -x test
-      # Docker build
-      - name: Docker build
-        run: |
-          docker login -u ${{ secrets.DOCKERHUB_USERNAME }} -p ${{ secrets.DOCKERHUB_PASSWORD }}
-          docker build -t play-barcode/play-barcode.back .
-          docker tag play-barcode play-barcode/play-barcode.back:${GITHUB_SHA::7}
-          docker push play-barcode/play-barcode.back:${GITHUB_SHA::7}
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_PASSWORD }}
+
+      - name: build and push to docker hub
+        uses: docker/build-push-action@ad44023a93711e3deb337508980b4b5e9bcdc5dc
+        with:
+          context: .
+          push: true
+          tags: play-barcode/home:${{ secrets.VERSION }}
+          labels: ${{ secrets.VERSION }}
+
+      - name: google auth
+        id: "auth"
+        uses: "google-github-actions/auth@v1"
+        with:
+          credentials_json: "${{ secrets.GCP_SA_KEY }}"
+
+
+      - name: set up Cloud SDK
+        uses: "google-github-actions/setup-gcloud@v1"
+        with:
+          project_id: ${{ secrets.GCP_PROJECT_ID }}
+
+      - name: use gcloud cli
+        run: "gcloud info"
+
+      - name: gcp deploy
+        run: |-
+          gcloud compute instances update-container "${{ secrets.GCP_INSTANCE_NAME }}" \
+            --zone "${{ secrets.GCP_ZONE }}" \
+            --container-image "play-barcode/home:${{ secrets.VERSION }}"
+
+      - name: gcp reset
+        run: |-
+          gcloud compute instances reset "${{ secrets.GCP_INSTANCE_NAME }}" \
+            --zone "${{ secrets.GCP_ZONE }}"
