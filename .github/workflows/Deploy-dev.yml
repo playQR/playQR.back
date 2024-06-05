@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - dev
+
 env:
   PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
   GKE_CLUSTER: ${{ secrets.GKE_CLUSTER }}
@@ -21,22 +22,25 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: check out the repo
+      - name: Check out the repo
         uses: actions/checkout@v3
 
       # Setup gcloud CLI
-      - uses: google-github-actions/setup-gcloud@94337306dda8180d967a56932ceb4ddcf01edae7
+      - name: Set up Google Cloud SDK
+        uses: google-github-actions/setup-gcloud@v1
         with:
           service_account_key: ${{ secrets.GCP_SA_KEY }}
           project_id: ${{ secrets.GCP_PROJECT_ID }}
+          export_default_credentials: true
 
-      # Configure Docker to use the gcloud command-line tool as a credential
-      # helper for authentication
-      - run: |-
+      # Configure Docker to use the gcloud command-line tool as a credential helper for authentication
+      - name: Configure Docker
+        run: |-
           gcloud --quiet auth configure-docker
+
       # Get the GKE credentials so we can deploy to the cluster
       - name: Set up GKE credentials
-        uses: google-github-actions/get-gke-credentials@v0
+        uses: google-github-actions/get-gke-credentials@v0.6.0
         with:
           cluster_name: ${{ secrets.GKE_CLUSTER }}
           location: ${{ secrets.GKE_ZONE }}
@@ -50,22 +54,22 @@ jobs:
             --build-arg GITHUB_SHA="$GITHUB_SHA" \
             --build-arg GITHUB_REF="$GITHUB_REF" \
             .
-      # Push the Docker image to Google Artifact Registry
+
+      # Push the Docker image to Google Container Registry
       - name: Publish
         run: |-
           docker push "gcr.io/$PROJECT_ID/$IMAGE:$GITHUB_SHA"
+
       # Set up kustomize
       - name: Set up Kustomize
         run: |-
           curl -sfLo kustomize https://github.com/kubernetes-sigs/kustomize/releases/download/v3.1.0/kustomize_3.1.0_linux_amd64
           chmod u+x ./kustomize
+
       # Deploy the Docker image to the GKE cluster
       - name: Deploy
         run: |-
-          # replacing the image name in the k8s template
           ./kustomize edit set image gcr.io/$PROJECT_ID/$IMAGE:v1=gcr.io/$PROJECT_ID/$IMAGE:$GITHUB_SHA
           ./kustomize build . | kubectl apply -f -
           kubectl rollout status deployment/$DEPLOYMENT_NAME
           kubectl get services -o wide
-
-
