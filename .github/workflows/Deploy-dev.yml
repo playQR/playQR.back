@@ -57,8 +57,8 @@ jobs:
 
       - name: Set up Kustomize
         run: |
-          curl -o /usr/local/bin/kustomize --location https://github.com/kubernetes-sigs/kustomize/releases/download/v3.1.0/kustomize_3.1.0_linux_amd64
-          chmod u+x /usr/local/bin/kustomize
+          sudo curl -o /usr/local/bin/kustomize --location https://github.com/kubernetes-sigs/kustomize/releases/download/v3.1.0/kustomize_3.1.0_linux_amd64
+          sudo chmod u+x /usr/local/bin/kustomize
 
       - name: GKE Deploy
         working-directory: ./k8s
