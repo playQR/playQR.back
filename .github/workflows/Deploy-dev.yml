@@ -78,6 +78,12 @@ jobs:
         run: |
           ls -la ./k8s
 
+      - name: Get GKE credentials
+        run: |
+          gcloud container clusters get-credentials $GKE_CLUSTER --zone $GKE_ZONE --project $PROJECT_ID
+        env:
+          CLOUDSDK_CORE_PROJECT: ${{ secrets.GCP_PROJECT_ID }}
+
       - name: Create Kubernetes secret for GCR
         run: |
           kubectl create secret docker-registry gcr-json-key \
