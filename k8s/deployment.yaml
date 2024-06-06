@@ -27,4 +27,4 @@ spec:
             - name: REDIS_HOST
               value: "$(REDIS_HOST)"
       imagePullSecrets:
-        - name: registry-secret
+        - name: recred
