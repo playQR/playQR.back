@@ -86,7 +86,11 @@ jobs:
 
       - name: Create Kubernetes secret for GCR
         run: |
-          kubectl create secret docker-registry gcr-json-key --docker-server=https://gcr.io --docker-username=_json_key --docker-password=${{ secrets.GCP_SA_KEY }} --docker-email=${{ secrets.GOOGLE_EMAIL }}
+          if ! kubectl get secret gcr-json-key; then
+            kubectl create secret docker-registry gcr-json-key --docker-server=https://gcr.io --docker-username=_json_key --docker-password=${{ secrets.GCP_SA_KEY }} --docker-email=${{ secrets.GOOGLE_EMAIL }}
+          else
+            echo "Secret gcr-json-key already exists, skipping creation."
+          fi
         env:
           USE_GKE_GCLOUD_AUTH_PLUGIN: True
 
