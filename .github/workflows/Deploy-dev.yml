@@ -67,7 +67,7 @@ jobs:
       - name: GKE Deploy
         working-directory: ./k8s
         run: |
-          gcloud container clusters get-credentials $GKE_CLUSTER --zone $GKE_ZONE
+          gcloud container clusters get-credentials $GKE_CLUSTER --zone $GKE_ZONE --project $PROJECT_ID
           /usr/local/bin/kustomize build . | kubectl apply -f -
           kubectl rollout status deployment/$DEPLOYMENT_NAME
           kubectl get services -o wide
