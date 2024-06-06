@@ -45,6 +45,10 @@ jobs:
           service_account_key: ${{secrets.GCP_SA_KEY}}
           project_id: ${{secrets.GCP_PROJECT_ID}}
 
+
+      - name: Build with Gradle
+        run: ./gradlew build
+
       # Build the Docker image
       - name: Build Docker Image
         run: |-
