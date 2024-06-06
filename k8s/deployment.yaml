@@ -26,3 +26,5 @@ spec:
               value: "$(MYSQL_URL)"
             - name: REDIS_HOST
               value: "$(REDIS_HOST)"
+      imagePullSecrets:
+        - name: gcr-json-key

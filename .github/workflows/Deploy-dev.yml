@@ -30,9 +30,11 @@ jobs:
         with:
           java-version: 17
 
-      # - name: Build with Gradle
-      #   run: ./gradlew jib
-      ## 데이터베이스 연결 문제로 빌드가 안 되는 것 같음. 나중에 제대로 연결해서 빌드해볼 것.
+      - name: Build Docker image
+        run: |
+          echo ${{ secrets.GCP_SA_KEY }} | docker login -u _json_key --password-stdin https://gcr.io
+          docker build -t gcr.io/${{ secrets.GCP_PROJECT_ID }}/$IMAGE:latest .
+          docker push gcr.io/${{ secrets.GCP_PROJECT_ID }}/$IMAGE:latest
 
       - name: Setup Google Cloud SDK
         run: |
@@ -59,11 +61,21 @@ jobs:
         run: |
           sudo curl -o /usr/local/bin/kustomize --location https://github.com/kubernetes-sigs/kustomize/releases/download/v3.1.0/kustomize_3.1.0_linux_amd64
           sudo chmod u+x /usr/local/bin/kustomize
-          
+
       - name: Check k8s directory
         run: |
           ls -la ./k8s
-          
+
+      - name: Create Kubernetes secret for GCR
+        run: |
+          kubectl create secret docker-registry gcr-json-key \
+            --docker-server=https://gcr.io \
+            --docker-username=_json_key \
+            --docker-password="${{ secrets.GCP_SA_KEY }}" \
+            --docker-email=${{ secrets.GOOGLE_EMAIL }}
+        env:
+          USE_GKE_GCLOUD_AUTH_PLUGIN: True
+
       - name: GKE Deploy
         working-directory: ./k8s
         run: |
