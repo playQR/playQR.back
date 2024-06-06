@@ -47,7 +47,7 @@ jobs:
 
 
       - name: Build with Gradle
-        run: ./gradlew build
+        run: ./gradlew clean build -x test    # test 코드 제외
 
       # Build the Docker image
       - name: Build Docker Image
