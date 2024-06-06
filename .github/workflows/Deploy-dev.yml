@@ -30,20 +30,20 @@ jobs:
         with:
           java-version: 17
 
-      - name: Build Docker image
-        run: |
-          echo "${{ secrets.GCP_SA_KEY }}" > /tmp/gcp-key.json
-          gcloud auth activate-service-account --key-file=/tmp/gcp-key.json
-          gcloud auth configure-docker
-          docker build -t gcr.io/${{ secrets.GCP_PROJECT_ID }}/$IMAGE:latest .
-          docker push gcr.io/${{ secrets.GCP_PROJECT_ID }}/$IMAGE:latest
-
       - name: Setup Google Cloud SDK
         run: |
           echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] http://packages.cloud.google.com/apt cloud-sdk main" | sudo tee -a /etc/apt/sources.list.d/google-cloud-sdk.list
           sudo apt-get install apt-transport-https ca-certificates -y
           curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key --keyring /usr/share/keyrings/cloud.google.gpg add -
           sudo apt-get update && sudo apt-get install google-cloud-sdk -y
+
+      - name: Build Docker image
+        run: |
+          gcloud auth login
+          gcloud auth configure-docker \
+          asia-northeast3-docker.pkg.dev
+          docker build -t gcr.io/${{ secrets.GCP_PROJECT_ID }}/$IMAGE:latest .
+          docker push gcr.io/${{ secrets.GCP_PROJECT_ID }}/$IMAGE:latest
 
       - name: Authenticate to Google Cloud
         uses: GoogleCloudPlatform/github-actions/setup-gcloud@0.1.3
