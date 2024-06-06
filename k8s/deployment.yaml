@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: play-barcode-dev
-          image: gcr.io/${PROJECT_ID}/play-barcode-dev:latest
+          image: gcr.io/play-barcode-dev/play-barcode-dev:latest
           ports:
             - containerPort: 8080
           env:

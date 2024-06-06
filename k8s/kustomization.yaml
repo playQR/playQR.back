@@ -7,5 +7,5 @@ resources:
 
 images:
   - name: play-barcode-dev
-    newName: gcr.io/${PROJECT_ID}/play-barcode-dev
+    newName: gcr.io/play-barcode-dev/play-barcode-dev
     newTag: latest
