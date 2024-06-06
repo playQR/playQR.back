@@ -53,7 +53,7 @@ jobs:
       - name: Build Docker Image
         run: |-
           docker build \
-            --tag "gcr.io/$PROJECT_ID/$IMAGE:$GITHUB_SHA" \
+            --tag "play-barcode-registry/$PROJECT_ID/$IMAGE:$GITHUB_SHA" \
             --build-arg GITHUB_SHA="$GITHUB_SHA" \
             --build-arg GITHUB_REF="$GITHUB_REF" \
             .
@@ -61,7 +61,7 @@ jobs:
       - name: Publish Image to Artifact Registry
         run: |-
           gcloud auth configure-docker
-          docker push "gcr.io/$PROJECT_ID/$IMAGE:$GITHUB_SHA"
+          docker push "play-barcode-registry/$PROJECT_ID/$IMAGE:$GITHUB_SHA"
 
       - name: Install gke-gcloud-auth-plugin
         run: |
@@ -92,7 +92,7 @@ jobs:
         working-directory: ./k8s
         run: |
           gcloud container clusters get-credentials $GKE_CLUSTER --zone $GKE_ZONE --project $PROJECT_ID
-          /usr/local/bin/kustomize edit set image gcr.io/$PROJECT_ID/$IMAGE:v1=gcr.io/$PROJECT_ID/$IMAGE:$GITHUB_SHA
+          docker pull $GKE_ZONE-docker.pkg.dev/$PROJECT-ID/play-barcode-registry/$IMAGE:TAG
           /usr/local/bin/kustomize build . | kubectl apply -f -
           kubectl rollout status deployment/$DEPLOYMENT_NAME --timeout=3m || true
           kubectl get services -o wide
