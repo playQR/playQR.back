@@ -89,7 +89,7 @@ jobs:
             --docker-server=https://gcr.io \
             --docker-username=_json_key \
             --docker-password="$(cat gcp-sa-key.json)" \
-            --docker-email=${{ secrets.GOOGLE_EMAIL }}
+            --docker-email=${{ secrets.GKE_CLIENT_EMAIL }}
 
 
       - name: GKE Deploy with Pull image from Docker
