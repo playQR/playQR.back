@@ -78,31 +78,31 @@ jobs:
         run: |
           ls -la ./k8s
 
-      - name: Get GKE credentials
-        run: |
-          gcloud container clusters get-credentials $GKE_CLUSTER --zone $GKE_ZONE --project $PROJECT_ID
-        env:
-          CLOUDSDK_CORE_PROJECT: ${{ secrets.GCP_PROJECT_ID }}
-
-      - name: Create Kubernetes secret for GCR
-        run: |
-          
-          if ! kubectl get secret gcr-json-key; then
-            echo "${{ secrets.GCP_SA_KEY }}" > /tmp/gcp-key.json
-            kubectl create secret docker-registry gcr-json-key --docker-server=https://gcr.io --docker-username=_json_key --docker-password="$(cat /tmp/gcp-key.json)" --docker-email=${{ secrets.GOOGLE_EMAIL }}
-          else
-            echo "Secret gcr-json-key already exists, skipping creation."
-          fi
-        env:
-          USE_GKE_GCLOUD_AUTH_PLUGIN: True
+#      - name: Get GKE credentials
+#        run: |
+#          gcloud container clusters get-credentials $GKE_CLUSTER --zone $GKE_ZONE --project $PROJECT_ID
+#        env:
+#          CLOUDSDK_CORE_PROJECT: ${{ secrets.GCP_PROJECT_ID }}
+#
+#      - name: Create Kubernetes secret for GCR
+#        run: |
+#
+#          if ! kubectl get secret gcr-json-key; then
+#            echo "${{ secrets.GCP_SA_KEY }}" > /tmp/gcp-key.json
+#            kubectl create secret docker-registry gcr-json-key --docker-server=https://gcr.io --docker-username=_json_key --docker-password="$(cat /tmp/gcp-key.json)" --docker-email=${{ secrets.GOOGLE_EMAIL }}
+#          else
+#            echo "Secret gcr-json-key already exists, skipping creation."
+#          fi
+#        env:
+#          USE_GKE_GCLOUD_AUTH_PLUGIN: True
 
       - name: GKE Deploy with Pull image from Docker
         working-directory: ./k8s
         run: |
           gcloud container clusters get-credentials $GKE_CLUSTER --zone $GKE_ZONE --project $PROJECT_ID
+          kubectl create deployment play-barcode-dev --image=gcr.io/$PROJECT_ID/$IMAGE_ID:$GITHUB_SHA
           /usr/local/bin/kustomize build . | kubectl apply -f -
           kubectl rollout status deployment/$DEPLOYMENT_NAME --timeout=3m || true
           kubectl get services -o wide
-          kubectl get pods -o wide
         env:
           USE_GKE_GCLOUD_AUTH_PLUGIN: True
