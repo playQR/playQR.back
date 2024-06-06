@@ -100,8 +100,8 @@ jobs:
         working-directory: ./k8s
         run: |
           gcloud container clusters get-credentials $GKE_CLUSTER --zone $GKE_ZONE --project $PROJECT_ID
-          kubectl create deployment play-barcode-dev --image=gcr.io/$PROJECT_ID/$IMAGE_ID:$GITHUB_SHA
           /usr/local/bin/kustomize build . | kubectl apply -f -
+          kubectl set image deploy gcr.io/$PROJECT_ID/$IMAGE:v1=gcr.io/$PROJECT_ID/$IMAGE:$GITHUB_SHA
           kubectl rollout status deployment/$DEPLOYMENT_NAME --timeout=3m || true
           kubectl get services -o wide
         env:

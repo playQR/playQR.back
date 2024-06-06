@@ -4,8 +4,3 @@ kind: Kustomization
 resources:
   - deployment.yaml
   - service.yaml
-
-images:
-  - name: play-barcode-dev
-    newName: gcr.io/play-barcode-dev/play-barcode-dev
-    newTag: latest
