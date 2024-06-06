@@ -84,12 +84,12 @@ jobs:
 #
       - name: Create Kubernetes secret for GCR
         run: |
-          docker login https://gcr.io
+          echo "${{ secrets.GCP_SA_KEY }}" > gcp-sa-key.json
           kubectl create secret docker-registry regcred \
-          --docker-server=https://gcr.io \
-          --docker-username=_json_key \
-          --docker-password="${{ secrets.GCP_SA_KEY }}" \
-          --docker-email=${{ secrets.GKE_CLIENT_EMAIL }}
+            --docker-server=https://gcr.io \
+            --docker-username=_json_key \
+            --docker-password="$(cat gcp-sa-key.json)" \
+            --docker-email=${{ secrets.GOOGLE_EMAIL }}
 
 
       - name: GKE Deploy with Pull image from Docker
