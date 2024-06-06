@@ -58,8 +58,9 @@ jobs:
             --build-arg GITHUB_REF="$GITHUB_REF" \
             .
       # Push the Docker image to Google Artifact Registry
-      - name: Publish Imaget to Artifact Registry
+      - name: Publish Image to Artifact Registry
         run: |-
+          gcloud auth configure-docker
           docker push "gcr.io/$PROJECT_ID/$IMAGE:$GITHUB_SHA"
 
       - name: Install gke-gcloud-auth-plugin
