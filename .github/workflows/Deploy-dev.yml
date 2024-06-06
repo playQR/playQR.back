@@ -96,7 +96,7 @@ jobs:
         working-directory: ./k8s
         run: |
           /usr/local/bin/kustomize build . | kubectl apply -f -
-          kubectl set image deployment/$DEPLOYMENT_NAME play-barcode-dev=play-barcode-dev:v1
+          kubectl set image deployment/$DEPLOYMENT_NAME $DEPLOYMENT_NAME=gcr.io/$PROJECT_ID/$IMAGE:$GITHUB_SHA
           kubectl get pods
           kubectl rollout status deployment/$DEPLOYMENT_NAME --timeout=5m
           kubectl get services -o wide
