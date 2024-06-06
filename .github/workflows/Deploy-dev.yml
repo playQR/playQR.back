@@ -78,22 +78,6 @@ jobs:
         run: |
           ls -la ./k8s
 
-      - name: Get GKE credentials
-        run: |
-          gcloud container clusters get-credentials $GKE_CLUSTER --zone $GKE_ZONE --project $PROJECT_ID
-        env:
-          CLOUDSDK_CORE_PROJECT: ${{ secrets.GCP_PROJECT_ID }}
-
-      - name: Create Kubernetes secret for GCR
-        run: |
-          if ! kubectl get secret gcr-json-key; then
-            kubectl create secret docker-registry gcr-json-key --docker-server=https://gcr.io --docker-username=_json_key --docker-password=${{ secrets.GCP_SA_KEY }} --docker-email=${{ secrets.GOOGLE_EMAIL }}
-          else
-            echo "Secret gcr-json-key already exists, skipping creation."
-          fi
-        env:
-          USE_GKE_GCLOUD_AUTH_PLUGIN: True
-
       - name: GKE Deploy with Pull image from Docker
         working-directory: ./k8s
         run: |
