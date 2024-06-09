@@ -18,10 +18,7 @@ spec:
           imagePullPolicy: Always
           ports:
             - containerPort: 8080
-          command:
-            - "/bin/bash"
-            - "-ec"
-            - "while :; do echo '.'; sleep 5; done"
+          
           env:
             - name: JWT_SECRET_KEY
               value: "$(JWT_SECRET_KEY)"
