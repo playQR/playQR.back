@@ -3,8 +3,7 @@ kind: Kustomization
 
 resources:
 - deployment.yaml
-- service.yaml
-#images:
-#- digest: sha256:953557967227b9865de0cea108829abfb2815e083fee7e0e5cf409ed2f13cbda
-#  name: gcr.io/play-barcode-dev/play-barcode-dev:v1
-#  newName: gcr.io/play-barcode-dev/play-barcode-dev
+- service-cluster.yaml
+- service-loadBalancer.yaml
+- service-node.yaml
+

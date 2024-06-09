@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: play-barcode-dev
+spec:
+  type: LoadBalancer
+  selector:
+    app: play-barcode-dev
+  ports:
+    - name: http
+      port: 80 # 로드밸런서로 트래픽이 들어오면 서비스의 80번 포트로 전달하고
+      targetPort: 80 # Pod의 80번 포트로 전달
+      protocol: TCP
+#status: 	   # 프로비저닝된 로드 밸런서 정보
+#  loadBalancer:
+#    ingress:
+#      - ip: 192.0.2.127

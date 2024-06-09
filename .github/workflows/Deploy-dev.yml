@@ -96,4 +96,7 @@ jobs:
 
       - name: External Ip
         run : |
-          gcloud compute addresses create play-barcode-dev-ip --region asia-northeast3
+          gcloud compute instances add-access-config \
+          --access-config-name "External NAT" \
+          --address play-barcode-dev-ip \
+          --region asia-northeast3
