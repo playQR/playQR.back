@@ -3,7 +3,5 @@ kind: Kustomization
 
 resources:
 - deployment.yaml
-- service-cluster.yaml
-- service-loadBalancer.yaml
-- service-node.yaml
+- service-load-balancer.yaml
 
