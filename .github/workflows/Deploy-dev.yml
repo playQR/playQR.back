@@ -71,8 +71,8 @@ jobs:
 
       - name: Set up Kustomize
         run: |
-          sudo curl -o /usr/local/bin/kustomize --location https://github.com/kubernetes-sigs/kustomize/releases/download/v3.1.0/kustomize_3.1.0_linux_amd64
-          sudo chmod u+x /usr/local/bin/kustomize
+          curl -s "https://raw.githubusercontent.com/kubernetes-sigs/kustomize/master/hack/install_kustomize.sh"  | bash
+          sudo install -m 0755 kustomize /usr/local/bin/kustomize
 
       - name: Check k8s directory
         run: |
@@ -81,22 +81,22 @@ jobs:
       - name: Get GKE credentials
         run: |
           gcloud container clusters get-credentials $GKE_CLUSTER --zone $GKE_ZONE --project $PROJECT_ID
-#
-      - name: Create Kubernetes secret for GCR
-        run: |
-          echo "${{ secrets.GCP_SA_KEY }}" > gcp-sa-key.json
-          kubectl create secret docker-registry regcred \
-            --docker-server=https://gcr.io \
-            --docker-username=_json_key \
-            --docker-password="$(cat gcp-sa-key.json)" \
-            --docker-email=${{ secrets.GKE_CLIENT_EMAIL }}
+
+#      - name: Create Kubernetes secret for GCR
+#        run: |
+#          echo "${{ secrets.GCP_SA_KEY }}" > gcp-sa-key.json
+#          kubectl create secret docker-registry regcred \
+#            --docker-server=https://gcr.io \
+#            --docker-username=_json_key \
+#            --docker-password="$(cat gcp-sa-key.json)" \
+#            --docker-email=${{ secrets.GKE_CLIENT_EMAIL }}
 
 
       - name: GKE Deploy with Pull image from Docker
         working-directory: ./k8s
         run: |
           /usr/local/bin/kustomize build . | kubectl apply -f -
-          kubectl set image deployment/$DEPLOYMENT_NAME $DEPLOYMENT_NAME=gcr.io/$PROJECT_ID/$IMAGE:$GITHUB_SHA
+          kubectl edit set image gcr.io/$PROJECT_ID/$IMAGE:v1=gcr.io/$PROJECT_ID/$IMAGE:$GITHUB_SHA
           kubectl get pods
           kubectl rollout status deployment/$DEPLOYMENT_NAME --timeout=5m
           kubectl get services -o wide
