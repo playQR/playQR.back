@@ -93,3 +93,7 @@ jobs:
           kubectl get services -o wide
         env:
           USE_GKE_GCLOUD_AUTH_PLUGIN: True
+
+      - name: External Ip
+        run : |
+          gcloud compute addresses create play-barcode-dev-ip --region asia-northeast3
