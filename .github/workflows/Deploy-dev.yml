@@ -93,10 +93,3 @@ jobs:
           kubectl get services -o wide
         env:
           USE_GKE_GCLOUD_AUTH_PLUGIN: True
-
-      - name: External Ip
-        run : |
-          gcloud compute instances add-access-config \
-          --access-config-name "External NAT" \
-          --address play-barcode-dev-ip \
-          --region asia-northeast3
