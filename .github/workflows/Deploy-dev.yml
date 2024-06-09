@@ -82,16 +82,6 @@ jobs:
         run: |
           gcloud container clusters get-credentials $GKE_CLUSTER --zone $GKE_ZONE --project $PROJECT_ID
 
-#      - name: Create Kubernetes secret for GCR
-#        run: |
-#          echo "${{ secrets.GCP_SA_KEY }}" > gcp-sa-key.json
-#          kubectl create secret docker-registry regcred \
-#            --docker-server=https://gcr.io \
-#            --docker-username=_json_key \
-#            --docker-password="$(cat gcp-sa-key.json)" \
-#            --docker-email=${{ secrets.GKE_CLIENT_EMAIL }}
-
-
       - name: GKE Deploy with Pull image from Docker
         working-directory: ./k8s
         run: |
