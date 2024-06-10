@@ -6,4 +6,5 @@ resources:
 - service-load-balancer.yaml
 - redis.yaml
 - nc.yaml
+- secret.yaml
 

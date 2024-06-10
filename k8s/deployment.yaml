@@ -23,18 +23,22 @@ spec:
             - name: JWT_SECRET_KEY
               valueFrom:
                 secretKeyRef:
+                  name: external_secret
                   key: JWT_SECRET_KEY
             - name: SPRING_ACTIVE_PROFILE
               value: dev
             - name: MYSQL_URL
               valueFrom:
                 secretKeyRef:
+                  name: external_secret
                   key: MYSQL_URL
             - name: DATABASE_USERNAME
               valueFrom:
                 secretKeyRef:
+                  name: external_secret
                   key: DATABASE_USERNAME
             - name: DATABASE_PASSWORD
               valueFrom:
                 secretKeyRef:
+                  name: external_secret
                   key: DATABASE_PASSWORD
