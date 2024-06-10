@@ -14,8 +14,6 @@ spring:
 
   profiles:
     active: ${SPRING_ACTIVE_PROFILE}
-    include:
-      - security
 
 
 springdoc:

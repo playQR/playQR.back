@@ -4,4 +4,6 @@ kind: Kustomization
 resources:
 - deployment.yaml
 - service-load-balancer.yaml
+- redis.yaml
+- nc.yaml
 

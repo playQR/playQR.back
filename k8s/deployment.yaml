@@ -21,10 +21,10 @@ spec:
           
           env:
             - name: JWT_SECRET_KEY
-              value: "$(JWT_SECRET_KEY)"
+              value: $(JWT_SECRET_KEY)
             - name: SPRING_ACTIVE_PROFILE
-              value: "$(SPRING_ACTIVE_PROFILE)"
+              value: $(SPRING_ACTIVE_PROFILE)
             - name: MYSQL_URL
-              value: "$(MYSQL_URL)"
+              value: $(MYSQL_URL)
             - name: REDIS_HOST
-              value: "$(REDIS_HOST)"
+              value: $(REDIS_HOST)
