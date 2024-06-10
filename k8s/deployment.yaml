@@ -23,22 +23,22 @@ spec:
             - name: app.jwt.secret
               valueFrom:
                 secretKeyRef:
-                  name: external_secret
+                  name: created-secret
                   key: JWT_SECRET_KEY
             - name: spring.profiles.active
               value: dev
             - name: spring.datasource.url
               valueFrom:
                 secretKeyRef:
-                  name: external_secret
+                  name: created-secret
                   key: MYSQL_URL
             - name: spring.datasource.username
               valueFrom:
                 secretKeyRef:
-                  name: external_secret
+                  name: created-secret
                   key: DATABASE_USERNAME
             - name: spring.datasource.password
               valueFrom:
                 secretKeyRef:
-                  name: external_secret
+                  name: created-secret
                   key: DATABASE_PASSWORD
