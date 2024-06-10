@@ -11,10 +11,6 @@ env:
   GKE_ZONE: ${{ secrets.GKE_ZONE }}
   DEPLOYMENT_NAME: play-barcode-dev
   IMAGE: play-barcode-dev
-  JWT_SECRET_KEY: ${{ secrets.JWT_SECRET_KEY }}
-  SPRING_ACTIVE_PROFILE: ${{ secrets.SPRING_ACTIVE_PROFILE }}
-  MYSQL_URL: ${{ secrets.MYSQL_URL }}
-  REDIS_HOST: ${{ secrets.REDIS_HOST }}
 
 jobs:
   setup-build-publish-deploy:
