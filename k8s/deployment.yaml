@@ -20,24 +20,24 @@ spec:
             - containerPort: 8080
           
           env:
-            - name: JWT_SECRET_KEY
+            - name: app.jwt.secret
               valueFrom:
                 secretKeyRef:
                   name: external_secret
                   key: JWT_SECRET_KEY
-            - name: SPRING_ACTIVE_PROFILE
+            - name: spring.profiles.active
               value: dev
-            - name: MYSQL_URL
+            - name: spring.datasource.url
               valueFrom:
                 secretKeyRef:
                   name: external_secret
                   key: MYSQL_URL
-            - name: DATABASE_USERNAME
+            - name: spring.datasource.username
               valueFrom:
                 secretKeyRef:
                   name: external_secret
                   key: DATABASE_USERNAME
-            - name: DATABASE_PASSWORD
+            - name: spring.datasource.password
               valueFrom:
                 secretKeyRef:
                   name: external_secret

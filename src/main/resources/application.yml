@@ -13,7 +13,7 @@ spring:
     org.hibernate.type: trace
 
   profiles:
-    active: ${SPRING_ACTIVE_PROFILE}
+    active: ${spring.profiles.active}
 
 
 springdoc:
@@ -24,4 +24,4 @@ springdoc:
 
 app:
   jwt:
-    secret: ${JWT_SECRET_KEY}       # intellij 상단 run -> edit config -> enviromnent variable에 추가
+    secret: ${app.jwt.secret}       # intellij 상단 run -> edit config -> enviromnent variable에 추가
