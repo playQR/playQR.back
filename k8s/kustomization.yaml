@@ -7,4 +7,5 @@ resources:
 - redis.yaml
 #- nc.yaml
 - secret.yaml
+- database.yaml
 

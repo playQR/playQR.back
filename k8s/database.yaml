@@ -1,0 +1,24 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: play-barcode-dev-mysql-service #service의 이름을 적어준다
+spec:
+  type: ClusterIP
+  ports:
+    - name: mysqldb
+      port: 3306
+      targetPort: 3306
+
+---
+apiVersion: v1
+kind: Endpoints
+metadata:
+  name: play-barcode-dev-mysql-endpoints #service의 이름을 적어준다
+subsets:
+  - addresses:
+      - ip: 34.64.143.1 #db서버의 ip를 입력한다.
+    ports:
+      - name: mysqldb
+        port: 3306
+        protocol: TCP
