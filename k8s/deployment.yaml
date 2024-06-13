@@ -24,21 +24,21 @@ spec:
               valueFrom:
                 secretKeyRef:
                   name: created-secret
-                  key: JWT_SECRET_KEY
+                  key: jwt-secret-key
             - name: spring.profiles.active
               value: dev
             - name: spring.datasource.url
               valueFrom:
                 secretKeyRef:
                   name: created-secret
-                  key: MYSQL_URL
+                  key: mssql-url
             - name: spring.datasource.username
               valueFrom:
                 secretKeyRef:
                   name: created-secret
-                  key: DATABASE_USERNAME
+                  key: database-username
             - name: spring.datasource.password
               valueFrom:
                 secretKeyRef:
                   name: created-secret
-                  key: DATABASE_PASSWORD
+                  key: database-password
