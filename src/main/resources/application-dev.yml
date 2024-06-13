@@ -9,7 +9,6 @@ spring:
     hibernate:
       ddl-auto: update
 
-  data:
-    redis:
-      host: redis-svc.default
-      port: 6379
+  redis:
+    host: redis-svc.default
+    port: 6379
