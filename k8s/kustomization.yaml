@@ -5,6 +5,6 @@ resources:
 - deployment.yaml
 - service-load-balancer.yaml
 - redis.yaml
-- nc.yaml
+#- nc.yaml
 - secret.yaml
 

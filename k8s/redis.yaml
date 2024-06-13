@@ -1,57 +1,39 @@
 apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: redis-config
-data:
-  redis-config: |
-    maxmemory 20mb
-    maxmemory-policy allkeys-lru
----
-apiVersion: v1
 kind: Service
 metadata:
-  name: redis
+  name: redis-svc
   labels:
-    app: redis
+    app: play-barcode-dev
+spec:
+  ports:
+    - port: 6379
+  selector:
+    app: play-barcode-dev
+    tier: redis
+  clusterIP: None
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: play-barcode-dev-redis
+  labels:
+    app: play-barcode-dev
 spec:
   selector:
-    app: redis
-  ports:
-    - name: redis
-      protocol: TCP
-      port: 6379
-      targetPort: 6379
----
-apiVersion: v1
-kind: Pod
-metadata:
-  name: redis
-  labels:
-    app: redis
-spec:
-  containers:
-    - name: redis
-      image: redis:latest
-      command:
-        - redis-server
-        - "/redis-master/redis.conf"
-      env:
-        - name: MASTER
-          value: "true"
-      ports:
-        - containerPort: 6379
+    matchLabels:
+      app: play-barcode-dev
+      tier: redis
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: play-barcode-dev
+        tier: redis
+    spec:
+      containers:
+        - image: redis:7.2
           name: redis
-      volumeMounts:
-        - mountPath: /redis-master-data
-          name: data
-        - mountPath: /redis-master
-          name: config
-  volumes:
-    - name: data
-      emptyDir: {}
-    - name: config
-      configMap:
-        name: redis-config
-        items:
-          - key: redis-config
-            path: redis.conf
+          ports:
+            - containerPort: 6379
+              name: redis

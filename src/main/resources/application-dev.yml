@@ -11,6 +11,5 @@ spring:
 
   data:
     redis:
-      cluster:
-        nodes:
-          - redis-cluster.redis.svc.cluster.local:6379
+      host: redis-svc.default
+      port: 6379
