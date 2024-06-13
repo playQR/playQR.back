@@ -31,7 +31,7 @@ spec:
               valueFrom:
                 secretKeyRef:
                   name: created-secret
-                  key: mssql-url
+                  key: mysql-url
             - name: spring.datasource.username
               valueFrom:
                 secretKeyRef:
