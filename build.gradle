@@ -58,6 +58,16 @@ tasks.named('test') {
 	useJUnitPlatform()
 }
 
+tasks.named("jar") {
+	enabled = false
+}
+
+if (project.hasProperty('dev')) {
+	apply from: project.file('profile-dev.gradle')
+} else if (project.hasProperty('prod')) {
+	apply from: project.file('profile-prod.gradle')
+}
+
 clean {
 	delete file('src/main/generated')
 }

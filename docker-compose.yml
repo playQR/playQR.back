@@ -1,8 +1,16 @@
-version: "3"
 services:
   application:
-    image: play-barcode-dev
+    image: 637423409397.dkr.ecr.ap-northeast-2.amazonaws.com/play-barcode:latest
     ports:
       - "8080:8080"
-    container_name: play-barcode-dev
-    restart: always
+    env_file:
+      - .env
+
+  nginx:
+    image: nginx:latest
+    ports:
+      - "80:80"
+    volumes:
+      - ./.platform/nginx/conf.d/proxy.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - application
