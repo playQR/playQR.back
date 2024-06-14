@@ -1,6 +1,6 @@
 services:
   application:
-    image: 637423409397.dkr.ecr.ap-northeast-2.amazonaws.com/play-barcode:latest
+    image: 637423409397.dkr.ecr.ap-northeast-2.amazonaws.com/play-barcode-ecr:latest
     ports:
       - "8080:8080"
     env_file:
