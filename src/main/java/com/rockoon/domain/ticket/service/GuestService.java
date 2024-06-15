@@ -12,10 +12,14 @@ public class GuestService {
     @Autowired
     private GuestRepository guestRepository;
 
-    public Guest updateGuest(Long guestId, String name) {
-        Guest guest = guestRepository.findById(guestId)
-                .orElseThrow(() -> new ResourceNotFoundException("Guest not found with id " + guestId));
-        guest.setName(name);
+    public Guest updateGuest(Long id, Guest guestDetails) {
+        Guest guest = guestRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Guest not found with id " + id));
+
+        guest.setName(guestDetails.getName());
+        guest.setTicketIssued(guestDetails.getTicketIssued());
+        guest.setEntered(guestDetails.getEntered());
+
         return guestRepository.save(guest);
     }
 }
