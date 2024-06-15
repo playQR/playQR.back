@@ -15,7 +15,7 @@ public class GuestController {
 
     @PutMapping("/{guestId}")
     public ResponseEntity<Guest> updateGuest(@PathVariable Long guestId, @RequestBody Guest guestDetails) {
-        Guest updatedGuest = guestService.updateGuest(guestId, guestDetails.getName());
+        Guest updatedGuest = guestService.updateGuest(guestId, guestDetails);
         return ResponseEntity.ok(updatedGuest);
     }
 }

@@ -2,6 +2,7 @@ package com.rockoon.domain.ticket.controller;
 
 import com.rockoon.domain.ticket.entity.Guest;
 import com.rockoon.domain.ticket.service.GuestService;
+import com.rockoon.domain.member.service.MemberQueryService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -24,6 +25,9 @@ public class GuestControllerTest {
     @MockBean
     private GuestService guestService;
 
+    @MockBean
+    private MemberQueryService memberQueryService; // 모킹된 MemberQueryService 추가
+
     @Autowired
     private ObjectMapper objectMapper;  // JSON 직렬화를 위한 ObjectMapper
 
@@ -35,7 +39,7 @@ public class GuestControllerTest {
         guest.setTicketIssued(true);
         guest.setEntered(false);
 
-        Mockito.when(guestService.updateGuest(Mockito.anyLong(), String.valueOf(Mockito.any(Guest.class)))).thenReturn(guest);
+        Mockito.when(guestService.updateGuest(Mockito.anyLong(), Mockito.any(Guest.class))).thenReturn(guest);
 
         String guestJson = objectMapper.writeValueAsString(guest);
 
