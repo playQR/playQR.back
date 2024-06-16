@@ -2,12 +2,8 @@ package com.rockoon.domain.ticket.entity;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
 
 @Entity
-@Getter
-@Setter
 public class Guest {
 
     @Id
@@ -25,4 +21,53 @@ public class Guest {
     @Column(name = "entered")
     @JsonProperty("entered")
     private Boolean entered;  // 필드 이름 변경
+
+    // Getter and Setter methods
+    public Long getGuestId() {
+        return guestId;
+    }
+
+    public void setGuestId(Long guestId) {
+        this.guestId = guestId;
+    }
+
+    public Long getPromotionId() {
+        return promotionId;
+    }
+
+    public void setPromotionId(Long promotionId) {
+        this.promotionId = promotionId;
+    }
+
+    public Long getMemberId() {
+        return memberId;
+    }
+
+    public void setMemberId(Long memberId) {
+        this.memberId = memberId;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public Boolean getTicketIssued() {
+        return ticketIssued;
+    }
+
+    public void setTicketIssued(Boolean ticketIssued) {
+        this.ticketIssued = ticketIssued;
+    }
+
+    public Boolean getEntered() {
+        return entered;
+    }
+
+    public void setEntered(Boolean entered) {
+        this.entered = entered;
+    }
 }
