@@ -6,13 +6,15 @@ import com.rockoon.domain.board.entity.Promotion;
 import com.rockoon.domain.board.service.promotion.PromotionCommandService;
 import com.rockoon.domain.board.service.promotion.PromotionQueryService;
 import com.rockoon.domain.member.entity.Member;
+import com.rockoon.domain.member.entity.Role;
 import com.rockoon.domain.member.service.MemberQueryService;
-import com.rockoon.global.config.test.DatabaseCleanUp;
+import com.rockoon.global.config.spring.WebMvcConfig;
 import com.rockoon.presentation.advice.ExceptionAdvice;
 import com.rockoon.presentation.payload.code.ErrorStatus;
 import com.rockoon.presentation.payload.exception.PromotionHandler;
+import com.rockoon.security.config.SecurityConfig;
+import com.rockoon.security.filter.JwtAuthenticationFilter;
 import lombok.extern.slf4j.Slf4j;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +26,8 @@ import org.springframework.context.annotation.FilterType;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.MediaType;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -39,7 +43,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @Slf4j
 @AutoConfigureMockMvc(addFilters = false)
 @WebMvcTest(controllers = PromotionApiController.class,
-        includeFilters = @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = ExceptionAdvice.class))
+        includeFilters = {
+                @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = ExceptionAdvice.class),
+                @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = SecurityConfig.class),
+                @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = WebMvcConfig.class)
+        })
 class PromotionApiControllerTest {
     @Autowired
     private MockMvc mockMvc;
@@ -52,23 +60,30 @@ class PromotionApiControllerTest {
     @MockBean
     private MemberQueryService memberQueryService;
     @MockBean
-    private DatabaseCleanUp databaseCleanUp;
+    private JwtAuthenticationFilter jwtAuthenticationFilter;
 
-    @AfterEach
-    void cleanUp() {
-        databaseCleanUp.truncateAllEntity();
-    }
 
     @Test
+    @WithMockUser(username = "username")
     @DisplayName("유저가 게시글을 작성합니다.")
     void createPromotion() throws Exception{
         //given
         PromotionRequest request = PromotionRequest.builder().build();
-        Long memberId = 2L;
         Long promotionId = 1L;
+        Long memberId = 2L;
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        Member member = Member.builder()
+                .id(memberId)
+                .nickname("nickname")
+                .name("name")
+                .role(Role.USER)
+                .username(username)
+                .kakaoEmail("kakaoEmail")
+                .build();
+        when(memberQueryService.getMemberByUsername(username)).thenReturn(member);
         when(promotionCommandService.createPromotion(any(), any())).thenReturn(promotionId);
         //when
-        ResultActions perform = mockMvc.perform(MockMvcRequestBuilders.post("/api/promotions/" + memberId)
+        ResultActions perform = mockMvc.perform(MockMvcRequestBuilders.post("/api/promotions")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request)));
         //then
