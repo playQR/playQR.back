@@ -34,7 +34,11 @@ public enum ErrorStatus implements BaseCode{
 
     //댓글 관련 오류(4200 ~ 4249)
     COMMENT_NOT_FOUND(NOT_FOUND, 4200, "존재하지 않는 댓글입니다"),
-    COMMENT_CAN_BE_ONLY_TOUCHED_BY_WRITER(BAD_REQUEST, 4201,"댓글은 댓글작성자만 관리할 수 있습니다");
+    COMMENT_CAN_BE_ONLY_TOUCHED_BY_WRITER(BAD_REQUEST, 4201,"댓글은 댓글작성자만 관리할 수 있습니다"),
+
+
+    //이미지 관련 오류(4250 ~ 4299)
+    IMAGE_REQUEST_IS_EMPTY(BAD_REQUEST, 4250, "요청한 이미지가 존재하지 않습니다");
 
     private final HttpStatus httpStatus;
     private final Integer code;
