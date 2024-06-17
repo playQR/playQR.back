@@ -25,6 +25,8 @@ springdoc:
 app:
   jwt:
     secret: ${app.jwt.secret}       # intellij 상단 run -> edit config -> enviromnent variable에 추가
+  server:
+    uri: ${app.server.uri}
 
 cloud:
   aws:
