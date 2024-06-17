@@ -2,6 +2,7 @@ package com.rockoon.domain.image.controller;
 
 import com.rockoon.global.annotation.api.ApiErrorCodeExample;
 import com.rockoon.global.service.AwsS3Service;
+import com.rockoon.global.util.ImageUtil;
 import com.rockoon.presentation.payload.code.ErrorStatus;
 import com.rockoon.presentation.payload.dto.ApiResponseDto;
 import io.swagger.v3.oas.annotations.Operation;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Tag(name = "Image API", description = "이미지 API")
 @ApiResponse(responseCode = "2000", description = "성공")
@@ -32,7 +34,12 @@ public class ImageApiController {
             ErrorStatus.IMAGE_REQUEST_IS_EMPTY
     })
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ApiResponseDto<List<String>> createPromotion(@RequestPart(value = "uploadImgFileList") List<MultipartFile> uploadImgFileList) {
-        return ApiResponseDto.onSuccess(awsS3Service.uploadFiles(uploadImgFileList));
+    public ApiResponseDto<List<String>> createPromotion(
+            @RequestPart(value = "uploadImgFileList") List<MultipartFile> uploadImgFileList) {
+        return ApiResponseDto.onSuccess(
+                awsS3Service.uploadFiles(uploadImgFileList).stream()
+                        .map(ImageUtil::appendUri)
+                        .collect(Collectors.toList())
+        );
     }
 }
