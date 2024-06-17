@@ -94,17 +94,27 @@ class PromotionApiControllerTest {
     }
 
     @Test
+    @WithMockUser(username = "username")
     @DisplayName("유저가 작성한 게시글을 수정합니다.")
     void modifyPromotion() throws Exception{
         //given
         PromotionRequest request = PromotionRequest.builder().build();
         Long modifiedPromotionId = 4L;
         Long memberId = 3L;
-
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        Member member = Member.builder()
+                .id(memberId)
+                .nickname("nickname")
+                .name("name")
+                .role(Role.USER)
+                .username(username)
+                .kakaoEmail("kakaoEmail")
+                .build();
+        when(memberQueryService.getMemberByUsername(username)).thenReturn(member);
         when(promotionCommandService.modifyPromotion(any(), any(), any())).thenReturn(modifiedPromotionId);
         //when
         ResultActions perform = mockMvc.perform(MockMvcRequestBuilders
-                .put("/api/promotions/" + modifiedPromotionId + "/members/" + memberId)
+                .put("/api/promotions/" + modifiedPromotionId)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request)));
         //then
@@ -114,17 +124,28 @@ class PromotionApiControllerTest {
     }
 
     @Test
+    @WithMockUser(username = "username")
     @DisplayName("프로모션을 수정할 때, 작성자가 아닌 유저가 프로모션을 수정하려는 접근을 제한합니다.")
     void executeExceptionWhenNotWriterTouchPromotion() throws Exception{
         //given
         PromotionRequest request = PromotionRequest.builder().build();
         Long modifiedPromotionId = 4L;
         Long memberId = 3L;
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        Member member = Member.builder()
+                .id(memberId)
+                .nickname("nickname")
+                .name("name")
+                .role(Role.USER)
+                .username(username)
+                .kakaoEmail("kakaoEmail")
+                .build();
+        when(memberQueryService.getMemberByUsername(username)).thenReturn(member);
         when(promotionCommandService.modifyPromotion(any(), any(), any()))
                 .thenThrow(new PromotionHandler(ErrorStatus.PROMOTION_ONLY_CAN_BE_TOUCHED_BY_WRITER));
         //when
         ResultActions perform = mockMvc.perform(MockMvcRequestBuilders
-                .put("/api/promotions/" + modifiedPromotionId + "/members/" + memberId)
+                .put("/api/promotions/" + modifiedPromotionId)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request)));
 
@@ -133,17 +154,28 @@ class PromotionApiControllerTest {
                 .andExpect(jsonPath("$.message").value("작성자가 아닌 유저는 프로모션을 수정이 불가합니다."));
     }
     @Test
+    @WithMockUser(username = "username")
     @DisplayName("프로모션을 수정할 때, 존재하지 않는 게시글일 경우 동작이 실패합니다.")
     void executeExceptionWhenPromotionCannotBeFound() throws Exception{
         //given
         PromotionRequest request = PromotionRequest.builder().build();
         Long modifiedPromotionId = 4L;
         Long memberId = 3L;
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        Member member = Member.builder()
+                .id(memberId)
+                .nickname("nickname")
+                .name("name")
+                .role(Role.USER)
+                .username(username)
+                .kakaoEmail("kakaoEmail")
+                .build();
+        when(memberQueryService.getMemberByUsername(username)).thenReturn(member);
         when(promotionCommandService.modifyPromotion(any(), any(), any()))
                 .thenThrow(new PromotionHandler(ErrorStatus.PROMOTION_NOT_FOUND));
         //when
         ResultActions perform = mockMvc.perform(MockMvcRequestBuilders
-                .put("/api/promotions/" + modifiedPromotionId + "/members/" + memberId)
+                .put("/api/promotions/" + modifiedPromotionId)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request)));
 
