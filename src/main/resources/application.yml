@@ -31,8 +31,8 @@ cloud:
     s3:
       bucket: ${cloud.aws.s3.bucket}
     credentials:
-      accessKey: ${cloud.aws.credentials.accessKey}
-      secretKey: ${cloud.aws.credentials.secretKey}
+      accessKey: ${cloud.aws.credentials.access-key}
+      secretKey: ${cloud.aws.credentials.secret-key}
     region:
       static: ap-northeast-2
     stack:
