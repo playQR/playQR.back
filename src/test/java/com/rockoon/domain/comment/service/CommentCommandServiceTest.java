@@ -10,6 +10,8 @@ import com.rockoon.domain.member.entity.Member;
 import com.rockoon.domain.member.service.MemberCommandService;
 import com.rockoon.domain.member.service.MemberQueryService;
 import com.rockoon.global.config.test.DatabaseCleanUp;
+import com.rockoon.presentation.payload.code.ErrorStatus;
+import com.rockoon.presentation.payload.exception.CommentHandler;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -22,6 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @Slf4j
 @SpringBootTest
@@ -42,6 +45,7 @@ class CommentCommandServiceTest {
     CommentRepository commentRepository;
     //Entity & dto & else
     Long promotionId;
+    Member writer;
 
     @BeforeEach
     void setUp() {
@@ -52,7 +56,7 @@ class CommentCommandServiceTest {
                 .name("name")
                 .build();
         Long memberId = memberCommandService.registerMember(saveMember);
-        Member writer = memberQueryService.getByMemberId(memberId);
+        writer = memberQueryService.getByMemberId(memberId);
         PromotionRequest request = PromotionRequest.builder()
                 .title("title")
                 .content("content")
@@ -113,6 +117,30 @@ class CommentCommandServiceTest {
         //then
         List<Comment> all = commentRepository.findAll();
         assertThat(all.size()).isEqualTo(0);
+    }
+
+    @Test
+    @Transactional
+    @DisplayName("댓글 삭제 시, 작성자가 아닌 경우에 예외 상황을 발생시킵니다.")
+    void executeExceptionWhenNotWriterTryToRemoveComment() {
+        //given
+        MemberRegisterDto saveMember = MemberRegisterDto.builder()
+                .kakaoEmail("newlykakaoEmail")
+                .nickname("newlynickname")
+                .profileImg("newlyprofileImg")
+                .name("newlyname")
+                .build();
+        CommentRequest request = CommentRequest.builder()
+                .content("content")
+                .build();
+        Long memberId = memberCommandService.registerMember(saveMember);
+        Member commentWriter = memberQueryService.getByMemberId(memberId);
+        Long commentId = commentCommandService.createComment(commentWriter, promotionId, request);
+
+        //when & then
+        assertThatThrownBy(() -> commentCommandService.removeComment(writer, commentId))
+                .isInstanceOf(CommentHandler.class)
+                .hasMessage(ErrorStatus.COMMENT_CAN_BE_ONLY_TOUCHED_BY_WRITER.getMessage());
     }
 
 

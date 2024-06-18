@@ -36,7 +36,6 @@ public class MemberQueryServiceImpl implements MemberQueryService{
 
     @Override
     public Member getMemberByUsername(String username) {
-        log.info("execute login");
         return memberRepository.findByUsername(username)
                 .orElseThrow(() -> new MemberHandler(ErrorStatus.MEMBER_NOT_FOUND));
     }
