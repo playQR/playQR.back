@@ -6,11 +6,13 @@ import com.rockoon.domain.board.entity.Promotion;
 import com.rockoon.domain.board.repository.PromotionRepository;
 import com.rockoon.domain.member.entity.Member;
 import com.rockoon.domain.member.repository.MemberRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Optional;
 
+@RequiredArgsConstructor
 @Service
 @Transactional
 public class GuestServiceImpl implements GuestService {
@@ -18,12 +20,6 @@ public class GuestServiceImpl implements GuestService {
     private final GuestRepository guestRepository;
     private final PromotionRepository promotionRepository;
     private final MemberRepository memberRepository;
-
-    public GuestServiceImpl(GuestRepository guestRepository, PromotionRepository promotionRepository, MemberRepository memberRepository) {
-        this.guestRepository = guestRepository;
-        this.promotionRepository = promotionRepository;
-        this.memberRepository = memberRepository;
-    }
 
     @Override
     public Guest createGuest(Long promotionId, Long memberId, String name) {
