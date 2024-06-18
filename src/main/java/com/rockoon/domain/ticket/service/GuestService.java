@@ -66,4 +66,15 @@ public class GuestService {
         guest.setTicketIssued(true);
         return guestRepository.save(guest);
     }
+
+    public Guest updateGuest(Long guestId, Guest guestDetails) {
+        Guest guest = guestRepository.findById(guestId)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid guest ID"));
+
+        guest.setName(guestDetails.getName());
+        guest.setTicketIssued(guestDetails.getTicketIssued());
+        guest.setEntered(guestDetails.getEntered());
+
+        return guestRepository.save(guest);
+    }
 }
