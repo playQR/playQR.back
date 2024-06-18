@@ -17,12 +17,16 @@ public class Ticket extends BaseTimeEntity{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "ticket_id")
     private Long id;
 
+    @Column(name = "data", nullable = false)
     private String data;
+
+    @Column(name = "due_date")
     private Date dueDate;
 
-    @ManyToOne
-    @JoinColumn(name = "guest_id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "guest_id", nullable = false)
     private Guest guest;
 }
