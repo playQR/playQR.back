@@ -1,4 +1,9 @@
 package com.rockoon.domain.comment.service;
 
-public class CommentQueryServiceImpl {
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+
+@RequiredArgsConstructor
+@Service
+public class CommentQueryServiceImpl implements CommentQueryService{
 }
