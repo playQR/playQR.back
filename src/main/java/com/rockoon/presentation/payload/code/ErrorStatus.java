@@ -29,8 +29,12 @@ public enum ErrorStatus implements BaseCode{
     MEMBER_NOT_FOUND(NOT_FOUND, 4100, "존재하지 않는 회원입니다."),
 
     //프로모션 관련 오류(4150 ~ 4199)
-    PROMOTION_NOT_FOUND(NOT_FOUND, 4150, "존재하지 않는 회원입니다."),
-    PROMOTION_ONLY_CAN_BE_TOUCHED_BY_WRITER(BAD_REQUEST, 4151, "작성자가 아닌 유저는 프로모션을 수정이 불가합니다.");
+    PROMOTION_NOT_FOUND(NOT_FOUND, 4150, "존재하지 않는 프로모션입니다."),
+    PROMOTION_ONLY_CAN_BE_TOUCHED_BY_WRITER(BAD_REQUEST, 4151, "작성자가 아닌 유저는 프로모션을 수정이 불가합니다."),
+
+    //댓글 관련 오류(4200 ~ 4249)
+    COMMENT_NOT_FOUND(NOT_FOUND, 4200, "존재하지 않는 댓글입니다"),
+    COMMENT_CAN_BE_ONLY_TOUCHED_BY_WRITER(BAD_REQUEST, 4201,"댓글은 댓글작성자만 관리할 수 있습니다");
 
     private final HttpStatus httpStatus;
     private final Integer code;
