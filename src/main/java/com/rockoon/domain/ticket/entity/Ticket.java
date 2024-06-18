@@ -26,6 +26,9 @@ public class Ticket extends BaseTimeEntity{
     @Column(name = "due_date")
     private Date dueDate;
 
+    @Column(name = "ticket_url", nullable = false)
+    private String Url;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "guest_id", nullable = false)
     private Guest guest;
