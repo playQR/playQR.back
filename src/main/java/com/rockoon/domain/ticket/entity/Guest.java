@@ -1,73 +1,51 @@
 package com.rockoon.domain.ticket.entity;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.rockoon.domain.auditing.entity.BaseTimeEntity;
+import com.rockoon.domain.board.entity.Promotion;
+import com.rockoon.domain.member.entity.Member;
 import jakarta.persistence.*;
+import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 @Entity
-public class Guest {
+@Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
+@SuperBuilder
+@Table(name = "guest")
+public class Guest extends BaseTimeEntity{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long guestId;
+    @Column(name = "guest_id")
+    private Long id;
 
-    private Long promotionId;
-    private Long memberId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "promotion_id", nullable = false)
+    private Promotion promotion;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_id", nullable = false)
+    private Member member;
+
+
     private String name;
 
-    @Column(name = "ticket_issued")
+    @Column(name = "isTicketIssued")
     @JsonProperty("ticketIssued")
-    private Boolean ticketIssued;  // 필드 이름 변경
+    private Boolean ticketIssued;
 
-    @Column(name = "entered")
+    @Column(name = "isEntered")
     @JsonProperty("entered")
-    private Boolean entered;  // 필드 이름 변경
-
-    // Getter and Setter methods
-    public Long getGuestId() {
-        return guestId;
-    }
-
-    public void setGuestId(Long guestId) {
-        this.guestId = guestId;
-    }
-
-    public Long getPromotionId() {
-        return promotionId;
-    }
-
-    public void setPromotionId(Long promotionId) {
-        this.promotionId = promotionId;
-    }
-
-    public Long getMemberId() {
-        return memberId;
-    }
-
-    public void setMemberId(Long memberId) {
-        this.memberId = memberId;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public Boolean getTicketIssued() {
-        return ticketIssued;
-    }
+    private Boolean entered;
 
     public void setTicketIssued(Boolean ticketIssued) {
         this.ticketIssued = ticketIssued;
     }
 
-    public Boolean getEntered() {
-        return entered;
-    }
-
     public void setEntered(Boolean entered) {
         this.entered = entered;
     }
+
 }
