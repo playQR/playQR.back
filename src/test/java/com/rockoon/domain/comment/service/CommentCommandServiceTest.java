@@ -17,6 +17,9 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -84,6 +87,32 @@ class CommentCommandServiceTest {
         //then
         Comment comment = commentRepository.findById(commentId).get();
         assertThat(comment.getContent()).isEqualTo(request.getContent());
+    }
+
+    @Test
+    @Transactional
+    @DisplayName("작성된 프로모션 내 댓글을 삭제합니다.")
+    void removeComment() {
+        //given
+        MemberRegisterDto saveMember = MemberRegisterDto.builder()
+                .kakaoEmail("newlykakaoEmail")
+                .nickname("newlynickname")
+                .profileImg("newlyprofileImg")
+                .name("newlyname")
+                .build();
+        CommentRequest request = CommentRequest.builder()
+                .content("content")
+                .build();
+        Long memberId = memberCommandService.registerMember(saveMember);
+        Member commentWriter = memberQueryService.getByMemberId(memberId);
+        Long commentId = commentCommandService.createComment(commentWriter, promotionId, request);
+        Comment comment = commentRepository.findById(commentId).get();
+        assertThat(comment.getContent()).isEqualTo(request.getContent());
+        //when
+        commentCommandService.removeComment(commentWriter, commentId);
+        //then
+        List<Comment> all = commentRepository.findAll();
+        assertThat(all.size()).isEqualTo(0);
     }
 
 

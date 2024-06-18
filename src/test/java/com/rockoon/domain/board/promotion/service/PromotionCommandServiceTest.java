@@ -215,7 +215,7 @@ class PromotionCommandServiceTest {
         //when & then
         assertThatThrownBy(() -> promotionCommandService.modifyPromotion(member1, 0L, updateRequest))
                 .isInstanceOf(PromotionHandler.class)
-                .hasMessage(ErrorStatus.MEMBER_NOT_FOUND.getMessage());
+                .hasMessage(ErrorStatus.PROMOTION_NOT_FOUND.getMessage());
 
     }
 
