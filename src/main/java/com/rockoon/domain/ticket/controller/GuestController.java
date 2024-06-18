@@ -4,11 +4,13 @@ import com.rockoon.domain.member.entity.Member;
 import com.rockoon.domain.ticket.entity.Guest;
 import com.rockoon.domain.ticket.service.guest.GuestCommandService;
 import com.rockoon.global.annotation.auth.AuthUser;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+@RequiredArgsConstructor
 @RestController
-@RequestMapping("/guests")
+@RequestMapping("/api/guests")
 public class GuestController {
 
     @Autowired
