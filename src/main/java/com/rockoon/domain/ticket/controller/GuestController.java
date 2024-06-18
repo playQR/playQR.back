@@ -1,45 +1,31 @@
 package com.rockoon.domain.ticket.controller;
 
+import com.rockoon.domain.member.entity.Member;
 import com.rockoon.domain.ticket.entity.Guest;
-import com.rockoon.domain.ticket.service.GuestService;
+import com.rockoon.domain.ticket.service.guest.GuestCommandService;
+import com.rockoon.global.annotation.auth.AuthUser;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 @RestController
-@RequestMapping("/api/guests")
+@RequestMapping("/guests")
 public class GuestController {
 
     @Autowired
-    private GuestService guestService;
+    private GuestCommandService guestCommandService;
 
-    // Guest를 업데이트
+    @PostMapping
+    public Guest createGuest(@AuthUser Member member, @RequestParam Long promotionId, @RequestParam String name) {
+        return guestCommandService.createGuest(promotionId, member, name);
+    }
+
     @PutMapping("/{guestId}")
-    public ResponseEntity<Guest> updateGuest(@PathVariable Long guestId, @RequestBody Guest guestDetails) {
-        Guest updatedGuest = guestService.updateGuest(guestId, guestDetails);
-        return ResponseEntity.ok(updatedGuest);
+    public Guest updateGuest(@PathVariable Long guestId, @RequestBody Guest guestDetails) {
+        return guestCommandService.updateGuest(guestId, guestDetails);
     }
 
-    // 티켓 발행
-    @PostMapping("/issue-ticket")
-    public ResponseEntity<Guest> issueTicket(@RequestParam Long guestId) {
-        Guest updatedGuest = guestService.issueTicket(guestId);
-        return ResponseEntity.ok(updatedGuest);
-    }
-
-    // 특정 프로모션의 모든 게스트를 가져오기
-    @GetMapping("/promotions/{promotionId}")
-    public ResponseEntity<List<Guest>> getGuestsByPromotion(@PathVariable Long promotionId) {
-        List<Guest> guests = guestService.findGuestsByPromotionId(promotionId);
-        return ResponseEntity.ok(guests);
-    }
-
-    // 특정 게스트를 삭제
     @DeleteMapping("/{guestId}")
-    public ResponseEntity<Void> deleteGuest(@PathVariable Long guestId) {
-        guestService.deleteGuest(guestId);
-        return ResponseEntity.noContent().build();
+    public void deleteGuest(@PathVariable Long guestId) {
+        guestCommandService.deleteGuest(guestId);
     }
 }
