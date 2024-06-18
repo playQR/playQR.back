@@ -10,4 +10,4 @@ spring:
 
 app:
   jwt:
-    secret: ${JWT_SECRET_KEY}
+    secret: e64467d9d73df5387e2379a0db11abe1a243b01d4d3283630933bd68d0494d8a
