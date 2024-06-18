@@ -2,6 +2,7 @@ package com.rockoon.domain.comment.entity;
 
 import com.rockoon.domain.board.entity.Promotion;
 import com.rockoon.domain.auditing.entity.BaseTimeEntity;
+import com.rockoon.domain.member.entity.Member;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -26,4 +27,16 @@ public class Comment extends BaseTimeEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "promotion_id")
     private Promotion promotion;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "writer_id")
+    private Member writer;
+
+    public static Comment of(Member member, Promotion promotion, CommentRequest request) {
+        return Comment.builder()
+                .content(request.getContent())
+                .promotion(promotion)
+                .writer(member)
+                .build();
+    }
 }
