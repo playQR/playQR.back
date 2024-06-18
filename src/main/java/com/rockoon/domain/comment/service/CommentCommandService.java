@@ -1,5 +1,6 @@
 package com.rockoon.domain.comment.service;
 
+import com.rockoon.domain.comment.dto.CommentRequest;
 import com.rockoon.domain.member.entity.Member;
 
 public interface CommentCommandService {

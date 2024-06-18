@@ -2,6 +2,7 @@ package com.rockoon.domain.comment.service;
 
 import com.rockoon.domain.board.entity.Promotion;
 import com.rockoon.domain.board.repository.PromotionRepository;
+import com.rockoon.domain.comment.dto.CommentRequest;
 import com.rockoon.domain.comment.entity.Comment;
 import com.rockoon.domain.comment.repository.CommentRepository;
 import com.rockoon.domain.member.entity.Member;
