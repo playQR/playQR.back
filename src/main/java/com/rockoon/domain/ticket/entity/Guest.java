@@ -48,4 +48,7 @@ public class Guest extends BaseTimeEntity{
         this.entered = entered;
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
 }
