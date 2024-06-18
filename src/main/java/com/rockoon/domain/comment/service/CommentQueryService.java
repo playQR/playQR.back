@@ -2,8 +2,8 @@ package com.rockoon.domain.comment.service;
 
 import com.rockoon.domain.comment.entity.Comment;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
-import java.awt.print.Pageable;
 
 public interface CommentQueryService {
 
