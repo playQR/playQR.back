@@ -3,7 +3,6 @@ package com.rockoon.domain.ticket.service.guest;
 import com.rockoon.domain.board.entity.Promotion;
 import com.rockoon.domain.board.repository.PromotionRepository;
 import com.rockoon.domain.member.entity.Member;
-import com.rockoon.domain.member.repository.MemberRepository;
 import com.rockoon.domain.ticket.entity.Guest;
 import com.rockoon.domain.ticket.repository.GuestRepository;
 import com.rockoon.global.exception.ResourceNotFoundException;
