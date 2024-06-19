@@ -23,9 +23,7 @@ public class GuestCommandServiceImpl implements GuestCommandService {
 
     @Override
     public Guest createGuest(Long promotionId, Member member, String name) {
-        Promotion promotion = promotionRepository.findById(promotionId)
-                .orElseThrow(() -> new IllegalArgumentException("Invalid promotion ID"));
-        return guestRepository.save(guest);;
+        return null;
     }
 
     @Override
