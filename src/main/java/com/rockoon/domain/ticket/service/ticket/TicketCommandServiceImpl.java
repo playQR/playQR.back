@@ -30,7 +30,6 @@ public class TicketCommandServiceImpl implements TicketCommandService {
 
         Ticket ticket = Ticket.builder()
                 .guest(guest)
-                .data("QR Code Data")
                 .dueDate(new Date())
                 .build();
 
