@@ -5,12 +5,14 @@ import com.rockoon.domain.ticket.entity.Guest;
 import com.rockoon.domain.ticket.entity.Ticket;
 import com.rockoon.domain.ticket.repository.GuestRepository;
 import com.rockoon.domain.ticket.repository.TicketRepository;
-import com.rockoon.global.exception.ResourceNotFoundException;
+import com.rockoon.presentation.payload.code.ErrorStatus;
+import com.rockoon.presentation.payload.exception.TicketHandler;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -21,17 +23,17 @@ public class TicketCommandServiceImpl implements TicketCommandService {
     private final GuestRepository guestRepository;
 
     @Override
-    public Long issueTicket(Long guestId, Member member) {
+    public Long createTicket(Long guestId, Member member) {
         Guest guest = guestRepository.findById(guestId)
-                .orElseThrow(() -> new ResourceNotFoundException("Guest not found for id: " + guestId));
-
-        guest.setTicketIssued(true);
-        guestRepository.save(guest);
+                .orElseThrow(() -> new TicketHandler(ErrorStatus.GUEST_NOT_FOUND));
 
         Ticket ticket = Ticket.builder()
-                .guest(guest)
+                .uuid(UUID.randomUUID().toString())
                 .dueDate(new Date())
+                .guest(guest)
                 .build();
+
+        guest.setTicketIssued(true);
 
         return ticketRepository.save(ticket).getId();
     }
@@ -39,7 +41,10 @@ public class TicketCommandServiceImpl implements TicketCommandService {
     @Override
     public void deleteTicket(Long ticketId, Member member) {
         Ticket ticket = ticketRepository.findById(ticketId)
-                .orElseThrow(() -> new ResourceNotFoundException("Ticket not found for id: " + ticketId));
+                .orElseThrow(() -> new TicketHandler(ErrorStatus.TICKET_NOT_FOUND));
+
+        Guest guest = ticket.getGuest();
+        guest.setTicketIssued(false);
 
         ticketRepository.delete(ticket);
     }

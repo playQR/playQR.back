@@ -6,6 +6,7 @@ import lombok.*;
 import lombok.experimental.SuperBuilder;
 
 import java.util.Date;
+import java.util.Random;
 import java.util.UUID;
 
 @Entity
@@ -14,7 +15,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @SuperBuilder
 @Table(name = "ticket")
-public class Ticket extends BaseTimeEntity{
+public class Ticket extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -31,15 +32,16 @@ public class Ticket extends BaseTimeEntity{
     @JoinColumn(name = "guest_id", nullable = false)
     private Guest guest;
 
-//    @PrePersist
-//    private void generateUUID() {
-//        if (uuid == null) {
-//            uuid = UUID.randomUUID().toString();
-//        }
-//    }
-//
-//    @PrePersist
-//    private void generateData() {
-//        /* 난수 생성 로직 추가 */
-//    }
+    @PrePersist
+    private void generateData() {
+        if (uuid == null) {
+            uuid = UUID.randomUUID().toString();
+        }
+
+        Random random = new Random();
+        int randomNumber = 1000 + random.nextInt(9000);
+
+        dueDate = new Date();
+    }
+
 }
