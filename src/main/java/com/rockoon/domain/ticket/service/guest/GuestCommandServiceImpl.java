@@ -21,7 +21,7 @@ public class GuestCommandServiceImpl implements GuestCommandService {
     private final PromotionRepository promotionRepository;
 
     @Override
-    public Guest createGuest(Long promotionId, Member member, String name) {
+    public Long createGuest(Long promotionId, Member member, String name) {
         Promotion promotion = promotionRepository.findById(promotionId)
                 .orElseThrow(() -> new ResourceNotFoundException("Promotion not found for id: " + promotionId));
 
@@ -33,11 +33,11 @@ public class GuestCommandServiceImpl implements GuestCommandService {
                 .entered(false)
                 .build();
 
-        return guestRepository.save(guest);
+        return guestRepository.save(guest).getId();
     }
 
     @Override
-    public Guest updateGuest(Long guestId, Guest guestDetails) {
+    public void updateGuest(Long guestId, Guest guestDetails) {
         Guest guest = guestRepository.findById(guestId)
                 .orElseThrow(() -> new ResourceNotFoundException("Guest not found for id: " + guestId));
 
@@ -45,7 +45,7 @@ public class GuestCommandServiceImpl implements GuestCommandService {
         guest.setTicketIssued(guestDetails.getTicketIssued());
         guest.setEntered(guestDetails.getEntered());
 
-        return guestRepository.save(guest);
+        guestRepository.save(guest);
     }
 
     @Override
