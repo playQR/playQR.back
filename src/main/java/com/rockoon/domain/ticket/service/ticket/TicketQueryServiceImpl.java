@@ -3,6 +3,8 @@ package com.rockoon.domain.ticket.service.ticket;
 import com.rockoon.domain.ticket.entity.Ticket;
 import com.rockoon.domain.ticket.repository.TicketRepository;
 import com.rockoon.global.exception.ResourceNotFoundException;
+import com.rockoon.presentation.payload.code.ErrorStatus;
+import com.rockoon.presentation.payload.exception.TicketHandler;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -21,7 +23,7 @@ public class TicketQueryServiceImpl implements TicketQueryService {
     @Override
     public Ticket findTicketById(Long ticketId) {
         return ticketRepository.findById(ticketId)
-                .orElseThrow(() -> new ResourceNotFoundException("Ticket not found for id: " + ticketId));
+                .orElseThrow(() -> new TicketHandler(ErrorStatus.TICKET_NOT_FOUND));
     }
 
     @Override
