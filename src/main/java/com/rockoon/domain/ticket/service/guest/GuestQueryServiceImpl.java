@@ -3,6 +3,8 @@ package com.rockoon.domain.ticket.service.guest;
 import com.rockoon.domain.ticket.entity.Guest;
 import com.rockoon.domain.ticket.repository.GuestRepository;
 import com.rockoon.global.exception.ResourceNotFoundException;
+import com.rockoon.presentation.payload.code.ErrorStatus;
+import com.rockoon.presentation.payload.exception.GuestHandler;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -26,7 +28,7 @@ public class GuestQueryServiceImpl implements GuestQueryService{
     @Override
     public Guest findGuestById(Long guestId) {
         return guestRepository.findById(guestId)
-                .orElseThrow(() -> new ResourceNotFoundException("Guest not found for id: " + guestId));
+                .orElseThrow(() -> new GuestHandler(ErrorStatus.GUEST_NOT_FOUND));
     }
 
     @Override
