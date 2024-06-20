@@ -5,9 +5,9 @@ import com.rockoon.domain.member.entity.Member;
 
 public interface GuestCommandService {
 
-    Guest createGuest(Long promotionId, Member member, String name);
+    Long createGuest(Long promotionId, Member member, String name);
 
-    Guest updateGuest(Long guestId, Guest guestDetails);
+    void updateGuest(Long guestId, Guest guestDetails);
 
     void deleteGuest(Long id);
 }
