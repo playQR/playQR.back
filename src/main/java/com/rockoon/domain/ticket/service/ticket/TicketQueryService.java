@@ -8,11 +8,11 @@ import java.util.List;
 
 public interface TicketQueryService {
 
-    List<Ticket> findAllTickets();
-
     Ticket findTicketById(Long ticketId);
 
-    Ticket findTicketByGuestId(Long guestId);
+    List<Ticket> findAllTickets();
 
-    Page<Ticket> findTickets(Pageable pageable);
+    Page<Ticket> findTicketsByGuestId(Long guestId, Pageable pageable);
+
+    List<Ticket> findTicketsByPromotionId(Long promotionId);
 }
