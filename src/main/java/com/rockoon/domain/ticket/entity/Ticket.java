@@ -39,7 +39,9 @@ public class Ticket extends BaseTimeEntity {
         }
 
         Random random = new Random();
-        int randomNumber = 1000 + random.nextInt(9000);
+        long currentTimeMillis = System.currentTimeMillis();
+        long randomTimeMillis = currentTimeMillis + random.nextInt();
+        dueDate = new Date(randomTimeMillis);
 
         dueDate = new Date();
     }
