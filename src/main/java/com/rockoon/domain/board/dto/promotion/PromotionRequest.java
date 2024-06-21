@@ -1,6 +1,5 @@
 package com.rockoon.domain.board.dto.promotion;
 
-import com.rockoon.domain.image.dto.ImageRequest;
 import com.rockoon.domain.music.dto.MusicRequest;
 import com.rockoon.domain.showOption.dto.ShowOptionRequest;
 import lombok.AllArgsConstructor;
@@ -20,7 +19,7 @@ public class PromotionRequest {
     private String title;
     private String team;
     private List<ShowOptionRequest> optionList;
-    private List<ImageRequest> imageList;
+    private List<String> imageList;
     private List<MusicRequest> musicList;
 
 }
