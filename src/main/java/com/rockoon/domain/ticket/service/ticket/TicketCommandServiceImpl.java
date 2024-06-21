@@ -27,11 +27,7 @@ public class TicketCommandServiceImpl implements TicketCommandService {
         Guest guest = guestRepository.findById(guestId)
                 .orElseThrow(() -> new TicketHandler(ErrorStatus.GUEST_NOT_FOUND));
 
-        Ticket ticket = Ticket.builder()
-                .uuid(UUID.randomUUID().toString())
-                .dueDate(new Date())
-                .guest(guest)
-                .build();
+        Ticket ticket = new Ticket(UUID.randomUUID().toString(), new Date(), guest);
 
         guest.markTicketAsIssued();
 
