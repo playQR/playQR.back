@@ -35,6 +35,7 @@ public class PromotionResponse {
         private Long promotionId;
         private String title;
         private String team;
+        private String thumbnail;
         private MemberResponse writer;
     }
     @Data

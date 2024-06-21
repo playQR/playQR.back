@@ -1,5 +1,6 @@
 package com.rockoon.global.util;
 
+import com.rockoon.domain.image.entity.Image;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -17,6 +18,10 @@ public class ImageUtil {
     public static String appendUri(String s3URI) {
         StringBuffer stringBuffer = new StringBuffer(SERVER_URI);
         return stringBuffer.append(s3URI).toString();
+    }
+
+    public static String appendUri(Image image) {
+        return appendUri(image.getImageUrl());
     }
 
     public static String removePrefix(String url) {

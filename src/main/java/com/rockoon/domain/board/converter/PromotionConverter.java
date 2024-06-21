@@ -5,6 +5,7 @@ import com.rockoon.domain.board.dto.promotion.PromotionResponse.PromotionListDto
 import com.rockoon.domain.board.dto.promotion.PromotionResponse.PromotionSummaryDto;
 import com.rockoon.domain.board.entity.Promotion;
 import com.rockoon.domain.member.converter.MemberConverter;
+import com.rockoon.global.util.ImageUtil;
 import org.springframework.data.domain.Page;
 
 import java.util.stream.Collectors;
@@ -18,6 +19,8 @@ public class PromotionConverter {
                 .content(promotion.getContent())
                 .maxAudience(promotion.getMaxAudience())
                 .writer(MemberConverter.toResponse(promotion.getWriter()))
+                .imageList(promotion.getBoardImageList().stream()
+                        .map(ImageUtil::appendUri).collect(Collectors.toList()))
                 .build();
     }
 
@@ -27,6 +30,7 @@ public class PromotionConverter {
                 .team(promotion.getTeam())
                 .title(promotion.getTitle())
                 .writer(MemberConverter.toResponse(promotion.getWriter()))
+                .thumbnail(ImageUtil.appendUri(promotion.getBoardImageList().get(0)))
                 .build();
     }
 
