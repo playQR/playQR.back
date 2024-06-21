@@ -32,6 +32,12 @@ public class Ticket extends BaseTimeEntity {
     @JoinColumn(name = "guest_id", nullable = false)
     private Guest guest;
 
+    public Ticket(String uuid, Date dueDate, Guest guest) {
+        this.uuid = uuid;
+        this.dueDate = dueDate;
+        this.guest = guest;
+    }
+
     @PrePersist
     private void generateData() {
         if (uuid == null) {
