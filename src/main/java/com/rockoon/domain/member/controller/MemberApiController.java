@@ -9,6 +9,7 @@ import com.rockoon.domain.member.service.MemberCommandService;
 import com.rockoon.domain.member.service.MemberQueryService;
 import com.rockoon.global.annotation.api.ApiErrorCodeExample;
 import com.rockoon.global.annotation.auth.AuthUser;
+import com.rockoon.global.util.ImageUtil;
 import com.rockoon.presentation.payload.code.ErrorStatus;
 import com.rockoon.presentation.payload.dto.ApiResponseDto;
 import io.swagger.v3.oas.annotations.Operation;
@@ -33,6 +34,7 @@ public class MemberApiController {
     })
     @PostMapping
     public ApiResponseDto<Long> registerMember(@RequestBody MemberRegisterDto memberRegisterDto) {
+        memberRegisterDto.setProfileImg(ImageUtil.removePrefix(memberRegisterDto.getProfileImg()));
         return ApiResponseDto.onSuccess(memberCommandService.registerMember(memberRegisterDto));
     }
 
@@ -47,6 +49,7 @@ public class MemberApiController {
     @PutMapping
     public ApiResponseDto<Long> modifyMemberInfo(@AuthUser Member member,
                                                  @RequestBody MemberModifyDto memberModifyDto) {
+        memberModifyDto.setProfileImg(ImageUtil.removePrefix(memberModifyDto.getProfileImg()));
         return ApiResponseDto.onSuccess(memberCommandService.modifyMemberInfo(member, memberModifyDto));
     }
 
