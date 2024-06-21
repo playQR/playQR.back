@@ -33,7 +33,7 @@ public class TicketCommandServiceImpl implements TicketCommandService {
                 .guest(guest)
                 .build();
 
-        guest.setTicketIssued(true);
+        guest.markTicketAsIssued();
 
         return ticketRepository.save(ticket).getId();
     }
@@ -44,7 +44,7 @@ public class TicketCommandServiceImpl implements TicketCommandService {
                 .orElseThrow(() -> new TicketHandler(ErrorStatus.TICKET_NOT_FOUND));
 
         Guest guest = ticket.getGuest();
-        guest.setTicketIssued(false);
+        guest.markTicketAsNotIssued();
 
         ticketRepository.delete(ticket);
     }
