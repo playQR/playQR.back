@@ -37,13 +37,6 @@ public class Ticket extends BaseTimeEntity {
         if (uuid == null) {
             uuid = UUID.randomUUID().toString();
         }
-
-        Random random = new Random();
-        long currentTimeMillis = System.currentTimeMillis();
-        long randomTimeMillis = currentTimeMillis + random.nextInt();
-        dueDate = new Date(randomTimeMillis);
-
-        dueDate = new Date();
     }
 
 }
