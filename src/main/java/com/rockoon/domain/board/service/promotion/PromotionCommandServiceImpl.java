@@ -12,6 +12,7 @@ import com.rockoon.domain.music.repository.MusicRepository;
 import com.rockoon.domain.music.repository.PromotionMusicRepository;
 import com.rockoon.domain.showOption.entity.ShowOption;
 import com.rockoon.domain.showOption.repository.showOptionRepository;
+import com.rockoon.global.service.AwsS3Service;
 import com.rockoon.global.util.ListUtil;
 import com.rockoon.presentation.payload.code.ErrorStatus;
 import com.rockoon.presentation.payload.exception.PromotionHandler;
@@ -34,6 +35,7 @@ public class PromotionCommandServiceImpl implements PromotionCommandService {
     private final ImageRepository imageRepository;
     private final MusicRepository musicRepository;
     private final PromotionMusicRepository promotionMusicRepository;
+    private final AwsS3Service awsS3Service;
 
     @Override
     public Long createPromotion(Member member, PromotionRequest request) {
@@ -50,6 +52,9 @@ public class PromotionCommandServiceImpl implements PromotionCommandService {
                 .orElseThrow(() -> new PromotionHandler(ErrorStatus.PROMOTION_NOT_FOUND));
         validateWriter(member, updatePromotion);
 
+        updatePromotion.getBoardImageList().stream()
+                .map(Image::getImageUrl)
+                .forEach(awsS3Service::deleteFile);
         showOptionRepository.deleteAllByBoardId(promotionId);
         imageRepository.deleteAllByBoardId(promotionId);
         promotionMusicRepository.deleteAllByPromotionId(promotionId);
@@ -67,6 +72,9 @@ public class PromotionCommandServiceImpl implements PromotionCommandService {
                 .orElseThrow(() -> new PromotionHandler(ErrorStatus.PROMOTION_NOT_FOUND));
         validateWriter(member, removePromotion);
 
+        removePromotion.getBoardImageList().stream()
+                .map(Image::getImageUrl)
+                .forEach(awsS3Service::deleteFile);
         showOptionRepository.deleteAllByBoardId(promotionId);
         imageRepository.deleteAllByBoardId(promotionId);
         promotionMusicRepository.deleteAllByPromotionId(promotionId);

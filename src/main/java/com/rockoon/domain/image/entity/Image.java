@@ -1,8 +1,7 @@
 package com.rockoon.domain.image.entity;
 
-import com.rockoon.domain.board.entity.Board;
 import com.rockoon.domain.auditing.entity.BaseTimeEntity;
-import com.rockoon.domain.image.dto.ImageRequest;
+import com.rockoon.domain.board.entity.Board;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -28,9 +27,9 @@ public class Image extends BaseTimeEntity {
     @JoinColumn(name = "board_id")
     private Board board;
 
-    public static Image of(Board board, ImageRequest request) {
+    public static Image of(Board board, String request) {
         return Image.builder()
-                .imageUrl(request.getImageUrl())
+                .imageUrl(request)
                 .board(board)
                 .build();
     }

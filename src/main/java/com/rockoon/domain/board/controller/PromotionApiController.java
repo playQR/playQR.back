@@ -9,6 +9,7 @@ import com.rockoon.domain.member.entity.Member;
 import com.rockoon.domain.member.service.MemberQueryService;
 import com.rockoon.global.annotation.api.ApiErrorCodeExample;
 import com.rockoon.global.annotation.auth.AuthUser;
+import com.rockoon.global.util.ImageUtil;
 import com.rockoon.presentation.payload.code.ErrorStatus;
 import com.rockoon.presentation.payload.dto.ApiResponseDto;
 import io.swagger.v3.oas.annotations.Operation;
@@ -18,6 +19,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 import static com.rockoon.domain.board.dto.promotion.PromotionResponse.PromotionDetailDto;
 
@@ -41,6 +45,10 @@ public class PromotionApiController {
     @PostMapping
     public ApiResponseDto<Long> createPromotion(@AuthUser Member member,
                                                 @RequestBody PromotionRequest promotionRequest) {
+        List<String> imageList = promotionRequest.getImageList().stream()
+                .map(ImageUtil::removePrefix)
+                .collect(Collectors.toList());
+        promotionRequest.setImageList(imageList);
         return ApiResponseDto.onSuccess(promotionCommandService.createPromotion(member, promotionRequest));
     }
 
@@ -58,6 +66,10 @@ public class PromotionApiController {
     public ApiResponseDto<Long> modifyPromotion(@AuthUser Member member,
                                                 @PathVariable Long promotionId,
                                                 @RequestBody PromotionRequest promotionRequest) {
+        List<String> imageList = promotionRequest.getImageList().stream()
+                .map(ImageUtil::removePrefix)
+                .collect(Collectors.toList());
+        promotionRequest.setImageList(imageList);
         return ApiResponseDto.onSuccess(promotionCommandService.modifyPromotion(member, promotionId, promotionRequest));
     }
 
