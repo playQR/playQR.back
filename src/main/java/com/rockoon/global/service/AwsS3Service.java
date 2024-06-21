@@ -67,7 +67,9 @@ public class AwsS3Service {
 
     public void deleteFile(String fileName) {
         try {
-            amazonS3.deleteObject(new DeleteObjectRequest(bucket, fileName));
+            if (amazonS3.doesObjectExist(bucket, fileName)) {
+                amazonS3.deleteObject(new DeleteObjectRequest(bucket, fileName));
+            }
         } catch (SdkClientException e) {
             throw new ImageHandler(ErrorStatus.IMAGE_REQUEST_IS_EMPTY);
         }

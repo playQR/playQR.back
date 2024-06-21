@@ -4,7 +4,6 @@ import com.rockoon.domain.board.dto.promotion.PromotionRequest;
 import com.rockoon.domain.board.entity.Promotion;
 import com.rockoon.domain.board.repository.PromotionRepository;
 import com.rockoon.domain.board.service.promotion.PromotionCommandService;
-import com.rockoon.domain.image.dto.ImageRequest;
 import com.rockoon.domain.image.entity.Image;
 import com.rockoon.domain.image.repository.ImageRepository;
 import com.rockoon.domain.member.entity.Member;
@@ -64,7 +63,7 @@ class PromotionCommandServiceTest {
     Long teamId;
     List<ShowOptionRequest> optionList = new ArrayList<>();
 
-    List<ImageRequest> imageList = new ArrayList<>();
+    List<String> imageList = new ArrayList<>();
     List<MusicRequest> musicList = new ArrayList<>();
 
     PromotionRequest request;
@@ -95,9 +94,7 @@ class PromotionCommandServiceTest {
                 .category(Category.FEE)
                 .content("content")
                 .build());
-        imageList.add(ImageRequest.builder()
-                .imageUrl("image.png")
-                .build());
+        imageList.add("image.png");
         musicList.add(MusicRequest.builder()
                 .artist("thornApple")
                 .title("blueSpring")
