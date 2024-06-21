@@ -1,6 +1,6 @@
 spring:
   profiles:
-    default: test
+    active: test
   datasource:
     embedded-database-connection: h2
 
@@ -11,3 +11,17 @@ spring:
 app:
   jwt:
     secret: e64467d9d73df5387e2379a0db11abe1a243b01d4d3283630933bd68d0494d8a
+  server:
+    uri: "proxyUri"
+
+cloud:
+  aws:
+    credentials:
+      accessKey: asdf
+      secretKey: asdf
+    s3:
+      bucket: playbarcode-bucket
+    region:
+      static: ap-northeast-2
+    stack:
+      auto: false
