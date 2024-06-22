@@ -38,7 +38,10 @@ public enum ErrorStatus implements BaseCode{
 
 
     //이미지 관련 오류(4250 ~ 4299)
-    IMAGE_REQUEST_IS_EMPTY(BAD_REQUEST, 4250, "요청한 이미지가 존재하지 않습니다");
+    IMAGE_REQUEST_IS_EMPTY(BAD_REQUEST, 4250, "요청한 이미지가 존재하지 않습니다"),
+
+    //셑리스트 좋아요 관련 오류(4300 ~ 4349)
+    LIKE_NOT_FOUND(NOT_FOUND, 4300, "존재하지 않는 좋아요 정보입니다.");
 
     private final HttpStatus httpStatus;
     private final Integer code;
