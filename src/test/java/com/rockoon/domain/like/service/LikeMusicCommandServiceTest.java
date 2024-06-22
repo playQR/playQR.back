@@ -16,7 +16,6 @@ import com.rockoon.domain.music.dto.MusicRequest;
 import com.rockoon.domain.music.entity.PromotionMusic;
 import com.rockoon.domain.music.repository.PromotionMusicRepository;
 import com.rockoon.global.config.test.DatabaseCleanUp;
-import jakarta.persistence.EntityManager;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -48,8 +47,6 @@ class LikeMusicCommandServiceTest {
     MemberQueryService memberQueryService;
     @Autowired
     DatabaseCleanUp databaseCleanUp;
-    @Autowired
-    EntityManager em;
     //Repository
     @Autowired
     LikeMusicRepository likeMusicRepository;
@@ -96,7 +93,6 @@ class LikeMusicCommandServiceTest {
                 .musicList(setList)
                 .build();
         promotionId = promotionCommandService.createPromotion(hostMember, request);
-        em.flush();
     }
 
     @AfterEach
@@ -117,6 +113,22 @@ class LikeMusicCommandServiceTest {
         //then
         Optional<LikeMusic> optionalLike = likeMusicRepository.findById(likeId);
         assertThat(optionalLike).isPresent();
+    }
+
+    @Test
+    @Transactional
+    @DisplayName("게스트가 셑리스트에 좋아요를 누르고 취소합니다.")
+    void testMethodName() {
+        //given
+        Promotion promotion = promotionRepository.findById(promotionId).get();
+        log.info("size = {}", promotion.getPromotionMusicList().size());
+        List<PromotionMusic> promotionMusicList = promotion.getPromotionMusicList();
+        promotionMusicList.forEach(promotionMusic -> likeMusicCommandService.likeMusic(promotionMusic.getId(),guestMember));
+        //when
+        likeMusicCommandService.unlikeMusic(promotionMusicList.get(0).getId(), guestMember);
+        //then
+        List<LikeMusic> all = likeMusicRepository.findAll();
+        assertThat(all.size()).isEqualTo(2);
     }
 
 }
