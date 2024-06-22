@@ -11,6 +11,6 @@ public interface TicketCommandService {
 
     void deleteTicket(Long ticketId, Member member);
 
-    void enterByUUID(String uuid) throws TicketHandler;
+    void enterByUUID(String uuid);
 
 }
