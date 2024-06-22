@@ -40,19 +40,19 @@ public class Guest extends BaseTimeEntity{
     @JsonProperty("entered")
     private Boolean entered;
 
-    public void markTicketAsIssued() {
+    public void markTicketAsIssued(Boolean ticketIssued) {
         this.ticketIssued = true;
     }
 
-    public void markTicketAsNotIssued() {
+    public void markTicketAsNotIssued(Boolean ticketIssued) {
         this.ticketIssued = false;
     }
 
-    public void setEntered(Boolean entered) {
+    public void updateEntryStatus(Boolean entered) {
         this.entered = entered;
     }
 
-    public void setName(String name) {
+    public void updateName(String name) {
         this.name = name;
     }
 }
