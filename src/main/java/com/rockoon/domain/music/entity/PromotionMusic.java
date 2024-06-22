@@ -30,10 +30,16 @@ public class PromotionMusic {
     private Music music;
 
     public static PromotionMusic of(Promotion promotion, Music music, boolean isOpen) {
-        return PromotionMusic.builder()
+        PromotionMusic build = PromotionMusic.builder()
                 .music(music)
                 .promotion(promotion)
                 .isOpen(isOpen)
                 .build();
+        build.link(promotion);
+        return build;
+    }
+
+    private void link(Promotion promotion) {
+        promotion.getPromotionMusicList().add(this);
     }
 }
