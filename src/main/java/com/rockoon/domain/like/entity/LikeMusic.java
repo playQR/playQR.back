@@ -13,11 +13,11 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @SuperBuilder
-@Table(name = "like")
-public class Like {
+@Table(name = "like_music")
+public class LikeMusic {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "like_id")
+    @Column(name = "like_music_id")
     private Long id;
 
     private Long promotionMusicId;          //연관관계 depth를 낮추기 위함
@@ -26,8 +26,8 @@ public class Like {
     @JoinColumn(name = "member_id")
     private Member member;
 
-    public static Like of(Long promotionMusicId, Member member) {
-        return Like.builder()
+    public static LikeMusic of(Long promotionMusicId, Member member) {
+        return LikeMusic.builder()
                 .member(member)
                 .promotionMusicId(promotionMusicId)
                 .build();

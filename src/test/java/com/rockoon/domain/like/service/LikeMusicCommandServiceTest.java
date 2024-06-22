@@ -2,17 +2,21 @@ package com.rockoon.domain.like.service;
 
 import com.rockoon.domain.board.dto.promotion.PromotionRequest;
 import com.rockoon.domain.board.entity.Promotion;
+import com.rockoon.domain.board.repository.PromotionRepository;
 import com.rockoon.domain.board.service.promotion.PromotionCommandService;
 import com.rockoon.domain.board.service.promotion.PromotionQueryService;
-import com.rockoon.domain.like.entity.Like;
-import com.rockoon.domain.like.repository.LikeRepository;
+import com.rockoon.domain.like.entity.LikeMusic;
+import com.rockoon.domain.like.repository.LikeMusicRepository;
+import com.rockoon.domain.like.service.music_like.LikeMusicCommandService;
 import com.rockoon.domain.member.dto.MemberRequest.MemberRegisterDto;
 import com.rockoon.domain.member.entity.Member;
 import com.rockoon.domain.member.service.MemberCommandService;
 import com.rockoon.domain.member.service.MemberQueryService;
 import com.rockoon.domain.music.dto.MusicRequest;
 import com.rockoon.domain.music.entity.PromotionMusic;
+import com.rockoon.domain.music.repository.PromotionMusicRepository;
 import com.rockoon.global.config.test.DatabaseCleanUp;
+import jakarta.persistence.EntityManager;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -30,10 +34,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @Slf4j
 @SpringBootTest
-class LikeCommandServiceTest {
+class LikeMusicCommandServiceTest {
     //Service
     @Autowired
-    LikeCommandService likeCommandService;
+    LikeMusicCommandService likeMusicCommandService;
     @Autowired
     PromotionCommandService promotionCommandService;
     @Autowired
@@ -44,13 +48,19 @@ class LikeCommandServiceTest {
     MemberQueryService memberQueryService;
     @Autowired
     DatabaseCleanUp databaseCleanUp;
+    @Autowired
+    EntityManager em;
     //Repository
     @Autowired
-    LikeRepository likeRepository;
+    LikeMusicRepository likeMusicRepository;
+    @Autowired
+    PromotionRepository promotionRepository;
+    @Autowired
+    PromotionMusicRepository promotionMusicRepository;
     //Entity & dto & else
     Member hostMember;
     Member guestMember;
-    Promotion promotion;
+    Long promotionId;
 
 
     @BeforeEach
@@ -85,9 +95,8 @@ class LikeCommandServiceTest {
                 .title("title")
                 .musicList(setList)
                 .build();
-        Long promotionId = promotionCommandService.createPromotion(hostMember, request);
-        promotion = promotionQueryService.getPromotionById(promotionId);
-
+        promotionId = promotionCommandService.createPromotion(hostMember, request);
+        em.flush();
     }
 
     @AfterEach
@@ -100,11 +109,13 @@ class LikeCommandServiceTest {
     @DisplayName("게스트가 셑리스트에 좋아요를 누릅니다.")
     void LikeSetList() {
         //given
+        Promotion promotion = promotionRepository.findById(promotionId).get();
+        log.info("size = {}", promotion.getPromotionMusicList().size());
         List<PromotionMusic> promotionMusicList = promotion.getPromotionMusicList();
         //when
-        Long likeId = likeCommandService.likeMusic(promotionMusicList.get(0).getId(), guestMember);
+        Long likeId = likeMusicCommandService.likeMusic(promotionMusicList.get(0).getId(), guestMember);
         //then
-        Optional<Like> optionalLike = likeRepository.findById(likeId);
+        Optional<LikeMusic> optionalLike = likeMusicRepository.findById(likeId);
         assertThat(optionalLike).isPresent();
     }
 
