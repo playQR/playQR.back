@@ -1,7 +1,6 @@
 package com.rockoon.domain.like.entity;
 
 import com.rockoon.domain.member.entity.Member;
-import com.rockoon.domain.music.entity.PromotionMusic;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -21,11 +20,16 @@ public class Like {
     @Column(name = "like_id")
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "promotion_music_id")
-    private PromotionMusic promotionMusic;
+    private Long promotionMusicId;          //연관관계 depth를 낮추기 위함
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private Member member;
+
+    public static Like of(Long promotionMusicId, Member member) {
+        return Like.builder()
+                .member(member)
+                .promotionMusicId(promotionMusicId)
+                .build();
+    }
 }
