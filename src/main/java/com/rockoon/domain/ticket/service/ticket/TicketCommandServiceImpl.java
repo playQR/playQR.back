@@ -23,11 +23,11 @@ public class TicketCommandServiceImpl implements TicketCommandService {
     private final GuestRepository guestRepository;
 
     @Override
-    public Long createTicket(Long guestId, Member member) {
+    public Long createTicket(Long guestId, Member member, Date dueDate) {
         Guest guest = guestRepository.findById(guestId)
                 .orElseThrow(() -> new TicketHandler(ErrorStatus.GUEST_NOT_FOUND));
 
-        Ticket ticket = new Ticket(UUID.randomUUID().toString(), new Date(), guest);
+        Ticket ticket = Ticket.builder().dueDate(dueDate).guest(guest).build();
 
         guest.markTicketAsIssued();
 
