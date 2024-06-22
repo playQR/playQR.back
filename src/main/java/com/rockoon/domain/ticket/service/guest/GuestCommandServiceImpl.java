@@ -25,13 +25,7 @@ public class GuestCommandServiceImpl implements GuestCommandService {
         Promotion promotion = promotionRepository.findById(promotionId)
                 .orElseThrow(() -> new GuestHandler(ErrorStatus.PROMOTION_NOT_FOUND));
 
-        Guest guest = Guest.builder()
-                .promotion(promotion)
-                .member(member)
-                .name(name)
-                .ticketIssued(false)
-                .entered(false)
-                .build();
+        Guest guest = Guest.builder().promotion(promotion).member(member).name(name).ticketIssued(false).entered(false).build();
 
         return guestRepository.save(guest).getId();
     }
@@ -43,9 +37,9 @@ public class GuestCommandServiceImpl implements GuestCommandService {
 
         validateCreator(guest.getMember(), guestDetails.getMember());
 
-        guest.setName(guestDetails.getName());
-        guest.setTicketIssued(guestDetails.getTicketIssued());
-        guest.setEntered(guestDetails.getEntered());
+        guest.updateEntryStatus(guestDetails.getEntered());
+        guest.markTicketAsIssued(guestDetails.getTicketIssued());
+        guest.updateName(guestDetails.getName());
 
         guestRepository.save(guest);
     }
