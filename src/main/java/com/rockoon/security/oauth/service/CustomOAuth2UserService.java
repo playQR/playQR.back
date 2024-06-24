@@ -3,6 +3,11 @@ package com.rockoon.security.oauth.service;
 import com.rockoon.domain.member.entity.Member;
 import com.rockoon.domain.member.entity.Role;
 import com.rockoon.domain.member.repository.MemberRepository;
+import com.rockoon.global.util.RandomNameUtil;
+import com.rockoon.global.util.RandomNameUtil.NameType;
+import com.rockoon.presentation.payload.code.ErrorStatus;
+import com.rockoon.presentation.payload.exception.security.OAuth2Exception;
+import com.rockoon.security.oauth.dto.CustomUserDetails;
 import com.rockoon.security.oauth.dto.OAuth2UserInfo;
 import com.rockoon.security.oauth.factory.OAuth2UserInfoFactory;
 import lombok.RequiredArgsConstructor;
@@ -16,7 +21,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
-import java.security.AuthProvider;
 import java.util.Optional;
 
 @Slf4j
@@ -48,12 +52,13 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
     private Member registerMember(OAuth2UserInfo oAuth2UserInfo) {
         Member register = Member.builder()
                 .kakaoEmail(oAuth2UserInfo.getEmail())
-                .username("username")
-                .nickname("nickname")
-                .name("name")
+                .username(RandomNameUtil.generateAuto(NameType.USERNAME))
+                .nickname(RandomNameUtil.generateAuto(NameType.NICKNAME))
+                .name(RandomNameUtil.generateAuto(NameType.NAME))
                 .role(Role.GUEST)           //회원가입시에만 guest로 두고 이후 사용에는 user로 돌린다
                 .build();
 
         return memberRepository.save(register);
     }
+
 }
