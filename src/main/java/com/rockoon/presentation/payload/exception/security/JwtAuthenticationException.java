@@ -1,4 +1,4 @@
-package com.rockoon.security.exception;
+package com.rockoon.presentation.payload.exception.security;
 
 import com.rockoon.presentation.payload.code.ErrorStatus;
 import org.springframework.security.core.AuthenticationException;
