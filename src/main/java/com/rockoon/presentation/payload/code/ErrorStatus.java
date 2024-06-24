@@ -25,8 +25,10 @@ public enum ErrorStatus implements BaseCode{
     AUTH_TOKEN_HAS_EXPIRED(BAD_REQUEST, 4053, "토큰의 유효기간이 만료되었습니다."),
     AUTH_TOKEN_IS_UNSUPPORTED(BAD_REQUEST,4054, "서버에서 지원하는 형식의 토큰이 아닙니다."),
     AUTH_IS_NULL(BAD_REQUEST,4055, "토큰 값이 존재하지 않습니다.(null)"),
+    AUTH_OAUTH2_EMAIL_NOT_FOUND_FROM_PROVIDER(NOT_FOUND, 4056, "해당 이메일은 카카오 계정 이메일로 존재하지 않습니다."),
     //회원 관련 오류(4100 ~ 4149)
     MEMBER_NOT_FOUND(NOT_FOUND, 4100, "존재하지 않는 회원입니다."),
+    MEMBER_NAME_TYPE_IS_INVALID(NOT_FOUND, 4101, "존재하지 않는 이름타입입니다. 이름타입은 유저네임, 네임, 닉네임입니다."),
 
     //프로모션 관련 오류(4150 ~ 4199)
     PROMOTION_NOT_FOUND(NOT_FOUND, 4150, "존재하지 않는 프로모션입니다."),
