@@ -27,6 +27,8 @@ app:
     secret: ${app.jwt.secret}       # intellij 상단 run -> edit config -> enviromnent variable에 추가
   server:
     uri: ${app.server.uri}
+  oauth2:
+    authorizedRedirectUri: ${app.oauth2.authorizedRedirectUri}
 
 cloud:
   aws:
