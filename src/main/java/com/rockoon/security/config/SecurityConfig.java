@@ -1,7 +1,12 @@
 package com.rockoon.security.config;
 
+import com.rockoon.security.exception.JwtAccessDeniedHandler;
+import com.rockoon.security.exception.JwtAuthenticationEntryPoint;
 import com.rockoon.security.filter.JwtAuthenticationFilter;
 import com.rockoon.security.filter.JwtExceptionFilter;
+import com.rockoon.security.oauth.handler.OAuth2AuthenticationFailureHandler;
+import com.rockoon.security.oauth.handler.OAuth2AuthenticationSuccessHandler;
+import com.rockoon.security.oauth.service.CustomOAuth2UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -26,13 +31,20 @@ import static org.springframework.security.web.util.matcher.AntPathRequestMatche
 @EnableWebSecurity
 public class SecurityConfig {
 
+    private final OAuth2AuthenticationSuccessHandler oAuth2AuthenticationSuccessHandler;
+    private final OAuth2AuthenticationFailureHandler oAuth2AuthenticationFailureHandler;
+    private final CustomOAuth2UserService customOAuth2UserService;
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
     private final JwtExceptionFilter jwtExceptionFilter;
+    private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
+    private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
         configureCorsAndSecurity(httpSecurity);
         configureAuth(httpSecurity);
+        configureOAuth2(httpSecurity);
+        configureExceptionHandling(httpSecurity);
         addFilter(httpSecurity);
 
         return httpSecurity.build();
@@ -67,6 +79,7 @@ public class SecurityConfig {
                             .requestMatchers("/", "/.well-known/**", "/css/**", "/*.ico", "/error", "/images/**").permitAll()
                             .requestMatchers(permitAllRequest()).permitAll()
                             .requestMatchers(additionalSwaggerRequests()).permitAll()
+                            .requestMatchers(authRelatedEndpoints()).permitAll()
                             .anyRequest().authenticated();
 //                            .requestMatchers(authorizationAdmin()).hasRole("ADMIN")
 //                            .requestMatchers(authorizationDormant()).hasRole("DORMANT")
@@ -79,6 +92,25 @@ public class SecurityConfig {
         httpSecurity
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .addFilterBefore(jwtExceptionFilter, JwtAuthenticationFilter.class);
+    }
+
+    private void configureExceptionHandling(HttpSecurity httpSecurity) throws Exception {
+        httpSecurity
+                .exceptionHandling(httpSecurityExceptionHandlingConfigurer -> httpSecurityExceptionHandlingConfigurer
+                        .authenticationEntryPoint(jwtAuthenticationEntryPoint)
+                        .accessDeniedHandler(jwtAccessDeniedHandler));        // 403
+    }
+
+    private void configureOAuth2(HttpSecurity httpSecurity) throws Exception {
+        httpSecurity
+                .oauth2Login(httpSecurityOAuth2LoginConfigurer -> httpSecurityOAuth2LoginConfigurer
+                        .authorizationEndpoint(authorizationEndpointConfig ->
+                                authorizationEndpointConfig.baseUri("/oauth2/authorize"))
+                        .userInfoEndpoint(userInfoEndpointConfig ->
+                                userInfoEndpointConfig.userService(customOAuth2UserService))
+                        .successHandler(oAuth2AuthenticationSuccessHandler::onAuthenticationSuccess)
+                        .failureHandler(oAuth2AuthenticationFailureHandler::onAuthenticationFailure)
+                );
     }
 
     private RequestMatcher[] permitAllRequest() {
@@ -102,6 +134,13 @@ public class SecurityConfig {
                 antMatcher("/v3/api-docs/**"),
                 antMatcher("/profile")
 
+        );
+        return requestMatchers.toArray(RequestMatcher[]::new);
+    }
+    private RequestMatcher[] authRelatedEndpoints() {
+        List<RequestMatcher> requestMatchers = List.of(
+                antMatcher("/oauth2/**"),
+                antMatcher("/login/**")
         );
         return requestMatchers.toArray(RequestMatcher[]::new);
     }

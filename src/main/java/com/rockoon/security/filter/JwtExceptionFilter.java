@@ -2,7 +2,7 @@ package com.rockoon.security.filter;
 
 import com.rockoon.presentation.payload.code.ErrorStatus;
 import com.rockoon.security.exception.CustomErrorSend;
-import com.rockoon.security.exception.JwtAuthenticationException;
+import com.rockoon.presentation.payload.exception.security.JwtAuthenticationException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

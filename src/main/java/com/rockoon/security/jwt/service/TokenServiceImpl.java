@@ -5,7 +5,7 @@ import com.rockoon.domain.member.service.MemberQueryService;
 import com.rockoon.global.service.RedisService;
 import com.rockoon.presentation.payload.code.ErrorStatus;
 import com.rockoon.presentation.payload.exception.GeneralException;
-import com.rockoon.security.exception.JwtAuthenticationException;
+import com.rockoon.presentation.payload.exception.security.JwtAuthenticationException;
 import com.rockoon.security.jwt.dto.JwtToken;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
