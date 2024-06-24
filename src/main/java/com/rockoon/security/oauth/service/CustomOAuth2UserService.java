@@ -55,7 +55,7 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
                 .username(RandomNameUtil.generateAuto(NameType.USERNAME))
                 .nickname(RandomNameUtil.generateAuto(NameType.NICKNAME))
                 .name(RandomNameUtil.generateAuto(NameType.NAME))
-                .role(Role.GUEST)           //회원가입시에만 guest로 두고 이후 사용에는 user로 돌린다
+                .role(Role.USER)           //회원가입시에만 guest로 두고 이후 사용에는 user로 돌린다
                 .build();
 
         return memberRepository.save(register);
