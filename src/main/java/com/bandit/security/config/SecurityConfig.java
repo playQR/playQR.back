@@ -121,9 +121,9 @@ public class SecurityConfig {
                 antMatcher(HttpMethod.POST, "/api/members"),
                 antMatcher(HttpMethod.GET,"/api/members/**"),
                 antMatcher(HttpMethod.GET, "/api/promotions/**"),
-                antMatcher(HttpMethod.GET, "/api/tokens/login"),
-                antMatcher(HttpMethod.POST, "/api/images"),
-                antMatcher(HttpMethod.GET,"/api/likes/music/{promotionMusicId}/count")
+                antMatcher(HttpMethod.GET,"/api/likes/music/{promotionMusicId}/count"),
+                antMatcher(HttpMethod.POST, "/api/tokens/reissue"),
+                antMatcher(HttpMethod.POST, "/api/images")
         );
         return requestMatchers.toArray(RequestMatcher[]::new);
     }
@@ -144,7 +144,7 @@ public class SecurityConfig {
         List<RequestMatcher> requestMatchers = List.of(
                 antMatcher("/oauth2/**"),
                 antMatcher("/login/**"),
-                antMatcher("/auth")
+                antMatcher("/auth/**")
         );
         return requestMatchers.toArray(RequestMatcher[]::new);
     }
