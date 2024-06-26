@@ -23,6 +23,8 @@ import org.springframework.util.StringUtils;
 
 import java.util.Optional;
 
+import static com.rockoon.global.util.RandomNameUtil.NameType.*;
+
 @Slf4j
 @Transactional
 @RequiredArgsConstructor
@@ -52,13 +54,40 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
     private Member registerMember(OAuth2UserInfo oAuth2UserInfo) {
         Member register = Member.builder()
                 .kakaoEmail(oAuth2UserInfo.getEmail())
-                .username(RandomNameUtil.generateAuto(NameType.USERNAME))
-                .nickname(RandomNameUtil.generateAuto(NameType.NICKNAME))
-                .name(RandomNameUtil.generateAuto(NameType.NAME))
+                .username(generateRandomName(USERNAME))
+                .nickname(generateRandomName(NICKNAME))
+                .name(generateRandomName(NAME))
                 .role(Role.USER)           //회원가입시에만 guest로 두고 이후 사용에는 user로 돌린다
                 .build();
 
         return memberRepository.save(register);
+    }
+
+    private String generateRandomName(NameType nameType) {
+        String randomName;
+        switch (nameType) {
+            case NAME -> {
+                do {
+                    randomName = RandomNameUtil.generateAuto(NAME);
+
+                } while (memberRepository.existsByName(randomName));
+            }
+            case NICKNAME -> {
+                do {
+                    randomName = RandomNameUtil.generateAuto(NameType.NICKNAME);
+                } while (memberRepository.existsByNickname(randomName));
+            }
+            case USERNAME -> {
+                do {
+                    randomName = RandomNameUtil.generateAuto(NameType.USERNAME);
+                }
+                while (memberRepository.existsByUsername(randomName));
+            }
+            default -> {
+                throw new OAuth2Exception(ErrorStatus.MEMBER_NAME_TYPE_IS_INVALID);
+            }
+        }
+        return randomName;
     }
 
 }
