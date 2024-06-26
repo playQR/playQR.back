@@ -140,7 +140,8 @@ public class SecurityConfig {
     private RequestMatcher[] authRelatedEndpoints() {
         List<RequestMatcher> requestMatchers = List.of(
                 antMatcher("/oauth2/**"),
-                antMatcher("/login/**")
+                antMatcher("/login/**"),
+                antMatcher("/auth")
         );
         return requestMatchers.toArray(RequestMatcher[]::new);
     }
