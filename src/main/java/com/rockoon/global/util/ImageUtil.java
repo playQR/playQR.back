@@ -1,9 +1,12 @@
 package com.rockoon.global.util;
 
 import com.rockoon.domain.image.entity.Image;
+import com.rockoon.domain.member.entity.Member;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+
+import java.util.List;
 
 @Slf4j
 @Component
@@ -21,7 +24,24 @@ public class ImageUtil {
     }
 
     public static String appendUri(Image image) {
+        if (image.getImageUrl() == null || image.getImageUrl().isEmpty()) {
+            return null;
+        }
         return appendUri(image.getImageUrl());
+    }
+
+    public static String appendUri(List<Image> imageList) {
+        if (imageList == null || imageList.isEmpty()) {
+            return null;
+        }
+        return appendUri(imageList.get(0));
+    }
+
+    public static String appendUri(Member member) {
+        if (member.getProfileImg() == null || member.getProfileImg().isEmpty()) {
+            return null;
+        }
+        return member.getProfileImg();
     }
 
     public static String removePrefix(String url) {
