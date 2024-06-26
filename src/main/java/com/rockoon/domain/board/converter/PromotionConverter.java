@@ -30,7 +30,7 @@ public class PromotionConverter {
                 .team(promotion.getTeam())
                 .title(promotion.getTitle())
                 .writer(MemberConverter.toResponse(promotion.getWriter()))
-                .thumbnail(ImageUtil.appendUri(promotion.getBoardImageList().get(0)))
+                .thumbnail(ImageUtil.appendUri(promotion.getBoardImageList()))
                 .build();
     }
 
