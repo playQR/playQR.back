@@ -119,7 +119,7 @@ public class SecurityConfig {
         List<RequestMatcher> requestMatchers = List.of(
                 antMatcher(HttpMethod.GET, "/"),
                 antMatcher(HttpMethod.POST, "/api/members"),
-                antMatcher(HttpMethod.GET,"/api/members/**"),
+                antMatcher(HttpMethod.GET,"/api/members/{memberId}"),
                 antMatcher(HttpMethod.GET, "/api/promotions/**"),
                 antMatcher(HttpMethod.GET,"/api/likes/music/{promotionMusicId}/count"),
                 antMatcher(HttpMethod.POST, "/api/tokens/reissue"),

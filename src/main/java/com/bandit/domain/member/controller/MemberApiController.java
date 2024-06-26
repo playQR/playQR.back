@@ -32,7 +32,7 @@ public class MemberApiController {
     @ApiErrorCodeExample({
             ErrorStatus._INTERNAL_SERVER_ERROR
     })
-    @PostMapping
+    @PostMapping        //TODO 나중에 지워도 됨
     public ApiResponseDto<Long> registerMember(@RequestBody MemberRegisterDto memberRegisterDto) {
         memberRegisterDto.setProfileImg(ImageUtil.removePrefix(memberRegisterDto.getProfileImg()));
         return ApiResponseDto.onSuccess(memberCommandService.registerMember(memberRegisterDto));
@@ -53,7 +53,7 @@ public class MemberApiController {
         return ApiResponseDto.onSuccess(memberCommandService.modifyMemberInfo(member, memberModifyDto));
     }
 
-    @Operation(summary = "회원 정보 조회 🔑", description = "PK를 통해 사용자의 정보를 조회합니다.")
+    @Operation(summary = "회원 정보 조회", description = "PK를 통해 사용자의 정보를 조회합니다.")
     @ApiErrorCodeExample({
             ErrorStatus._INTERNAL_SERVER_ERROR,
             ErrorStatus.MEMBER_NOT_FOUND
@@ -65,5 +65,16 @@ public class MemberApiController {
                         memberQueryService.getByMemberId(memberId)
                 )
         );
+    }
+    @Operation(summary = "회원 정보 조회 🔑", description = "액세스토큰을 통해 사용자의 정보를 조회합니다.")
+    @ApiErrorCodeExample({
+            ErrorStatus._INTERNAL_SERVER_ERROR,
+            ErrorStatus._UNAUTHORIZED_LOGIN_DATA_RETRIEVAL_ERROR,
+            ErrorStatus._ASSIGNABLE_PARAMETER,
+            ErrorStatus.MEMBER_NOT_FOUND
+    })
+    @GetMapping
+    public ApiResponseDto<MemberResponse> getMemberInfo(@AuthUser Member member) {
+        return ApiResponseDto.onSuccess(MemberConverter.toResponse(member));
     }
 }
