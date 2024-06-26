@@ -46,13 +46,6 @@ public class TokenServiceImpl implements TokenService{
         this.redisService = redisService;
         this.memberQueryService = memberQueryService;
     }
-    @Override       //TODO oauth2적용시 필요 없음
-    public JwtToken login(String kakaoEmail) {
-        Member member = memberQueryService.getByKakaoEmail(kakaoEmail);
-        Authentication authentication = new UsernamePasswordAuthenticationToken(member, "",
-                member.getAuthorities());
-        return generateToken(authentication);
-    }
 
     @Override
     public JwtToken issueTokens(String refreshToken) {
@@ -110,6 +103,8 @@ public class TokenServiceImpl implements TokenService{
                 .grantType("Bearer")
                 .accessToken(accessToken)
                 .refreshToken(refreshToken)
+                .code_expire(parseExpiration(accessToken))
+                .refresh_expire(parseExpiration(refreshToken))
                 .build();
     }
 
@@ -119,7 +114,7 @@ public class TokenServiceImpl implements TokenService{
         Claims claims = parseClaims(accessToken);
 
         if (claims.get("auth") == null) {
-            throw new RuntimeException("권한 정보가 없는 토큰입니다.");
+            throw new JwtAuthenticationException(ErrorStatus.AUTH_INVALID_TOKEN);
         }
 
         // 클레임에서 권한 정보 가져오기
@@ -165,6 +160,21 @@ public class TokenServiceImpl implements TokenService{
     @Override
     public boolean existsRefreshToken(String refreshToken) {
         return redisService.getValue(refreshToken) != null;
+    }
+
+    @Override
+    public Date parseExpiration(String token) {
+        try {
+            Claims claims = Jwts.parserBuilder()
+                    .setSigningKey(key)
+                    .build()
+                    .parseClaimsJws(token)
+                    .getBody();
+
+            return claims.getExpiration();
+        } catch (JwtException exception) {
+            throw new JwtAuthenticationException(ErrorStatus._INTERNAL_SERVER_ERROR);
+        }
     }
 
     private Claims parseClaims(String accessToken) {
