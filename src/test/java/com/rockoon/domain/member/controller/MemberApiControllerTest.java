@@ -9,12 +9,14 @@ import com.rockoon.domain.member.service.MemberCommandService;
 import com.rockoon.domain.member.service.MemberQueryService;
 import com.rockoon.global.config.spring.WebMvcConfig;
 import com.rockoon.global.config.test.DatabaseCleanUp;
+import com.rockoon.global.util.ImageUtil;
 import com.rockoon.presentation.advice.ExceptionAdvice;
 import com.rockoon.presentation.payload.code.ErrorStatus;
 import com.rockoon.presentation.payload.exception.MemberHandler;
 import com.rockoon.security.config.SecurityConfig;
 import com.rockoon.security.jwt.service.TokenService;
 import lombok.extern.slf4j.Slf4j;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,12 +28,14 @@ import org.springframework.context.annotation.FilterType;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.nio.charset.StandardCharsets;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -60,6 +64,13 @@ class MemberApiControllerTest {
     private MemberCommandService memberCommandService;
     @MockBean
     private DatabaseCleanUp databaseCleanUp;
+    @MockBean
+    private ImageUtil imageUtil;
+
+    @BeforeEach
+    void setUp() {
+        ReflectionTestUtils.setField(ImageUtil.class, "SERVER_URI", "http://localhost:8080/");
+    }
 
 
     @Test
@@ -73,7 +84,7 @@ class MemberApiControllerTest {
                 .profileImg("profileImg")
                 .build();
         Long memberId = 5L;     // 개발자가 명시하는 변수
-        when(memberCommandService.registerMember(request)).thenReturn(memberId);
+        when(memberCommandService.registerMember(any())).thenReturn(memberId);
         //when
         ResultActions perform = mockMvc.perform(MockMvcRequestBuilders.post("/api/members")
                 .contentType(MediaType.APPLICATION_JSON)

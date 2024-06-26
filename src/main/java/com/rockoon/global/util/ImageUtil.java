@@ -46,10 +46,8 @@ public class ImageUtil {
 
     public static String removePrefix(String url) {
         String subPrefixUrl = null;
-        if (url != null) {
-            if (url.startsWith(SERVER_URI)) {
-                subPrefixUrl = url.substring(SERVER_URI.length());
-            }
+        if (url != null && url.startsWith(SERVER_URI)) {
+            subPrefixUrl = url.substring(SERVER_URI.length());
         }
         return subPrefixUrl;
     }
@@ -59,5 +57,9 @@ public class ImageUtil {
             return false;
         }
         return !previous.equals(current);
+    }
+
+    public static String prefix() {
+        return SERVER_URI;
     }
 }

@@ -32,6 +32,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -68,7 +69,7 @@ class PromotionApiControllerTest {
     @DisplayName("유저가 게시글을 작성합니다.")
     void createPromotion() throws Exception{
         //given
-        PromotionRequest request = PromotionRequest.builder().build();
+        PromotionRequest request = PromotionRequest.builder().imageList(new ArrayList<>()).build();
         Long promotionId = 1L;
         Long memberId = 2L;
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
@@ -98,7 +99,7 @@ class PromotionApiControllerTest {
     @DisplayName("유저가 작성한 게시글을 수정합니다.")
     void modifyPromotion() throws Exception{
         //given
-        PromotionRequest request = PromotionRequest.builder().build();
+        PromotionRequest request = PromotionRequest.builder().imageList(new ArrayList<>()).build();
         Long modifiedPromotionId = 4L;
         Long memberId = 3L;
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
@@ -128,7 +129,7 @@ class PromotionApiControllerTest {
     @DisplayName("프로모션을 수정할 때, 작성자가 아닌 유저가 프로모션을 수정하려는 접근을 제한합니다.")
     void executeExceptionWhenNotWriterTouchPromotion() throws Exception{
         //given
-        PromotionRequest request = PromotionRequest.builder().build();
+        PromotionRequest request = PromotionRequest.builder().imageList(new ArrayList<>()).build();
         Long modifiedPromotionId = 4L;
         Long memberId = 3L;
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
@@ -158,7 +159,7 @@ class PromotionApiControllerTest {
     @DisplayName("프로모션을 수정할 때, 존재하지 않는 게시글일 경우 동작이 실패합니다.")
     void executeExceptionWhenPromotionCannotBeFound() throws Exception{
         //given
-        PromotionRequest request = PromotionRequest.builder().build();
+        PromotionRequest request = PromotionRequest.builder().imageList(new ArrayList<>()).build();
         Long modifiedPromotionId = 4L;
         Long memberId = 3L;
         String username = SecurityContextHolder.getContext().getAuthentication().getName();

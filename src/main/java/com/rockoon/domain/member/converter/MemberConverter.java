@@ -8,7 +8,7 @@ public class MemberConverter {
     public static MemberResponse toResponse(Member member) {
         return MemberResponse.builder()
                 .name(member.getName())
-                .profileImg(ImageUtil.appendUri(member.getProfileImg()))
+                .profileImg(ImageUtil.appendUri(member))
                 .nickname(member.getNickname())
                 .build();
     }
