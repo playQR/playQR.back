@@ -22,10 +22,11 @@ import java.util.List;
 @Table(name = "promotion")
 public class Promotion extends Board {
     private int maxAudience;
-    private int fee;
+    private int entranceFee;
     private String team;
     private LocalDate showDate;
-    private String showTime;
+    private String startTime;
+    private String endTime;
     private String showLocation;
     private String bankName;
     private String account;
@@ -42,11 +43,12 @@ public class Promotion extends Board {
                 .title(request.getTitle())
                 .content(request.getContent())
                 .maxAudience(request.getMaxAudience())
-                .fee(request.getFee())
+                .entranceFee(request.getEntranceFee())
                 .team(request.getTeam())
                 .writer(member)
                 .showDate(request.getShowDate())
-                .showTime(request.getShowTime())
+                .startTime(request.getStartTime())
+                .endTime(request.getEndTime())
                 .showLocation(request.getShowLocation())
                 .bankName(request.getBankName())
                 .account(request.getAccount())

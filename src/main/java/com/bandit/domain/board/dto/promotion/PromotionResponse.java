@@ -7,6 +7,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
 import java.util.List;
 
 public class PromotionResponse {
@@ -19,7 +20,16 @@ public class PromotionResponse {
         private String title;
         private String content;
         private String team;
+        private int entranceFee;
         private int maxAudience;
+        private LocalDate date;
+        private String startTime;
+        private String endTime;
+        private String location;
+        private String bankName;
+        private String account;
+        private String accountHolder;
+        private String refundInfo;
         private MemberResponse writer;
 
         private List<MusicResponse> musicList;
@@ -34,6 +44,11 @@ public class PromotionResponse {
         private String title;
         private String team;
         private String thumbnail;
+        private LocalDate date;
+        private String location;
+        private String startTime;
+        private String endTime;
+        private int entranceFee;
         private MemberResponse writer;
     }
     @Data
