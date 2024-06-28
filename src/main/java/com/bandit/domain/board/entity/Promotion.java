@@ -10,6 +10,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,6 +23,14 @@ import java.util.List;
 public class Promotion extends Board {
     private int maxAudience;
     private String team;
+    private LocalDate showDate;
+    private String showTime;
+    private String showLocation;
+    private String bankName;
+    private String account;
+    private String accountHolder;
+    private String refundInfo;
+
 
     @Builder.Default
     @OneToMany(mappedBy = "promotion", cascade = CascadeType.PERSIST, orphanRemoval = true)
