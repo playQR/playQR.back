@@ -43,6 +43,13 @@ public class Promotion extends Board {
                 .maxAudience(request.getMaxAudience())
                 .team(request.getTeam())
                 .writer(member)
+                .showDate(request.getShowDate())
+                .showTime(request.getShowTime())
+                .showLocation(request.getShowLocation())
+                .bankName(request.getBankName())
+                .account(request.getAccount())
+                .accountHolder(request.getAccountHolder())
+                .refundInfo(request.getRefundInfo())
                 .build();
     }
 

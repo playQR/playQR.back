@@ -10,8 +10,6 @@ import com.bandit.domain.music.entity.Music;
 import com.bandit.domain.music.entity.PromotionMusic;
 import com.bandit.domain.music.repository.MusicRepository;
 import com.bandit.domain.music.repository.PromotionMusicRepository;
-import com.bandit.domain.showOption.entity.ShowOption;
-import com.bandit.domain.showOption.repository.showOptionRepository;
 import com.bandit.global.service.AwsS3Service;
 import com.bandit.global.util.ListUtil;
 import com.bandit.presentation.payload.code.ErrorStatus;
@@ -31,7 +29,6 @@ import java.util.stream.Collectors;
 @Service
 public class PromotionCommandServiceImpl implements PromotionCommandService {
     private final PromotionRepository promotionRepository;
-    private final showOptionRepository showOptionRepository;
     private final ImageRepository imageRepository;
     private final MusicRepository musicRepository;
     private final PromotionMusicRepository promotionMusicRepository;
@@ -40,7 +37,6 @@ public class PromotionCommandServiceImpl implements PromotionCommandService {
     @Override
     public Long createPromotion(Member member, PromotionRequest request) {
         Promotion savePromotion = promotionRepository.save(Promotion.of(member, request));
-        saveOptionListInPromotion(request, savePromotion);
         saveImageListInPromotion(request, savePromotion);
         saveMusicListInPromotion(request, savePromotion);
         return savePromotion.getId();
@@ -55,13 +51,11 @@ public class PromotionCommandServiceImpl implements PromotionCommandService {
         updatePromotion.getBoardImageList().stream()
                 .map(Image::getImageUrl)
                 .forEach(awsS3Service::deleteFile);
-        showOptionRepository.deleteAllByBoardId(promotionId);
         imageRepository.deleteAllByBoardId(promotionId);
         promotionMusicRepository.deleteAllByPromotionId(promotionId);
 
         updatePromotion.update(request);
         saveImageListInPromotion(request, updatePromotion);
-        saveOptionListInPromotion(request, updatePromotion);
         saveMusicListInPromotion(request, updatePromotion);
         return updatePromotion.getId();
     }
@@ -75,7 +69,6 @@ public class PromotionCommandServiceImpl implements PromotionCommandService {
         removePromotion.getBoardImageList().stream()
                 .map(Image::getImageUrl)
                 .forEach(awsS3Service::deleteFile);
-        showOptionRepository.deleteAllByBoardId(promotionId);
         imageRepository.deleteAllByBoardId(promotionId);
         promotionMusicRepository.deleteAllByPromotionId(promotionId);
         promotionRepository.delete(removePromotion);
@@ -88,12 +81,6 @@ public class PromotionCommandServiceImpl implements PromotionCommandService {
         }
     }
 
-    private void saveOptionListInPromotion(PromotionRequest request, Promotion savePromotion) {
-        if (!ListUtil.isNullOrEmpty(request.getOptionList())) {
-            showOptionRepository.saveAll(request.getOptionList().stream()
-                    .map(optionRequest -> ShowOption.of(savePromotion, optionRequest)).collect(Collectors.toList()));
-        }
-    }
 
     private void saveMusicListInPromotion(PromotionRequest request, Promotion savePromotion) {
         if (!ListUtil.isNullOrEmpty(request.getMusicList())) {
