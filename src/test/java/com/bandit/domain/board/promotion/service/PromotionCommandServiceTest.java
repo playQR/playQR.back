@@ -105,7 +105,7 @@ class PromotionCommandServiceTest {
     void createPromotionWithoutRelationEntity() {
         //given
         request = PromotionRequest.builder()
-                .fee(7000)
+                .entranceFee(7000)
                 .title("promotion test")
                 .content("promotion")
                 .maxAudience(3)
@@ -115,7 +115,8 @@ class PromotionCommandServiceTest {
                 .bankName("ibk")
                 .showDate(LocalDate.of(2024, 8,2))
                 .showLocation("001 club")
-                .showTime("07:00")
+                .startTime("07:00")
+                .endTime("09:00")
                 .build();
         //when
         Long promotionId = promotionCommandService.createPromotion(member1, request);
@@ -125,11 +126,11 @@ class PromotionCommandServiceTest {
         assertThat(promotionOptional).isPresent()
                 .get()
                 .extracting("title", "content", "maxAudience", "refundInfo",
-                        "account", "accountHolder","bankName","showLocation",
-                        "showTime", "showDate", "fee")
+                        "account", "accountHolder", "bankName", "showLocation",
+                        "startTime", "endTime", "showDate", "entranceFee")
                 .containsExactly(request.getTitle(), request.getContent(), request.getMaxAudience(), request.getRefundInfo(),
                         request.getAccount(), request.getAccountHolder(), request.getBankName(), request.getShowLocation(),
-                        request.getShowTime(), request.getShowDate(), request.getFee());
+                        request.getStartTime(), request.getEndTime(), request.getShowDate(), request.getEntranceFee());
     }
 
     @Test

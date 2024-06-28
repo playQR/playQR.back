@@ -15,12 +15,13 @@ import java.util.List;
 @AllArgsConstructor
 public class PromotionRequest {
     private int maxAudience;
-    private int fee;
+    private int entranceFee;
     private String content;
     private String title;
     private String team;
     private LocalDate showDate;
-    private String showTime;
+    private String startTime;
+    private String endTime;
     private String showLocation;
     private String bankName;
     private String account;
