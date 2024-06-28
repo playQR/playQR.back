@@ -105,6 +105,7 @@ class PromotionCommandServiceTest {
     void createPromotionWithoutRelationEntity() {
         //given
         request = PromotionRequest.builder()
+                .fee(7000)
                 .title("promotion test")
                 .content("promotion")
                 .maxAudience(3)
@@ -125,10 +126,10 @@ class PromotionCommandServiceTest {
                 .get()
                 .extracting("title", "content", "maxAudience", "refundInfo",
                         "account", "accountHolder","bankName","showLocation",
-                        "showTime", "showDate")
+                        "showTime", "showDate", "fee")
                 .containsExactly(request.getTitle(), request.getContent(), request.getMaxAudience(), request.getRefundInfo(),
                         request.getAccount(), request.getAccountHolder(), request.getBankName(), request.getShowLocation(),
-                        request.getShowTime(), request.getShowDate());
+                        request.getShowTime(), request.getShowDate(), request.getFee());
     }
 
     @Test

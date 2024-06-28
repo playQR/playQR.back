@@ -15,6 +15,7 @@ import java.util.List;
 @AllArgsConstructor
 public class PromotionRequest {
     private int maxAudience;
+    private int fee;
     private String content;
     private String title;
     private String team;

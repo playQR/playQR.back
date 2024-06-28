@@ -9,6 +9,7 @@ import com.bandit.domain.member.entity.Member;
 import com.bandit.global.annotation.api.ApiErrorCodeExample;
 import com.bandit.global.annotation.auth.AuthUser;
 import com.bandit.global.util.ImageUtil;
+import com.bandit.global.util.PageUtil;
 import com.bandit.presentation.payload.code.ErrorStatus;
 import com.bandit.presentation.payload.dto.ApiResponseDto;
 import io.swagger.v3.oas.annotations.Operation;
@@ -86,14 +87,31 @@ public class PromotionApiController {
     }
 
     @Operation(summary = "프로모션 페이징 조회", description = "프로모션의 리스트를 페이징을 통해 조회합니다." +
-            "한페이지당 사이즈는 5개입니다.")
+            "한페이지당 사이즈는 10개입니다.")
     @ApiErrorCodeExample({
             ErrorStatus._INTERNAL_SERVER_ERROR,
             ErrorStatus.PROMOTION_NOT_FOUND
     })
     @GetMapping
     public ApiResponseDto<PromotionListDto> getPromotionList(@RequestParam(defaultValue = "0") int currentPage) {
-        Pageable pageable = PageRequest.of(currentPage, 5);
+        Pageable pageable = PageRequest.of(currentPage, PageUtil.PROMOTION_SIZE);
+        return ApiResponseDto.onSuccess(
+                PromotionConverter.toListDto(
+                        promotionQueryService.getPaginationPromotion(pageable)
+                )
+        );
+    }
+    @Operation(summary = "프로모션 페이징 검색", description = "프로모션을 키워드를 통해 조회합니다." +
+            "한페이지당 사이즈는 10개입니다.")
+    @ApiErrorCodeExample({
+            ErrorStatus._INTERNAL_SERVER_ERROR,
+            ErrorStatus.PROMOTION_NOT_FOUND
+    })
+    @GetMapping("/search")
+    public ApiResponseDto<PromotionListDto> getPromotionList(
+            @RequestParam(defaultValue = "0") int currentPage,
+            @RequestParam String keyword) {
+        Pageable pageable = PageRequest.of(currentPage, PageUtil.PROMOTION_SIZE);
         return ApiResponseDto.onSuccess(
                 PromotionConverter.toListDto(
                         promotionQueryService.getPaginationPromotion(pageable)
