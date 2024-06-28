@@ -120,7 +120,7 @@ class GuestCommandServiceTest {
         Long promotionId = promotionCommandService.createPromotion(host, request);
         Long guestId = guestCommandService.createGuest(promotionId, guest, "guestName");
         //when
-        guestCommandService.updateGuest(guestId, Guest.builder().member(guest).name(convertedName).build());   //TODO edit argument
+        guestCommandService.updateGuest(guestId, guest,  convertedName);   //TODO edit argument
         //then
         Guest updatedGuest = guestRepository.findById(guestId).get();
         assertThat(updatedGuest.getName()).isEqualTo(convertedName);
@@ -139,7 +139,7 @@ class GuestCommandServiceTest {
         Long promotionId = promotionCommandService.createPromotion(host, request);
         Long guestId = guestCommandService.createGuest(promotionId, guest, "guestName");
         //when & then
-        assertThatThrownBy(() -> guestCommandService.updateGuest(guestId, Guest.builder().member(notGuest).name("exception").build()))
+        assertThatThrownBy(() -> guestCommandService.updateGuest(guestId, notGuest, "exception"))
                 .isInstanceOf(GuestHandler.class)
                 .hasMessage(ErrorStatus.GUEST_ONLY_CAN_BE_TOUCHED_BY_CREATOR.getMessage());
     }
@@ -150,9 +150,8 @@ class GuestCommandServiceTest {
         //given
         Long proxyId = 1000L;
         //when & then
-        assertThatThrownBy(() -> guestCommandService.updateGuest(proxyId, Guest.builder().member(guest).name("exception").build()))
+        assertThatThrownBy(() -> guestCommandService.updateGuest(proxyId, guest, "exception"))
                 .isInstanceOf(GuestHandler.class)
                 .hasMessage(ErrorStatus.GUEST_NOT_FOUND.getMessage());
     }
-
 }
