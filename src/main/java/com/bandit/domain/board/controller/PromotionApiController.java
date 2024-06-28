@@ -108,13 +108,13 @@ public class PromotionApiController {
             ErrorStatus.PROMOTION_NOT_FOUND
     })
     @GetMapping("/search")
-    public ApiResponseDto<PromotionListDto> getPromotionList(
+    public ApiResponseDto<PromotionListDto> searchPromotionList(
             @RequestParam(defaultValue = "0") int currentPage,
             @RequestParam String keyword) {
         Pageable pageable = PageRequest.of(currentPage, PageUtil.PROMOTION_SIZE);
         return ApiResponseDto.onSuccess(
                 PromotionConverter.toListDto(
-                        promotionQueryService.getPaginationPromotion(pageable)
+                        promotionQueryService.searchPaginationPromotion(keyword, pageable)
                 )
         );
     }

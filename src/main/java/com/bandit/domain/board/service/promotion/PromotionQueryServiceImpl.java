@@ -35,6 +35,11 @@ public class PromotionQueryServiceImpl implements PromotionQueryService{
     }
 
     @Override
+    public Page<Promotion> searchPaginationPromotion(String keyword, Pageable pageable) {
+        return promotionRepository.searchPromotion(keyword, pageable);
+    }
+
+    @Override
     public Promotion getPromotionById(Long promotionId) {
         return promotionRepository.findById(promotionId)
                 .orElseThrow(() -> new PromotionHandler(ErrorStatus.PROMOTION_NOT_FOUND));
