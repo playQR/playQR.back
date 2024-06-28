@@ -2,7 +2,6 @@ package com.bandit.domain.board.dto.promotion;
 
 import com.bandit.domain.member.dto.MemberResponse;
 import com.bandit.domain.music.dto.MusicResponse;
-import com.bandit.domain.showOption.dto.ShowOptionResponse;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -24,7 +23,6 @@ public class PromotionResponse {
         private MemberResponse writer;
 
         private List<MusicResponse> musicList;
-        private List<ShowOptionResponse> optionList;
         private List<String> imageList;
     }
     @Data

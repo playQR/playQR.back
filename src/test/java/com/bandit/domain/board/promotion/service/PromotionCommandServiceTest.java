@@ -13,10 +13,6 @@ import com.bandit.domain.music.dto.MusicRequest;
 import com.bandit.domain.music.entity.PromotionMusic;
 import com.bandit.domain.music.repository.MusicRepository;
 import com.bandit.domain.music.repository.PromotionMusicRepository;
-import com.bandit.domain.showOption.dto.ShowOptionRequest;
-import com.bandit.domain.showOption.entity.Category;
-import com.bandit.domain.showOption.entity.ShowOption;
-import com.bandit.domain.showOption.repository.showOptionRepository;
 import com.bandit.global.config.test.DatabaseCleanUp;
 import com.bandit.presentation.payload.code.ErrorStatus;
 import com.bandit.presentation.payload.exception.PromotionHandler;
@@ -44,8 +40,6 @@ class PromotionCommandServiceTest {
     @Autowired
     PromotionRepository promotionRepository;
     @Autowired
-    showOptionRepository showOptionRepository;
-    @Autowired
     ImageRepository imageRepository;
     @Autowired
     MusicRepository musicRepository;
@@ -61,8 +55,6 @@ class PromotionCommandServiceTest {
     Member member1;
     Member member2;
     Long teamId;
-    List<ShowOptionRequest> optionList = new ArrayList<>();
-
     List<String> imageList = new ArrayList<>();
     List<MusicRequest> musicList = new ArrayList<>();
 
@@ -86,14 +78,6 @@ class PromotionCommandServiceTest {
                 .nickname("Hann")
                 .build();
 
-        optionList.add(ShowOptionRequest.builder()
-                .category(Category.TIME)
-                .content("content")
-                .build());
-        optionList.add(ShowOptionRequest.builder()
-                .category(Category.FEE)
-                .content("content")
-                .build());
         imageList.add("image.png");
         musicList.add(MusicRequest.builder()
                 .artist("thornApple")
@@ -141,7 +125,6 @@ class PromotionCommandServiceTest {
                 .title("promotion test")
                 .content("promotion")
                 .imageList(imageList)
-                .optionList(optionList)
                 .musicList(musicList)
                 .maxAudience(3)
                 .build();
@@ -150,10 +133,8 @@ class PromotionCommandServiceTest {
         Long promotionId = promotionCommandService.createPromotion(member1, request);
 
         //then
-        List<ShowOption> optionsByBoardId = showOptionRepository.findOptionsByBoardId(promotionId);
         List<Image> imagesByBoardId = imageRepository.findImagesByBoardId(promotionId);
         List<PromotionMusic> musicsByBoardId = promotionMusicRepository.findMusicsByPromotionId(promotionId);
-        assertThat(optionsByBoardId).hasSize(2);
         assertThat(imagesByBoardId).hasSize(1);
         assertThat(musicsByBoardId).hasSize(2);
 
@@ -167,18 +148,15 @@ class PromotionCommandServiceTest {
                 .title("promotion test")
                 .content("promotion")
                 .imageList(imageList)
-                .optionList(optionList)
                 .musicList(musicList)
                 .maxAudience(3)
                 .build();
         Long promotionId = promotionCommandService.createPromotion(member1, request);
         imageList.remove(0);
-        optionList.add(ShowOptionRequest.builder().build());
         PromotionRequest updateRequest = PromotionRequest.builder()
                 .title("promotion update test")
                 .content("promotion")
                 .imageList(imageList)
-                .optionList(optionList)
                 .musicList(musicList)
                 .maxAudience(3)
                 .build();
@@ -188,10 +166,8 @@ class PromotionCommandServiceTest {
         //then
         Promotion promotion = promotionRepository.findById(updatePromotionId).get();
         assertThat(promotion.getTitle()).isEqualTo(updateRequest.getTitle());
-        List<ShowOption> optionsByBoardId = showOptionRepository.findOptionsByBoardId(updatePromotionId);
         List<Image> imagesByBoardId = imageRepository.findImagesByBoardId(updatePromotionId);
         List<PromotionMusic> musicsByBoardId = promotionMusicRepository.findMusicsByPromotionId(updatePromotionId);
-        assertThat(optionsByBoardId).hasSize(3);
         assertThat(imagesByBoardId).hasSize(0);
         assertThat(musicsByBoardId).hasSize(2);
     }
@@ -204,7 +180,6 @@ class PromotionCommandServiceTest {
                 .title("promotion update test")
                 .content("promotion")
                 .imageList(imageList)
-                .optionList(optionList)
                 .musicList(musicList)
                 .maxAudience(3)
                 .build();
@@ -224,7 +199,6 @@ class PromotionCommandServiceTest {
                 .title("promotion update test")
                 .content("promotion")
                 .imageList(imageList)
-                .optionList(optionList)
                 .musicList(musicList)
                 .maxAudience(3)
                 .build();
@@ -244,7 +218,6 @@ class PromotionCommandServiceTest {
                 .title("promotion update test")
                 .content("promotion")
                 .imageList(imageList)
-                .optionList(optionList)
                 .musicList(musicList)
                 .maxAudience(3)
                 .build();
