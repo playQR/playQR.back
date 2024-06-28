@@ -8,6 +8,7 @@ import com.bandit.domain.member.entity.Member;
 import com.bandit.domain.member.entity.Role;
 import com.bandit.domain.member.repository.MemberRepository;
 import com.bandit.global.config.test.DatabaseCleanUp;
+import com.bandit.global.util.PageUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -152,6 +153,24 @@ class PromotionQueryServiceTest {
             assertThat(paginationPromotion.getContent().get(i).getCreatedDate())
                     .isBeforeOrEqualTo(paginationPromotion.getContent().get(i - 1).getCreatedDate());
         }
+
+    }
+
+    @Test
+    @DisplayName("키워드를 통해 페이지네이션 된 글 목록을 조회합니다. 이때 키워드가 존재하지 않으면 조건 없이 생성 내림차순으로 조회됩니다")
+    void searchPaginationPromotion() {
+        //given
+        String keyword1 = "1";
+        String keyword2 = null;
+        Pageable pageable = PageRequest.of(0, PageUtil.PROMOTION_SIZE);
+        //when
+        Page<Promotion> searchPromotions = promotionQueryService.searchPaginationPromotion(keyword1, pageable);
+        Page<Promotion> allPromotions = promotionQueryService.searchPaginationPromotion(keyword2, pageable);
+        //then
+        assertThat(searchPromotions.getContent().size()).isEqualTo(3);
+        assertThat(allPromotions.getTotalPages()).isEqualTo(2);
+        assertThat(allPromotions.getContent().size()).isEqualTo(10);
+        assertThat(allPromotions.getTotalElements()).isEqualTo(15);
 
     }
 }

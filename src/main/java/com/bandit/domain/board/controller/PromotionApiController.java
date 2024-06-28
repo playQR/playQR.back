@@ -110,7 +110,7 @@ public class PromotionApiController {
     @GetMapping("/search")
     public ApiResponseDto<PromotionListDto> searchPromotionList(
             @RequestParam(defaultValue = "0") int currentPage,
-            @RequestParam String keyword) {
+            @RequestParam(required = false) String keyword) {
         Pageable pageable = PageRequest.of(currentPage, PageUtil.PROMOTION_SIZE);
         return ApiResponseDto.onSuccess(
                 PromotionConverter.toListDto(
