@@ -24,8 +24,10 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -106,15 +108,27 @@ class PromotionCommandServiceTest {
                 .title("promotion test")
                 .content("promotion")
                 .maxAudience(3)
+                .refundInfo("refund_info")
+                .account("04110790601014")
+                .accountHolder("이정한")
+                .bankName("ibk")
+                .showDate(LocalDate.of(2024, 8,2))
+                .showLocation("001 club")
+                .showTime("07:00")
                 .build();
         //when
         Long promotionId = promotionCommandService.createPromotion(member1, request);
 
         //then
-        Promotion promotion = promotionRepository.findById(promotionId).get();
-        assertThat(promotion.getMaxAudience()).isEqualTo(request.getMaxAudience());
-        assertThat(promotion.getContent()).isEqualTo(request.getContent());
-        assertThat(promotion.getTitle()).isEqualTo(request.getTitle());
+        Optional<Promotion> promotionOptional = promotionRepository.findById(promotionId);
+        assertThat(promotionOptional).isPresent()
+                .get()
+                .extracting("title", "content", "maxAudience", "refundInfo",
+                        "account", "accountHolder","bankName","showLocation",
+                        "showTime", "showDate")
+                .containsExactly(request.getTitle(), request.getContent(), request.getMaxAudience(), request.getRefundInfo(),
+                        request.getAccount(), request.getAccountHolder(), request.getBankName(), request.getShowLocation(),
+                        request.getShowTime(), request.getShowDate());
     }
 
     @Test
