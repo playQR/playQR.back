@@ -6,7 +6,6 @@ import com.bandit.domain.board.dto.promotion.PromotionResponse.PromotionListDto;
 import com.bandit.domain.board.service.promotion.PromotionCommandService;
 import com.bandit.domain.board.service.promotion.PromotionQueryService;
 import com.bandit.domain.member.entity.Member;
-import com.bandit.domain.member.service.MemberQueryService;
 import com.bandit.global.annotation.api.ApiErrorCodeExample;
 import com.bandit.global.annotation.auth.AuthUser;
 import com.bandit.global.util.ImageUtil;
@@ -33,7 +32,6 @@ import static com.bandit.domain.board.dto.promotion.PromotionResponse.PromotionD
 public class PromotionApiController {
     private final PromotionCommandService promotionCommandService;
     private final PromotionQueryService promotionQueryService;
-    private final MemberQueryService memberQueryService;
 
     @Operation(summary = "프로모션 작성 🔑", description = "로그인한 회원이 프로모션(홍보글)을 작성합니다.")
     @ApiErrorCodeExample({
