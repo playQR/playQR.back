@@ -32,17 +32,15 @@ public class GuestCommandServiceImpl implements GuestCommandService {
     }
 
     @Override
-    public void updateGuest(Long guestId, Member member, GuestRequest guestRequest) {
-        GuestRequest.GuestModifyDto modifyDto = guestRequest.getModifyDto();
-
+    public void updateGuest(Long guestId, Member member, GuestRequest.GuestModifyDto guestRequest) {
         Guest guest = guestRepository.findById(guestId)
                 .orElseThrow(() -> new GuestHandler(ErrorStatus.GUEST_NOT_FOUND));
 
         validateCreator(guest.getMember(), member);
 
-        guest.updateEntryStatus((modifyDto.isEntered()));
-        guest.markTicketAsIssued(modifyDto.isTicketIssued());
-        guest.updateName(modifyDto.getName());
+        guest.updateName(guestRequest.getName());
+        guest.updateEntryStatus(guestRequest.isEntered());
+        guest.markTicketAsIssued(guestRequest.isTicketIssued());
 
         guestRepository.save(guest);
     }

@@ -6,6 +6,7 @@ import com.rockoon.domain.member.dto.MemberRequest.MemberRegisterDto;
 import com.rockoon.domain.member.entity.Member;
 import com.rockoon.domain.member.service.MemberCommandService;
 import com.rockoon.domain.member.service.MemberQueryService;
+import com.rockoon.domain.ticket.dto.guest.GuestRequest;
 import com.rockoon.domain.ticket.entity.Guest;
 import com.rockoon.domain.ticket.repository.GuestRepository;
 import com.rockoon.global.config.test.DatabaseCleanUp;
@@ -119,8 +120,15 @@ class GuestCommandServiceTest {
         String convertedName = "convertedName";
         Long promotionId = promotionCommandService.createPromotion(host, request);
         Long guestId = guestCommandService.createGuest(promotionId, guest, "guestName");
+
+        GuestRequest.GuestModifyDto guestModifyDto = GuestRequest.GuestModifyDto.builder()
+                .name(convertedName)
+                .entered(false)
+                .ticketIssued(false)
+                .build();
+
         //when
-        guestCommandService.updateGuest(guestId, guest,  convertedName);   //TODO edit argument
+        guestCommandService.updateGuest(guestId, guest, guestModifyDto);   //TODO edit argument
         //then
         Guest updatedGuest = guestRepository.findById(guestId).get();
         assertThat(updatedGuest.getName()).isEqualTo(convertedName);
@@ -138,8 +146,15 @@ class GuestCommandServiceTest {
         Member notGuest = Member.builder().build();
         Long promotionId = promotionCommandService.createPromotion(host, request);
         Long guestId = guestCommandService.createGuest(promotionId, guest, "guestName");
+
+        GuestRequest.GuestModifyDto guestModifyDto = GuestRequest.GuestModifyDto.builder()
+                .name("exception")
+                .entered(false)
+                .ticketIssued(false)
+                .build();
+
         //when & then
-        assertThatThrownBy(() -> guestCommandService.updateGuest(guestId, notGuest, "exception"))
+        assertThatThrownBy(() -> guestCommandService.updateGuest(guestId, notGuest, guestModifyDto))
                 .isInstanceOf(GuestHandler.class)
                 .hasMessage(ErrorStatus.GUEST_ONLY_CAN_BE_TOUCHED_BY_CREATOR.getMessage());
     }
@@ -149,8 +164,15 @@ class GuestCommandServiceTest {
     void executeExceptionNotFoundGuest() {
         //given
         Long proxyId = 1000L;
+
+        GuestRequest.GuestModifyDto guestModifyDto = GuestRequest.GuestModifyDto.builder()
+                .name("exception")
+                .entered(false)
+                .ticketIssued(false)
+                .build();
+
         //when & then
-        assertThatThrownBy(() -> guestCommandService.updateGuest(proxyId, guest, "exception"))
+        assertThatThrownBy(() -> guestCommandService.updateGuest(proxyId, guest, guestModifyDto))
                 .isInstanceOf(GuestHandler.class)
                 .hasMessage(ErrorStatus.GUEST_NOT_FOUND.getMessage());
     }
