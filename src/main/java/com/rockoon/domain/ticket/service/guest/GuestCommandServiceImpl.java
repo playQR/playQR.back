@@ -38,11 +38,7 @@ public class GuestCommandServiceImpl implements GuestCommandService {
 
         validateCreator(guest.getMember(), member);
 
-        guest.updateName(guestRequest.getName());
-        guest.updateEntryStatus(guestRequest.isEntered());
-        guest.markTicketAsIssued(guestRequest.isTicketIssued());
-
-        guestRepository.save(guest);
+        guest.updateGuestDetails(guestRequest);
     }
 
     @Override
