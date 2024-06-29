@@ -50,7 +50,7 @@ public class TicketController {
     @DeleteMapping("/{ticketId}")
     public ApiResponseDto<Void> deleteTicket(
             @PathVariable Long ticketId,
-            @RequestBody @Valid Member member) {
+            @AuthUser Member member) {
         ticketCommandService.deleteTicket(ticketId, member);
         return ApiResponseDto.onSuccess(null);
     }
