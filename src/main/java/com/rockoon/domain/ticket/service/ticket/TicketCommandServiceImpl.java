@@ -46,7 +46,7 @@ public class TicketCommandServiceImpl implements TicketCommandService {
     }
 
     @Override
-    public void enterByUUID(String uuid) throws TicketHandler {
+    public void entrance(String uuid) {
         Ticket ticket = ticketRepository.findByUuid(uuid)
                 .orElseThrow(() -> new TicketHandler(ErrorStatus.TICKET_NOT_FOUND));
 

@@ -13,6 +13,7 @@ import com.rockoon.domain.ticket.service.guest.GuestCommandService;
 import com.rockoon.domain.ticket.service.guest.GuestQueryService;
 import com.rockoon.global.config.test.DatabaseCleanUp;
 import com.rockoon.presentation.payload.code.ErrorStatus;
+import com.rockoon.presentation.payload.exception.TicketHandler;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -22,6 +23,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -99,7 +101,7 @@ class TicketCommandServiceTest {
         //given
         //when
         //TODO logic edit (validate guest.getPromotion().getWriter().equals(hostMember)) -> 나중에 여기에 매니저 추가
-        Long ticketId = ticketCommandService.issueTicket(applyGuest.getId(), host);
+        Long ticketId = ticketCommandService.createTicket(applyGuest.getId(), host, new Date());
         //then
         Optional<Ticket> optionalTicket = ticketRepository.findById(ticketId);
         assertThat(optionalTicket).isPresent();
@@ -113,7 +115,7 @@ class TicketCommandServiceTest {
         //given
         Long proxyGuestId = 1000L;
         //when
-        assertThatThrownBy(() -> ticketCommandService.issueTicket(proxyGuestId, host))
+        assertThatThrownBy(() -> ticketCommandService.createTicket(proxyGuestId, host, new Date()))
                 .isInstanceOf(TicketHandler.class)
                 .hasMessage(ErrorStatus.GUEST_NOT_FOUND.getMessage());
         //then
@@ -124,7 +126,7 @@ class TicketCommandServiceTest {
     @DisplayName("QR로부터 받아온 uuid를 통해 티켓을 가져오고, 해당 게스트의 isEntered 값이 true로 변경됩니다.")
     void checkTicket() {
         //given
-        Long ticketId = ticketCommandService.issueTicket(applyGuest.getId(), host);
+        Long ticketId = ticketCommandService.createTicket(applyGuest.getId(), host, new Date());
         Ticket ticket = ticketRepository.findById(ticketId).get();
         String uuid = ticket.getUuid();
         //when
@@ -152,7 +154,7 @@ class TicketCommandServiceTest {
     @DisplayName("호스트가 발급된 티켓의 유효성을 삭제합니다.")
     void deleteTicket() {
         //given
-        Long ticketId = ticketCommandService.issueTicket(applyGuest.getId(), host);
+        Long ticketId = ticketCommandService.createTicket(applyGuest.getId(), host, new Date());
         //when
         //TODO need to validate commander is host
         ticketCommandService.deleteTicket(ticketId, host);
@@ -170,16 +172,16 @@ class TicketCommandServiceTest {
         //when & then
         assertThatThrownBy(() -> ticketCommandService.deleteTicket(proxyTicketId, host))
                 .isInstanceOf(TicketHandler.class)
-                .hasMessage(ErrorStatus.TICKET_NOT_FOUND);
+                .hasMessage(ErrorStatus.TICKET_NOT_FOUND.getMessage());
     }
 
     @Test
     @DisplayName("티켓의 유효성을 삭제할 때, 삭제하는 이가 호스트가 아닐 경우 예외를 발생시킵니다.")
     void executeExceptionValidateHost() {
         //when & then
-        assertThatThrownBy(() -> ticketCommandService.issueTicket(applyGuest.getId(), guest))
+        assertThatThrownBy(() -> ticketCommandService.createTicket(applyGuest.getId(), guest, new Date()))
                 .isInstanceOf(TicketHandler.class)
-                .hasMessage(ErrorStatus.TICKET_CAN_ONLY_BE_TOUCHED_BY_HOST_AND_MANAGERS);
+                .hasMessage(ErrorStatus.TICKET_CAN_ONLY_BE_TOUCHED_BY_HOST_AND_MANAGERS.getMessage());
     }
 
 }
