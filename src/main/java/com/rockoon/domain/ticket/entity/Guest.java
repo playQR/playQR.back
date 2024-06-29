@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.rockoon.domain.auditing.entity.BaseTimeEntity;
 import com.rockoon.domain.board.entity.Promotion;
 import com.rockoon.domain.member.entity.Member;
+import com.rockoon.domain.ticket.dto.guest.GuestRequest;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
@@ -62,5 +63,11 @@ public class Guest extends BaseTimeEntity{
 
     public void updateName(String name) {
         this.name = name;
+    }
+
+    public void updateGuestDetails(GuestRequest.GuestModifyDto guestRequest) {
+        this.updateName(guestRequest.getName());
+        this.updateEntryStatus(guestRequest.isEntered());
+        this.markTicketAsIssued(guestRequest.isTicketIssued());
     }
 }
