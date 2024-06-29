@@ -13,9 +13,16 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class GuestResponse {
-    private Long guestId;
-    private String guestname;
-    private MemberResponse writer;
+
+    @Data
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class GuestDetailDto {
+        private Long guestId;
+        private String guestname;
+        private MemberResponse writer;
+    }
 
     @Data
     @Builder
@@ -24,6 +31,7 @@ public class GuestResponse {
     public static class GuestSummaryDto {
         private Long guestId;
         private String guestname;
+        private MemberResponse writer;
     }
 
     @Data
