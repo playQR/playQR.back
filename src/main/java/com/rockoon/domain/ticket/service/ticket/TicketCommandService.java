@@ -1,7 +1,6 @@
 package com.rockoon.domain.ticket.service.ticket;
 
 import com.rockoon.domain.member.entity.Member;
-import com.rockoon.presentation.payload.exception.TicketHandler;
 
 import java.util.Date;
 
@@ -11,6 +10,6 @@ public interface TicketCommandService {
 
     void deleteTicket(Long ticketId, Member member);
 
-    void enterByUUID(String uuid);
+    void entrance(String uuid);
 
 }
