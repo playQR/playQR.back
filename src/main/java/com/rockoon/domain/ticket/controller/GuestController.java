@@ -16,7 +16,6 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -51,7 +50,7 @@ public class GuestController {
     public ApiResponseDto<Void> updateGuest(
             @PathVariable Long guestId,
             @AuthUser Member member,
-            @RequestBody @Valid GuestRequest guestDetails) {
+            @RequestBody @Valid GuestRequest.GuestModifyDto guestDetails) {
         guestCommandService.updateGuest(guestId, member, guestDetails);
         return ApiResponseDto.onSuccess(null);
     }
