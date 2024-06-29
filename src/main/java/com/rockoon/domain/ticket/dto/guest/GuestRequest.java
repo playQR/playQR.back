@@ -1,23 +1,32 @@
 package com.rockoon.domain.ticket.dto.guest;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class GuestRequest {
-    private Long promotionId;
-    private String guestname;
+
+    private GuestCreateDto createDto;
+    private GuestModifyDto modifyDto;
+
+    @Data
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class GuestCreateDto {
+        private Long promotionId;
+        private String name;
+    }
 
     @Data
     @Builder
     @NoArgsConstructor
     @AllArgsConstructor
     public static class GuestModifyDto {
-        private String guestname;
+        private String name;
+        private boolean entered;
+        private boolean ticketIssued;
     }
 }
