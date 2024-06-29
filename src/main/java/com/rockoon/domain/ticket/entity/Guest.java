@@ -44,7 +44,7 @@ public class Guest extends BaseTimeEntity{
         this.ticketIssued = true;
     }
 
-    public void markTicketAsIssued(Boolean ticketIssued) {
+    public void markTicketAsIssued(boolean ticketIssued) {
         this.ticketIssued = ticketIssued;
     }
 
@@ -52,7 +52,7 @@ public class Guest extends BaseTimeEntity{
         this.ticketIssued = false;
     }
 
-    public void updateEntryStatus(Boolean entered) {
+    public void updateEntryStatus(boolean entered) {
         this.entered = entered;
     }
 

@@ -3,6 +3,7 @@ package com.rockoon.domain.ticket.service.guest;
 import com.rockoon.domain.board.entity.Promotion;
 import com.rockoon.domain.board.repository.PromotionRepository;
 import com.rockoon.domain.member.entity.Member;
+import com.rockoon.domain.ticket.dto.guest.GuestRequest;
 import com.rockoon.domain.ticket.entity.Guest;
 import com.rockoon.domain.ticket.repository.GuestRepository;
 import com.rockoon.presentation.payload.code.ErrorStatus;
@@ -31,15 +32,17 @@ public class GuestCommandServiceImpl implements GuestCommandService {
     }
 
     @Override
-    public void updateGuest(Long guestId, Guest guestDetails) {
+    public void updateGuest(Long guestId, Member member, GuestRequest guestRequest) {
+        GuestRequest.GuestModifyDto modifyDto = guestRequest.getModifyDto();
+
         Guest guest = guestRepository.findById(guestId)
                 .orElseThrow(() -> new GuestHandler(ErrorStatus.GUEST_NOT_FOUND));
 
-        validateCreator(guest.getMember(), guestDetails.getMember());
+        validateCreator(guest.getMember(), member);
 
-        guest.updateEntryStatus(guestDetails.getEntered());
-        guest.markTicketAsIssued(guestDetails.getTicketIssued());
-        guest.updateName(guestDetails.getName());
+        guest.updateEntryStatus((modifyDto.isEntered()));
+        guest.markTicketAsIssued(modifyDto.isTicketIssued());
+        guest.updateName(modifyDto.getName());
 
         guestRepository.save(guest);
     }
