@@ -9,7 +9,7 @@ spring:
             redirect-uri: ${spring.security.oauth2.client.registration.kakao.baseurl}/login/oauth2/code/kakao
             client-authentication-method: client_secret_post
             authorization-grant-type: authorization_code
-            #            scope: profile_nickname, profile_image
+            scope: profile_nickname, profile_image, friends
             client-name: Kakao
 
         provider:

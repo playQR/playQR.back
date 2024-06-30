@@ -123,7 +123,8 @@ public class SecurityConfig {
                 antMatcher(HttpMethod.GET, "/api/promotions/**"),
                 antMatcher(HttpMethod.GET,"/api/likes/music/{promotionMusicId}/count"),
                 antMatcher(HttpMethod.POST, "/api/tokens/reissue"),
-                antMatcher(HttpMethod.POST, "/api/images")
+                antMatcher(HttpMethod.POST, "/api/images"),
+                antMatcher(HttpMethod.GET,"/api/kakao/list")
         );
         return requestMatchers.toArray(RequestMatcher[]::new);
     }
