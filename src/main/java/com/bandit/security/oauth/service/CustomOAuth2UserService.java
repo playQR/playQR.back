@@ -15,6 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserService;
+import org.springframework.security.oauth2.core.OAuth2AccessToken;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
@@ -36,9 +37,9 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
         OAuth2UserService oAuth2UserService = new DefaultOAuth2UserService();
         OAuth2User oAuth2User = oAuth2UserService.loadUser(userRequest);
 
-        return processOAuth2User(oAuth2User);
+        return processOAuth2User(oAuth2User, userRequest.getAccessToken());
     }
-    protected OAuth2User processOAuth2User(OAuth2User oAuth2User) {
+    protected OAuth2User processOAuth2User(OAuth2User oAuth2User, OAuth2AccessToken oAuth2AccessToken) {
         //OAuth2 로그인 플랫폼 구분 과정 생략, 카카오에서 필요한 정보 가져오기(이메일)
         OAuth2UserInfo oAuth2UserInfo = OAuth2UserInfoFactory.getOAuth2UserInfo(oAuth2User.getAttributes());
 
@@ -48,7 +49,7 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
         Optional<Member> byEmail = memberRepository.findByKakaoEmail(oAuth2UserInfo.getEmail());
         Member member = byEmail.orElseGet(() -> registerMember(oAuth2UserInfo));
 
-        return CustomUserDetails.create(member);
+        return CustomUserDetails.create(member, oAuth2AccessToken);
     }
 
     private Member registerMember(OAuth2UserInfo oAuth2UserInfo) {
