@@ -1,5 +1,6 @@
 package com.bandit.security.oauth.handler;
 
+import com.bandit.global.util.SecurityUtil;
 import com.bandit.security.jwt.dto.JwtToken;
 import com.bandit.security.jwt.service.TokenService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -35,6 +36,7 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
                 .queryParam("refresh", jwtToken.getRefreshToken())
                 .queryParam("code_expire", jwtToken.getCode_expire())
                 .queryParam("refresh_expire", jwtToken.getRefresh_expire())
+                .queryParam("resource_access", SecurityUtil.getCustomUserDetails().getOAuth2AccessToken())
                 .build()
                 .toUriString();
 
