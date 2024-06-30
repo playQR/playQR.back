@@ -36,7 +36,7 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
                 .queryParam("refresh", jwtToken.getRefreshToken())
                 .queryParam("code_expire", jwtToken.getCode_expire())
                 .queryParam("refresh_expire", jwtToken.getRefresh_expire())
-                .queryParam("resource_access", SecurityUtil.getCustomUserDetails().getOAuth2AccessToken())
+                .queryParam("resource_code", SecurityUtil.getAccessTokenOfResource())
                 .build()
                 .toUriString();
 

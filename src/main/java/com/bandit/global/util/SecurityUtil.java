@@ -6,10 +6,10 @@ import org.springframework.security.core.context.SecurityContextHolder;
 
 public class SecurityUtil {
 
-    public static CustomUserDetails getCustomUserDetails() {
+    public static String getAccessTokenOfResource() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication != null && authentication.getPrincipal() instanceof CustomUserDetails) {
-            return (CustomUserDetails) authentication.getPrincipal();
+            return ((CustomUserDetails) authentication.getPrincipal()).getOAuth2AccessToken().getTokenValue();
         }
         return null;
     }
