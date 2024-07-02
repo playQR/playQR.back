@@ -1,4 +1,4 @@
-package com.rockoon.domain.ticket.entity;
+package com.bandit.domain.ticket.entity;
 
 import com.rockoon.domain.auditing.entity.BaseTimeEntity;
 import jakarta.persistence.*;
@@ -6,7 +6,6 @@ import lombok.*;
 import lombok.experimental.SuperBuilder;
 
 import java.util.Date;
-import java.util.Random;
 import java.util.UUID;
 
 @Entity

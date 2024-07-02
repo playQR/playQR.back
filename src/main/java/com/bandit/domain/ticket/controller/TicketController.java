@@ -1,10 +1,10 @@
-package com.rockoon.domain.ticket.controller;
+package com.bandit.domain.ticket.controller;
 
 import com.rockoon.domain.member.entity.Member;
-import com.rockoon.domain.ticket.dto.ticket.TicketResponse;
-import com.rockoon.domain.ticket.entity.Ticket;
-import com.rockoon.domain.ticket.service.ticket.TicketCommandService;
-import com.rockoon.domain.ticket.service.ticket.TicketQueryService;
+import com.bandit.domain.ticket.dto.ticket.TicketResponse;
+import com.bandit.domain.ticket.entity.Ticket;
+import com.bandit.domain.ticket.service.ticket.TicketCommandService;
+import com.bandit.domain.ticket.service.ticket.TicketQueryService;
 import com.rockoon.global.annotation.api.ApiErrorCodeExample;
 import com.rockoon.global.annotation.auth.AuthUser;
 import com.rockoon.presentation.payload.code.ErrorStatus;
@@ -12,11 +12,9 @@ import com.rockoon.presentation.payload.dto.ApiResponseDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;

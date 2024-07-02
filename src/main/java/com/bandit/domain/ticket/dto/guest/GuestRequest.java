@@ -1,4 +1,4 @@
-package com.rockoon.domain.ticket.dto.guest;
+package com.bandit.domain.ticket.dto.guest;
 
 import lombok.*;
 
