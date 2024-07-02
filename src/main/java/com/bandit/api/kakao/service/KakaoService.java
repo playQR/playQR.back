@@ -1,8 +1,10 @@
-package com.bandit.global.service;
+package com.bandit.api.kakao.service;
 
 
-import com.bandit.global.dto.KakaoFriendDto;
-import com.bandit.global.dto.KakaoMessageDto;
+import com.bandit.api.kakao.dto.KakaoFriendDto;
+import com.bandit.api.kakao.dto.KakaoMessageDto;
+import com.bandit.api.kakao.dto.KakaoMessageRequest;
+import com.bandit.global.service.HttpCallService;
 import lombok.extern.slf4j.Slf4j;
 import net.minidev.json.JSONArray;
 import net.minidev.json.JSONObject;
@@ -60,8 +62,8 @@ public class KakaoService extends HttpCallService {
                 .build();
     }
     public String sendMessage(String accessToken,
-                              List<String> receiverUuidList,
-                              KakaoMessageDto msgDto) {
+                              KakaoMessageRequest request) {
+        KakaoMessageDto msgDto = request.getMessageDto();
         JSONObject linkObj = new JSONObject();
         JSONObject templateObj = new JSONObject();
 
@@ -72,7 +74,7 @@ public class KakaoService extends HttpCallService {
         header.set("Authorization", "Bearer " + accessToken);
 
         MultiValueMap<String, String> parameters = new LinkedMultiValueMap<>();
-        parameters.add("receiver_uuids", receiverUuidList.toString());
+        parameters.add("receiver_uuids", request.getReceiverUuidList().toString());
         parameters.add("template_object", templateObj.toString());
 
         HttpEntity<?> messageRequestEntity = httpClientEntity(header, parameters);

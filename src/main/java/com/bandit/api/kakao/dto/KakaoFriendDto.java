@@ -1,4 +1,4 @@
-package com.bandit.global.dto;
+package com.bandit.api.kakao.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
