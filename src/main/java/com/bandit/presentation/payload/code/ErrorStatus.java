@@ -40,12 +40,16 @@ public enum ErrorStatus implements BaseCode{
     COMMENT_NOT_FOUND(NOT_FOUND, 4200, "존재하지 않는 댓글입니다"),
     COMMENT_CAN_BE_ONLY_TOUCHED_BY_WRITER(BAD_REQUEST, 4201,"댓글은 댓글작성자만 관리할 수 있습니다"),
 
-
     //이미지 관련 오류(4250 ~ 4299)
     IMAGE_REQUEST_IS_EMPTY(BAD_REQUEST, 4250, "요청한 이미지가 존재하지 않습니다"),
 
     //셑리스트 좋아요 관련 오류(4300 ~ 4349)
-    LIKE_NOT_FOUND(NOT_FOUND, 4300, "존재하지 않는 좋아요 정보입니다.");
+    LIKE_NOT_FOUND(NOT_FOUND, 4300, "존재하지 않는 좋아요 정보입니다."),
+
+
+    //게스트 관련 오류(4350 ~ 4399)
+    GUEST_NOT_FOUND(NOT_FOUND, 4350, "존재하지 않는 게스트입니다."),
+    GUEST_ONLY_CAN_BE_TOUCHED_BY_CREATOR(BAD_REQUEST, 4201, "작성자가 아닌 유저는 게스트를 수정할 수 없습니다.");
 
     private final HttpStatus httpStatus;
     private final Integer code;

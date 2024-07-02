@@ -5,12 +5,12 @@ import com.rockoon.domain.board.repository.PromotionRepository;
 import com.rockoon.domain.member.entity.Member;
 import com.rockoon.domain.ticket.entity.Guest;
 import com.rockoon.domain.ticket.repository.GuestRepository;
-import com.rockoon.global.exception.ResourceNotFoundException;
+import com.rockoon.presentation.payload.code.ErrorStatus;
+import com.rockoon.presentation.payload.exception.GuestHandler;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import static com.rockoon.domain.ticket.entity.QGuest.guest;
 
 @RequiredArgsConstructor
 @Service
@@ -23,7 +23,7 @@ public class GuestCommandServiceImpl implements GuestCommandService {
     @Override
     public Long createGuest(Long promotionId, Member member, String name) {
         Promotion promotion = promotionRepository.findById(promotionId)
-                .orElseThrow(() -> new ResourceNotFoundException("Promotion not found for id: " + promotionId));
+                .orElseThrow(() -> new GuestHandler(ErrorStatus.PROMOTION_NOT_FOUND));
 
         Guest guest = Guest.builder()
                 .promotion(promotion)
@@ -39,7 +39,9 @@ public class GuestCommandServiceImpl implements GuestCommandService {
     @Override
     public void updateGuest(Long guestId, Guest guestDetails) {
         Guest guest = guestRepository.findById(guestId)
-                .orElseThrow(() -> new ResourceNotFoundException("Guest not found for id: " + guestId));
+                .orElseThrow(() -> new GuestHandler(ErrorStatus.GUEST_NOT_FOUND));
+
+        validateCreator(guest.getMember(), guestDetails.getMember());
 
         guest.setName(guestDetails.getName());
         guest.setTicketIssued(guestDetails.getTicketIssued());
@@ -51,8 +53,14 @@ public class GuestCommandServiceImpl implements GuestCommandService {
     @Override
     public void deleteGuest(Long id) {
         Guest guest = guestRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Guest not found for id: " + id));
+                .orElseThrow(() -> new GuestHandler(ErrorStatus.GUEST_NOT_FOUND));
 
         guestRepository.delete(guest);
+    }
+
+    private void validateCreator(Member creator, Member currentUser) {
+        if (!creator.equals(currentUser)) {
+            throw new GuestHandler(ErrorStatus.GUEST_ONLY_CAN_BE_TOUCHED_BY_CREATOR);
+        }
     }
 }
