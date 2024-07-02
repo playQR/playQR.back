@@ -66,19 +66,21 @@ public class KakaoService extends HttpCallService {
         KakaoMessageDto msgDto = request.getMessageDto();
         JSONObject linkObj = new JSONObject();
         JSONObject templateObj = new JSONObject();
+        JSONArray uuidArray = new JSONArray();
+        uuidArray.addAll(request.getReceiverUuidList());
 
         mapMessageToTemplate(linkObj, templateObj, msgDto);
+        log.info("check template = {}", templateObj.toJSONString());
 
         HttpHeaders header = new HttpHeaders();
         header.set("Content-Type", APP_TYPE_URL_ENCODED);
         header.set("Authorization", "Bearer " + accessToken);
 
         MultiValueMap<String, String> parameters = new LinkedMultiValueMap<>();
-        parameters.add("receiver_uuids", request.getReceiverUuidList().toString());
-        parameters.add("template_object", templateObj.toString());
+        parameters.add("receiver_uuids", uuidArray.toString());
+        parameters.add("template_object", templateObj.toJSONString());
 
-        HttpEntity<?> messageRequestEntity = httpClientEntity(header, parameters);
-
+        HttpEntity<MultiValueMap<String, String>> messageRequestEntity = new HttpEntity<>(parameters, header);
         ResponseEntity<String> response = httpRequest(POST_MESSAGE_TO_FRIEND_URL, HttpMethod.POST, messageRequestEntity);
         JSONParser parser = new JSONParser();
         JSONObject jsonObject = null;
