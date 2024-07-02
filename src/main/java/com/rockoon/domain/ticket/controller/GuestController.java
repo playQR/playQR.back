@@ -1,11 +1,14 @@
 package com.rockoon.domain.ticket.controller;
 
 import com.rockoon.domain.member.entity.Member;
+import com.rockoon.domain.ticket.dto.guest.GuestRequest;
 import com.rockoon.domain.ticket.entity.Guest;
 import com.rockoon.domain.ticket.service.guest.GuestCommandService;
 import com.rockoon.domain.ticket.service.guest.GuestQueryService;
 import com.rockoon.global.annotation.api.ApiErrorCodeExample;
+import com.rockoon.global.annotation.auth.AuthUser;
 import com.rockoon.presentation.payload.code.ErrorStatus;
+import com.rockoon.presentation.payload.dto.ApiResponseDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -14,7 +17,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -34,71 +36,72 @@ public class GuestController {
     @ApiErrorCodeExample(
             {ErrorStatus._INTERNAL_SERVER_ERROR})
     @PostMapping
-    public ResponseEntity<Long> createGuest(
+    public ApiResponseDto<Long> createGuest(
             @RequestParam Long promotionId,
-            @RequestBody @Valid Member member,
-            @RequestParam String name) {
-        Long guestId = guestCommandService.createGuest(promotionId, member, name);
-        return ResponseEntity.status(HttpStatus.CREATED).body(guestId);
+            @AuthUser Member member,  // @AuthUser 사용
+            @RequestParam String guestname) {
+        Long guestId = guestCommandService.createGuest(promotionId, member, guestname);
+        return ApiResponseDto.onSuccess(guestId);
     }
 
     @Operation(summary = "게스트 수정", description = "게스트 ID와 게스트 정보를 받아 기존 게스트 정보를 수정합니다.")
     @ApiErrorCodeExample(
             {ErrorStatus._INTERNAL_SERVER_ERROR})
     @PutMapping("/{guestId}")
-    public ResponseEntity<Void> updateGuest(
+    public ApiResponseDto<Void> updateGuest(
             @PathVariable Long guestId,
-            @RequestBody @Valid Guest guestDetails) {
-        guestCommandService.updateGuest(guestId, guestDetails);
-        return ResponseEntity.ok().build();
+            @AuthUser Member member,
+            @RequestBody @Valid GuestRequest guestDetails) {
+        guestCommandService.updateGuest(guestId, member, guestDetails);
+        return ApiResponseDto.onSuccess(null);
     }
 
     @Operation(summary = "게스트 삭제", description = "게스트 ID를 받아 해당 게스트를 삭제합니다.")
     @ApiErrorCodeExample(
             {ErrorStatus._INTERNAL_SERVER_ERROR})
     @DeleteMapping("/{guestId}")
-    public ResponseEntity<Void> deleteGuest(@PathVariable Long guestId) {
+    public ApiResponseDto<Void> deleteGuest(@PathVariable Long guestId) {
         guestCommandService.deleteGuest(guestId);
-        return ResponseEntity.ok().build();
+        return ApiResponseDto.onSuccess(null);
     }
 
     @Operation(summary = "모든 게스트 조회", description = "모든 게스트 정보를 조회합니다.")
     @ApiErrorCodeExample(
             {ErrorStatus._INTERNAL_SERVER_ERROR})
     @GetMapping
-    public ResponseEntity<List<Guest>> getAllGuests() {
+    public ApiResponseDto<List<Guest>> getAllGuests() {
         List<Guest> guests = guestQueryService.findAllGuests();
-        return ResponseEntity.ok(guests);
+        return ApiResponseDto.onSuccess(guests);
     }
 
     @Operation(summary = "게스트 조회", description = "게스트 ID를 받아 해당 게스트 정보를 조회합니다.")
     @ApiErrorCodeExample(
             {ErrorStatus._INTERNAL_SERVER_ERROR})
     @GetMapping("/{guestId}")
-    public ResponseEntity<Guest> getGuestById(@PathVariable Long guestId) {
+    public ApiResponseDto<Guest> getGuestById(@PathVariable Long guestId) {
         Guest guest = guestQueryService.findGuestById(guestId);
-        return ResponseEntity.ok(guest);
+        return ApiResponseDto.onSuccess(guest);
     }
 
     @Operation(summary = "프로모션 ID로 게스트 조회", description = "프로모션 ID를 받아 해당 프로모션에 속한 모든 게스트 정보를 조회합니다.")
     @ApiErrorCodeExample(
             {ErrorStatus._INTERNAL_SERVER_ERROR})
     @GetMapping("/promotion/{promotionId}")
-    public ResponseEntity<List<Guest>> getGuestsByPromotionId(@PathVariable Long promotionId) {
+    public ApiResponseDto<List<Guest>> getGuestsByPromotionId(@PathVariable Long promotionId) {
         List<Guest> guests = guestQueryService.findGuestsByPromotionId(promotionId);
-        return ResponseEntity.ok(guests);
+        return ApiResponseDto.onSuccess(guests);
     }
 
     @Operation(summary = "프로모션 ID로 게스트 페이징 조회", description = "프로모션 ID를 받아 해당 프로모션에 속한 게스트 정보를 페이지별로 조회합니다.")
     @ApiErrorCodeExample(
             {ErrorStatus._INTERNAL_SERVER_ERROR})
     @GetMapping("/promotion/{promotionId}/page")
-    public ResponseEntity<Page<Guest>> getGuestsByPromotionIdPaged(
+    public ApiResponseDto<Page<Guest>> getGuestsByPromotionIdPaged(
             @PathVariable Long promotionId,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size) {
         PageRequest pageable = PageRequest.of(page, size);
         Page<Guest> guestPage = guestQueryService.findGuestsByPromotionId(promotionId, pageable);
-        return ResponseEntity.ok(guestPage);
+        return ApiResponseDto.onSuccess(guestPage);
     }
 }
