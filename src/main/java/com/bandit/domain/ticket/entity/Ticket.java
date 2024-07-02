@@ -1,8 +1,11 @@
 package com.bandit.domain.ticket.entity;
 
-import com.rockoon.domain.auditing.entity.BaseTimeEntity;
+import com.bandit.domain.auditing.entity.BaseTimeEntity;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
 import java.util.Date;

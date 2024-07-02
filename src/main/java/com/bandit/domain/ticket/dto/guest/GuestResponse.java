@@ -1,6 +1,6 @@
 package com.bandit.domain.ticket.dto.guest;
 
-import com.rockoon.domain.member.dto.MemberResponse;
+import com.bandit.domain.member.dto.MemberResponse;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

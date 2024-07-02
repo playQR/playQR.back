@@ -1,7 +1,7 @@
 package com.bandit.domain.ticket.service.guest;
 
+import com.bandit.domain.member.entity.Member;
 import com.bandit.domain.ticket.dto.guest.GuestRequest;
-import com.rockoon.domain.member.entity.Member;
 
 public interface GuestCommandService {
 

@@ -1,6 +1,7 @@
 package com.bandit.domain.ticket.service.ticket;
 
-import com.rockoon.domain.member.entity.Member;
+
+import com.bandit.domain.member.entity.Member;
 
 import java.util.Date;
 
