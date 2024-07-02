@@ -1,10 +1,10 @@
-package com.rockoon.domain.ticket.controller;
+package com.bandit.domain.ticket.controller;
 
 import com.rockoon.domain.member.entity.Member;
-import com.rockoon.domain.ticket.dto.guest.GuestRequest;
-import com.rockoon.domain.ticket.entity.Guest;
-import com.rockoon.domain.ticket.service.guest.GuestCommandService;
-import com.rockoon.domain.ticket.service.guest.GuestQueryService;
+import com.bandit.domain.ticket.dto.guest.GuestRequest;
+import com.bandit.domain.ticket.entity.Guest;
+import com.bandit.domain.ticket.service.guest.GuestCommandService;
+import com.bandit.domain.ticket.service.guest.GuestQueryService;
 import com.rockoon.global.annotation.api.ApiErrorCodeExample;
 import com.rockoon.global.annotation.auth.AuthUser;
 import com.rockoon.presentation.payload.code.ErrorStatus;

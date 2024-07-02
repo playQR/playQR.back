@@ -1,16 +1,17 @@
 package com.rockoon.domain.ticket.service.ticket;
 
+import com.bandit.domain.ticket.service.ticket.TicketCommandService;
 import com.rockoon.domain.board.dto.promotion.PromotionRequest;
 import com.rockoon.domain.board.service.promotion.PromotionCommandService;
 import com.rockoon.domain.member.dto.MemberRequest.MemberRegisterDto;
 import com.rockoon.domain.member.entity.Member;
 import com.rockoon.domain.member.service.MemberCommandService;
 import com.rockoon.domain.member.service.MemberQueryService;
-import com.rockoon.domain.ticket.entity.Guest;
-import com.rockoon.domain.ticket.entity.Ticket;
-import com.rockoon.domain.ticket.repository.TicketRepository;
-import com.rockoon.domain.ticket.service.guest.GuestCommandService;
-import com.rockoon.domain.ticket.service.guest.GuestQueryService;
+import com.bandit.domain.ticket.entity.Guest;
+import com.bandit.domain.ticket.entity.Ticket;
+import com.bandit.domain.ticket.repository.TicketRepository;
+import com.bandit.domain.ticket.service.guest.GuestCommandService;
+import com.bandit.domain.ticket.service.guest.GuestQueryService;
 import com.rockoon.global.config.test.DatabaseCleanUp;
 import com.rockoon.presentation.payload.code.ErrorStatus;
 import com.rockoon.presentation.payload.exception.TicketHandler;

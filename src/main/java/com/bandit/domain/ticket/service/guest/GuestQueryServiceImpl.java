@@ -1,8 +1,7 @@
-package com.rockoon.domain.ticket.service.guest;
+package com.bandit.domain.ticket.service.guest;
 
-import com.rockoon.domain.ticket.entity.Guest;
-import com.rockoon.domain.ticket.repository.GuestRepository;
-import com.rockoon.global.exception.ResourceNotFoundException;
+import com.bandit.domain.ticket.repository.GuestRepository;
+import com.bandit.domain.ticket.entity.Guest;
 import com.rockoon.presentation.payload.code.ErrorStatus;
 import com.rockoon.presentation.payload.exception.GuestHandler;
 import lombok.RequiredArgsConstructor;

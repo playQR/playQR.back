@@ -1,6 +1,6 @@
-package com.rockoon.domain.ticket.service.ticket;
+package com.bandit.domain.ticket.service.ticket;
 
-import com.rockoon.domain.ticket.entity.Ticket;
+import com.bandit.domain.ticket.entity.Ticket;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 

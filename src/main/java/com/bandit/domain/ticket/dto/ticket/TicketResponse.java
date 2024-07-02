@@ -1,4 +1,4 @@
-package com.rockoon.domain.ticket.dto.ticket;
+package com.bandit.domain.ticket.dto.ticket;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

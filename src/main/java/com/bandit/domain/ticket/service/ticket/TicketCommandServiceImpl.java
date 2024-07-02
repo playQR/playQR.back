@@ -1,10 +1,10 @@
-package com.rockoon.domain.ticket.service.ticket;
+package com.bandit.domain.ticket.service.ticket;
 
+import com.bandit.domain.ticket.entity.Guest;
+import com.bandit.domain.ticket.entity.Ticket;
+import com.bandit.domain.ticket.repository.GuestRepository;
+import com.bandit.domain.ticket.repository.TicketRepository;
 import com.rockoon.domain.member.entity.Member;
-import com.rockoon.domain.ticket.entity.Guest;
-import com.rockoon.domain.ticket.entity.Ticket;
-import com.rockoon.domain.ticket.repository.GuestRepository;
-import com.rockoon.domain.ticket.repository.TicketRepository;
 import com.rockoon.presentation.payload.code.ErrorStatus;
 import com.rockoon.presentation.payload.exception.TicketHandler;
 import lombok.RequiredArgsConstructor;
@@ -12,7 +12,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
-import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor

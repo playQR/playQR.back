@@ -1,4 +1,4 @@
-package com.rockoon.domain.ticket.service.ticket;
+package com.bandit.domain.ticket.service.ticket;
 
 import com.rockoon.domain.member.entity.Member;
 
