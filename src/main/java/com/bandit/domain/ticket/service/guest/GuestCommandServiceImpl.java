@@ -1,13 +1,13 @@
 package com.bandit.domain.ticket.service.guest;
 
-import com.rockoon.domain.board.entity.Promotion;
-import com.rockoon.domain.board.repository.PromotionRepository;
-import com.rockoon.domain.member.entity.Member;
+import com.bandit.domain.board.entity.Promotion;
+import com.bandit.domain.board.repository.PromotionRepository;
+import com.bandit.domain.member.entity.Member;
 import com.bandit.domain.ticket.dto.guest.GuestRequest;
 import com.bandit.domain.ticket.entity.Guest;
 import com.bandit.domain.ticket.repository.GuestRepository;
-import com.rockoon.presentation.payload.code.ErrorStatus;
-import com.rockoon.presentation.payload.exception.GuestHandler;
+import com.bandit.presentation.payload.code.ErrorStatus;
+import com.bandit.presentation.payload.exception.GuestHandler;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

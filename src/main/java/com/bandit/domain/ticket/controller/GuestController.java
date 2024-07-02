@@ -1,14 +1,14 @@
 package com.bandit.domain.ticket.controller;
 
-import com.rockoon.domain.member.entity.Member;
+import com.bandit.domain.member.entity.Member;
 import com.bandit.domain.ticket.dto.guest.GuestRequest;
 import com.bandit.domain.ticket.entity.Guest;
 import com.bandit.domain.ticket.service.guest.GuestCommandService;
 import com.bandit.domain.ticket.service.guest.GuestQueryService;
-import com.rockoon.global.annotation.api.ApiErrorCodeExample;
-import com.rockoon.global.annotation.auth.AuthUser;
-import com.rockoon.presentation.payload.code.ErrorStatus;
-import com.rockoon.presentation.payload.dto.ApiResponseDto;
+import com.bandit.global.annotation.api.ApiErrorCodeExample;
+import com.bandit.global.annotation.auth.AuthUser;
+import com.bandit.presentation.payload.code.ErrorStatus;
+import com.bandit.presentation.payload.dto.ApiResponseDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -17,7 +17,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.web.bind.annotation.*;
-
 
 import java.util.List;
 

@@ -1,9 +1,9 @@
 package com.bandit.domain.ticket.service.ticket;
 
-import com.bandit.domain.ticket.repository.TicketRepository;
 import com.bandit.domain.ticket.entity.Ticket;
-import com.rockoon.presentation.payload.code.ErrorStatus;
-import com.rockoon.presentation.payload.exception.TicketHandler;
+import com.bandit.domain.ticket.repository.TicketRepository;
+import com.bandit.presentation.payload.code.ErrorStatus;
+import com.bandit.presentation.payload.exception.TicketHandler;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
