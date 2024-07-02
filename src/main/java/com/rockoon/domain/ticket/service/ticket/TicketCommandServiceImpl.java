@@ -44,4 +44,15 @@ public class TicketCommandServiceImpl implements TicketCommandService {
 
         ticketRepository.delete(ticket);
     }
+
+    @Override
+    public void enterByUUID(String uuid) throws TicketHandler {
+        Ticket ticket = ticketRepository.findByUuid(UUID.fromString(uuid))
+                .orElseThrow(() -> new TicketHandler(ErrorStatus.TICKET_NOT_FOUND));
+
+        Guest guest = ticket.getGuest();
+        guest.markAsEntered();
+
+        ticketRepository.save(ticket);
+    }
 }
