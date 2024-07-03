@@ -40,13 +40,13 @@ public class Guest extends BaseTimeEntity {
 
     private LocalDate depositDate;
 
-    private Boolean isEntranced;
+    private Boolean isEntered;
 
     public static Guest of(Promotion promotion, Member member, GuestRequest request) {
         return Guest.builder()
                 .promotion(promotion)
                 .member(member)
-                .isEntranced(false)
+                .isEntered(false)
                 .name(request.getName())
                 .depositDate(request.getDepositDate())
                 .reservationCount(request.getReservationCount())
@@ -58,6 +58,6 @@ public class Guest extends BaseTimeEntity {
     }
 
     public void entrance() {
-        this.isEntranced = true;
+        this.isEntered = true;
     }
 }
