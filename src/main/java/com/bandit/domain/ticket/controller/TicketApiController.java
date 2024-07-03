@@ -1,6 +1,7 @@
 package com.bandit.domain.ticket.controller;
 
 import com.bandit.domain.member.entity.Member;
+import com.bandit.domain.ticket.dto.ticket.TicketRequest.TicketRegisterDto;
 import com.bandit.domain.ticket.dto.ticket.TicketResponse;
 import com.bandit.domain.ticket.entity.Ticket;
 import com.bandit.domain.ticket.service.ticket.TicketCommandService;
@@ -17,7 +18,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Date;
 import java.util.List;
 
 @Tag(name = "Ticket API", description = "티켓 관련 API")
@@ -25,24 +25,24 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/tickets")
 @RequiredArgsConstructor
-public class TicketController {
+public class TicketApiController {
 
     private final TicketCommandService ticketCommandService;
     private final TicketQueryService ticketQueryService;
 
-    @Operation(summary = "티켓 생성", description = "게스트 ID와 멤버 정보, 만료 날짜를 받아 새로운 티켓을 생성합니다.")
+    @Operation(summary = "티켓 생성 🔑", description = "게스트 ID와 멤버 정보, 만료 날짜를 받아 새로운 티켓을 생성합니다.")
     @ApiErrorCodeExample(
             {ErrorStatus._INTERNAL_SERVER_ERROR})
-    @PostMapping
+    @PostMapping("{guestId}")
     public ApiResponseDto<Long> createTicket(
-            @RequestParam Long guestId,
+            @PathVariable Long guestId,
             @AuthUser Member member,
-            @RequestParam Date dueDate) {
-        Long ticketId = ticketCommandService.createTicket(guestId, member, dueDate);
-        return ApiResponseDto.onSuccess(guestId);
+            @RequestBody TicketRegisterDto request) {
+        Long ticketId = ticketCommandService.createTicket(guestId, member, request);
+        return ApiResponseDto.onSuccess(ticketId);
     }
 
-    @Operation(summary = "티켓 삭제", description = "티켓 ID와 멤버 정보를 받아 기존 티켓을 삭제합니다.")
+    @Operation(summary = "티켓 삭제 🔑", description = "티켓 ID와 멤버 정보를 받아 기존 티켓을 삭제합니다.")
     @ApiErrorCodeExample(
             {ErrorStatus._INTERNAL_SERVER_ERROR})
     @DeleteMapping("/{ticketId}")

@@ -1,6 +1,7 @@
 package com.bandit.domain.ticket.service.ticket;
 
 import com.bandit.domain.member.entity.Member;
+import com.bandit.domain.ticket.dto.ticket.TicketRequest.TicketRegisterDto;
 import com.bandit.domain.ticket.entity.Guest;
 import com.bandit.domain.ticket.entity.Ticket;
 import com.bandit.domain.ticket.repository.GuestRepository;
@@ -11,8 +12,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Date;
-
 @Service
 @RequiredArgsConstructor
 @Transactional
@@ -22,11 +21,11 @@ public class TicketCommandServiceImpl implements TicketCommandService {
     private final GuestRepository guestRepository;
 
     @Override
-    public Long createTicket(Long guestId, Member member, Date dueDate) {
+    public Long createTicket(Long guestId, Member member, TicketRegisterDto request) {
         Guest guest = guestRepository.findById(guestId)
                 .orElseThrow(() -> new TicketHandler(ErrorStatus.GUEST_NOT_FOUND));
 
-        Ticket ticket = Ticket.builder().dueDate(dueDate).guest(guest).build();
+        Ticket ticket = Ticket.builder().dueDate(request.getDueDate()).guest(guest).build();
 
         guest.markTicketAsIssued();
 

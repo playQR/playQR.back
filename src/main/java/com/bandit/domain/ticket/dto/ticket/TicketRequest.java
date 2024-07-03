@@ -5,7 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 public class TicketRequest {
     @Data
@@ -13,8 +13,7 @@ public class TicketRequest {
     @NoArgsConstructor
     @AllArgsConstructor
     public static class TicketRegisterDto {
-        private Long guestId;
-        private Date dueDate;
+        private LocalDate dueDate;
     }
 
     @Data
@@ -22,6 +21,6 @@ public class TicketRequest {
     @NoArgsConstructor
     @AllArgsConstructor
     public static class TicketModifyDto {
-        private Date dueDate;
+        private LocalDate dueDate;
     }
 }
