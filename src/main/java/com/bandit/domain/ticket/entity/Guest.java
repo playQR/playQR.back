@@ -1,7 +1,6 @@
 package com.bandit.domain.ticket.entity;
 
 import com.bandit.domain.auditing.entity.BaseTimeEntity;
-import com.bandit.domain.board.entity.Promotion;
 import com.bandit.domain.member.entity.Member;
 import com.bandit.domain.ticket.dto.guest.GuestRequest;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -11,6 +10,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
+
+import java.time.LocalDate;
 
 @Entity
 @Getter
@@ -26,51 +27,27 @@ public class Guest extends BaseTimeEntity {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "promotion_id", nullable = false)
-    private Promotion promotion;
+    @JoinColumn(name = "ticket_id", nullable = false)
+    private Ticket ticket;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id", nullable = false)
     private Member member;
 
-
     private String name;
 
-    @Column(name = "isTicketIssued")
-    @JsonProperty("ticketIssued")
-    private Boolean ticketIssued;
+    private int reservationCount;
 
-    @Column(name = "isEntered")
+    private LocalDate depositDate;
+
     @JsonProperty("entered")
-    private Boolean entered;
-
-    public void markTicketAsIssued() {
-        this.ticketIssued = true;
-    }
-
-    public void markTicketAsIssued(boolean ticketIssued) {
-        this.ticketIssued = ticketIssued;
-    }
-
-    public void markTicketAsNotIssued() {
-        this.ticketIssued = false;
-    }
-
-    public void updateEntryStatus(boolean entered) {
-        this.entered = entered;
-    }
-
-    public void markAsEntered() {
-        this.entered = true;
-    }
+    private Boolean isEntranced;
 
     public void updateName(String name) {
         this.name = name;
     }
 
-    public void updateGuestDetails(GuestRequest.GuestModifyDto guestRequest) {
-        this.updateName(guestRequest.getName());
-        this.updateEntryStatus(guestRequest.isEntered());
-        this.markTicketAsIssued(guestRequest.isTicketIssued());
+    public void updateGuestDetails(GuestRequest guestRequest) {
+       this.name = guestRequest.getName();
     }
 }

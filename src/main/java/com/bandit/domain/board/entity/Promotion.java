@@ -3,6 +3,7 @@ package com.bandit.domain.board.entity;
 import com.bandit.domain.board.dto.promotion.PromotionRequest;
 import com.bandit.domain.member.entity.Member;
 import com.bandit.domain.music.entity.PromotionMusic;
+import com.bandit.domain.ticket.entity.Ticket;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -33,6 +34,8 @@ public class Promotion extends Board {
     private String accountHolder;
     private String refundInfo;
 
+    @OneToOne(mappedBy = "promotion")
+    private Ticket ticket;
 
     @Builder.Default
     @OneToMany(mappedBy = "promotion", cascade = CascadeType.PERSIST, orphanRemoval = true)
