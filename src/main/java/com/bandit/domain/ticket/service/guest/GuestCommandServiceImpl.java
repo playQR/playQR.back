@@ -22,29 +22,28 @@ public class GuestCommandServiceImpl implements GuestCommandService {
     private final PromotionRepository promotionRepository;
 
     @Override
-    public Long createGuest(Long promotionId, Member member, String name) {
+    public Long createGuest(Long promotionId, Member member, GuestRequest request) {
         Promotion promotion = promotionRepository.findById(promotionId)
                 .orElseThrow(() -> new GuestHandler(ErrorStatus.PROMOTION_NOT_FOUND));
 
-        Guest guest = Guest.builder().promotion(promotion).member(member).name(name).ticketIssued(false).entered(false).build();
-
-        return guestRepository.save(guest).getId();
+        return guestRepository.save(Guest.of(promotion, member, request)).getId();
     }
 
     @Override
-    public void updateGuest(Long guestId, Member member, GuestRequest.GuestModifyDto guestRequest) {
+    public void updateGuest(Long guestId, Member member, GuestRequest request) {
         Guest guest = guestRepository.findById(guestId)
                 .orElseThrow(() -> new GuestHandler(ErrorStatus.GUEST_NOT_FOUND));
 
         validateCreator(guest.getMember(), member);
 
-        guest.updateGuestDetails(guestRequest);
+        guest.updateGuestDetails(request);
     }
 
     @Override
-    public void deleteGuest(Long id) {
-        Guest guest = guestRepository.findById(id)
+    public void deleteGuest(Long guestId, Member member) {
+        Guest guest = guestRepository.findById(guestId)
                 .orElseThrow(() -> new GuestHandler(ErrorStatus.GUEST_NOT_FOUND));
+        validateCreator(guest.getMember(), member);
 
         guestRepository.delete(guest);
     }

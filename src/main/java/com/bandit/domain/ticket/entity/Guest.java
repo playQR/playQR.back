@@ -4,7 +4,6 @@ import com.bandit.domain.auditing.entity.BaseTimeEntity;
 import com.bandit.domain.board.entity.Promotion;
 import com.bandit.domain.member.entity.Member;
 import com.bandit.domain.ticket.dto.guest.GuestRequest;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -41,11 +40,17 @@ public class Guest extends BaseTimeEntity {
 
     private LocalDate depositDate;
 
-    @JsonProperty("entered")
     private Boolean isEntranced;
 
-    public void updateName(String name) {
-        this.name = name;
+    public static Guest of(Promotion promotion, Member member, GuestRequest request) {
+        return Guest.builder()
+                .promotion(promotion)
+                .member(member)
+                .isEntranced(false)
+                .name(request.getName())
+                .depositDate(request.getDepositDate())
+                .reservationCount(request.getReservationCount())
+                .build();
     }
 
     public void updateGuestDetails(GuestRequest guestRequest) {

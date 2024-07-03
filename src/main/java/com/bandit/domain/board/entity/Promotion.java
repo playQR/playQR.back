@@ -37,6 +37,7 @@ public class Promotion extends Board {
     @OneToOne(mappedBy = "promotion")
     private Ticket ticket;
 
+
     @Builder.Default
     @OneToMany(mappedBy = "promotion", cascade = CascadeType.PERSIST, orphanRemoval = true)
     private List<PromotionMusic> promotionMusicList = new ArrayList<>();
