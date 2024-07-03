@@ -1,9 +1,13 @@
 package com.bandit.domain.ticket.service.guest;
 
+import com.bandit.domain.board.entity.Promotion;
+import com.bandit.domain.board.repository.PromotionRepository;
+import com.bandit.domain.member.entity.Member;
 import com.bandit.domain.ticket.entity.Guest;
 import com.bandit.domain.ticket.repository.GuestRepository;
 import com.bandit.presentation.payload.code.ErrorStatus;
 import com.bandit.presentation.payload.exception.GuestHandler;
+import com.bandit.presentation.payload.exception.PromotionHandler;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -18,25 +22,39 @@ import java.util.List;
 public class GuestQueryServiceImpl implements GuestQueryService{
 
     private final GuestRepository guestRepository;
+    private final PromotionRepository promotionRepository;
 
     @Override
-    public List<Guest> findAllGuests() {
-        return guestRepository.findAll();
-    }
-
-    @Override
-    public Guest findGuestById(Long guestId) {
-        return guestRepository.findById(guestId)
+    public Guest findGuestById(Long guestId, Member member) {
+        Guest guest = guestRepository.findById(guestId)
                 .orElseThrow(() -> new GuestHandler(ErrorStatus.GUEST_NOT_FOUND));
+        validateHost(guest, member);
+        return guest;
     }
 
     @Override
-    public List<Guest> findGuestsByPromotionId(Long promotionId) {
+    public List<Guest> findGuestsByPromotionId(Long promotionId, Member member) {
+        validateHost(promotionId, member);
         return guestRepository.findByPromotionId(promotionId);
     }
 
+
     @Override
-    public Page<Guest> findGuestsByPromotionId(Long promotionId, Pageable pageable) {
+    public Page<Guest> findGuestsByPromotionId(Long promotionId, Member member, Pageable pageable) {
+        validateHost(promotionId, member);
         return guestRepository.findByPromotionId(promotionId, pageable);
+    }
+
+    private void validateHost(Guest guest, Member member) {
+        if (guest.getPromotion().getWriter().equals(member)) {
+            throw new GuestHandler(ErrorStatus.GUEST_ONLY_CAN_BE_TOUCHED_BY_CREATOR);
+        }
+    }
+    private void validateHost(Long promotionId, Member member) {
+        Promotion promotion = promotionRepository.findById(promotionId)
+                .orElseThrow(() -> new PromotionHandler(ErrorStatus.PROMOTION_NOT_FOUND));
+        if (promotion.getWriter().equals(member)) {
+            throw new GuestHandler(ErrorStatus.GUEST_ONLY_CAN_BE_TOUCHED_BY_CREATOR);
+        }
     }
 }
