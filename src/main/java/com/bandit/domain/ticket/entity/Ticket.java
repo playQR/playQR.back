@@ -1,6 +1,7 @@
 package com.bandit.domain.ticket.entity;
 
 import com.bandit.domain.auditing.entity.BaseTimeEntity;
+import com.bandit.domain.board.entity.Promotion;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -33,6 +34,10 @@ public class Ticket extends BaseTimeEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "guest_id", nullable = false)
     private Guest guest;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "promotion_id", nullable = false)
+    private Promotion promotion;
 
     @PrePersist
     private void generateData() {
