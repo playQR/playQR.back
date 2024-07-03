@@ -9,26 +9,12 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class TicketQueryServiceImpl implements TicketQueryService {
 
     private final TicketRepository ticketRepository;
-
-    @Override
-    public Ticket findTicketById(Long ticketId) {
-        return ticketRepository.findById(ticketId)
-                .orElseThrow(() -> new TicketHandler(ErrorStatus.TICKET_NOT_FOUND));
-    }
-
-    @Override
-    public List<Ticket> findAllTickets() {
-        return ticketRepository.findAll();
-    }
-
 
     @Override
     public Ticket findTicketsByPromotionId(Long promotionId, Member member) {
@@ -40,7 +26,7 @@ public class TicketQueryServiceImpl implements TicketQueryService {
 
     private void validateHost(Ticket ticket, Member host) {
         if (!ticket.getPromotion().getWriter().equals(host)) {
-            throw new TicketHandler(ErrorStatus.TICKET_ONLY_CAN_BE_OPENED_BY_MANAGERS)
+            throw new TicketHandler(ErrorStatus.TICKET_ONLY_CAN_BE_OPENED_BY_MANAGERS);
         }
     }
 }

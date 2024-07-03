@@ -9,6 +9,7 @@ import com.bandit.domain.ticket.service.guest.GuestCommandService;
 import com.bandit.domain.ticket.service.guest.GuestQueryService;
 import com.bandit.global.annotation.api.ApiErrorCodeExample;
 import com.bandit.global.annotation.auth.AuthUser;
+import com.bandit.global.util.PageUtil;
 import com.bandit.presentation.payload.code.ErrorStatus;
 import com.bandit.presentation.payload.dto.ApiResponseDto;
 import io.swagger.v3.oas.annotations.Operation;
@@ -74,43 +75,37 @@ public class GuestApiController {
         return ApiResponseDto.onSuccess(true);
     }
 
-    @Operation(summary = "모든 게스트 조회", description = "모든 게스트 정보를 조회합니다.")
-    @ApiErrorCodeExample(
-            {ErrorStatus._INTERNAL_SERVER_ERROR})
-    @GetMapping
-    public ApiResponseDto<List<Guest>> getAllGuests() {
-        List<Guest> guests = guestQueryService.findAllGuests();
-        return ApiResponseDto.onSuccess(guests);
-    }
 
-    @Operation(summary = "게스트 조회", description = "게스트 ID를 받아 해당 게스트 정보를 조회합니다.")
+    @Operation(summary = "게스트 조회 🔑", description = "게스트 ID를 받아 해당 게스트 정보를 조회합니다.")
     @ApiErrorCodeExample(
             {ErrorStatus._INTERNAL_SERVER_ERROR})
     @GetMapping("/{guestId}")
-    public ApiResponseDto<Guest> getGuestById(@PathVariable Long guestId) {
-        Guest guest = guestQueryService.findGuestById(guestId);
+    public ApiResponseDto<Guest> getGuestById(@PathVariable Long guestId,
+                                              @AuthUser Member member) {
+        Guest guest = guestQueryService.findGuestById(guestId, member);
         return ApiResponseDto.onSuccess(guest);
     }
 
-    @Operation(summary = "프로모션 ID로 게스트 조회", description = "프로모션 ID를 받아 해당 프로모션에 속한 모든 게스트 정보를 조회합니다.")
+    @Operation(summary = "프로모션 ID로 게스트 조회 🔑", description = "프로모션 ID를 받아 해당 프로모션에 속한 모든 게스트 정보를 조회합니다.")
     @ApiErrorCodeExample(
             {ErrorStatus._INTERNAL_SERVER_ERROR})
     @GetMapping("/promotions/{promotionId}")
-    public ApiResponseDto<GuestListDto> getGuestsByPromotionId(@PathVariable Long promotionId) {
-        List<Guest> guests = guestQueryService.findGuestsByPromotionId(promotionId);
+    public ApiResponseDto<GuestListDto> getGuestsByPromotionId(@PathVariable Long promotionId,
+                                                               @AuthUser Member member) {
+        List<Guest> guests = guestQueryService.findGuestsByPromotionId(promotionId, member);
         return ApiResponseDto.onSuccess(GuestConverter.toListDto(guests));
     }
 
-    @Operation(summary = "프로모션 ID로 게스트 페이징 조회", description = "프로모션 ID를 받아 해당 프로모션에 속한 게스트 정보를 페이지별로 조회합니다.")
+    @Operation(summary = "프로모션 ID로 게스트 페이징 조회 🔑", description = "프로모션 ID를 받아 해당 프로모션에 속한 게스트 정보를 페이지별로 조회합니다.")
     @ApiErrorCodeExample(
             {ErrorStatus._INTERNAL_SERVER_ERROR})
     @GetMapping("/promotions/{promotionId}/page")
     public ApiResponseDto<GuestListDto> getGuestsByPromotionIdPaged(
             @PathVariable Long promotionId,
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size) {
-        PageRequest pageable = PageRequest.of(page, size);
-        Page<Guest> guestPage = guestQueryService.findGuestsByPromotionId(promotionId, pageable);
+            @AuthUser Member member,
+            @RequestParam(defaultValue = "0") int page) {
+        PageRequest pageable = PageRequest.of(page, PageUtil.GUEST_SIZE);
+        Page<Guest> guestPage = guestQueryService.findGuestsByPromotionId(promotionId, member, pageable);
         return ApiResponseDto.onSuccess(GuestConverter.toListDto(guestPage));
     }
 }
