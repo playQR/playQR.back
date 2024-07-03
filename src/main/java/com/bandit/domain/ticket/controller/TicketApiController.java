@@ -32,7 +32,7 @@ public class TicketApiController {
     @GetMapping("/promotions/{promotionId}")
     public ApiResponseDto<TicketResponse> getTicketById(@PathVariable Long promotionId,
                                                         @AuthUser Member member) {
-        Ticket ticket = ticketQueryService.findTicketsByPromotionId(promotionId, member);
+        Ticket ticket = ticketQueryService.findTicketByPromotionId(promotionId, member);
         return ApiResponseDto.onSuccess(TicketConverter.toResponse(ticket));
     }
 

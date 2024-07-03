@@ -5,5 +5,5 @@ import com.bandit.domain.ticket.entity.Ticket;
 
 public interface TicketQueryService {
 
-    Ticket findTicketsByPromotionId(Long promotionId, Member member);
+    Ticket findTicketByPromotionId(Long promotionId, Member member);
 }

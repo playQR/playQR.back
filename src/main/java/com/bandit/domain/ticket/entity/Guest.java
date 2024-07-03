@@ -54,7 +54,9 @@ public class Guest extends BaseTimeEntity {
     }
 
     public void updateGuestDetails(GuestRequest guestRequest) {
-       this.name = guestRequest.getName();
+        this.reservationCount = guestRequest.getReservationCount();
+        this.name = guestRequest.getName();
+        this.depositDate = guestRequest.getDepositDate();
     }
 
     public void entrance() {
