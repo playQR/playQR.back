@@ -34,13 +34,12 @@ public class GuestCommandServiceImpl implements GuestCommandService {
     }
 
     @Override
-    public boolean entrance(String uuid, Member member) {
+    public void entrance(String uuid, Member member) {
         Ticket ticket = ticketRepository.findByUuid(uuid)
                 .orElseThrow(() -> new TicketHandler(ErrorStatus.TICKET_NOT_FOUND));
         Guest guest = guestRepository.findByMemberAndPromotion(member, ticket.getPromotion())
                 .orElseThrow(() -> new GuestHandler(ErrorStatus.GUEST_NOT_FOUND));
         guest.entrance();
-        return false;
     }
 
     @Override       //TODO remove this method
