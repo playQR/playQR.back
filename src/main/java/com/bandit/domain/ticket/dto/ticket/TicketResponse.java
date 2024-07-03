@@ -5,7 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 @Data
 @Builder
@@ -13,6 +13,6 @@ import java.util.Date;
 @AllArgsConstructor
 public class TicketResponse {
     private Long ticketId;
-    private Long guestId;
-    private Date dueDate;
+    private String uuid;
+    private LocalDate dueDate;
 }

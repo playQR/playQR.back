@@ -1,5 +1,6 @@
 package com.bandit.domain.ticket.service.ticket;
 
+import com.bandit.domain.member.entity.Member;
 import com.bandit.domain.ticket.entity.Ticket;
 
 import java.util.List;
@@ -10,7 +11,6 @@ public interface TicketQueryService {
 
     List<Ticket> findAllTickets();
 
-//    Page<Ticket> findTicketsByGuestId(Long guestId, Pageable pageable);
 
-    Ticket findTicketsByPromotionId(Long promotionId);
+    Ticket findTicketsByPromotionId(Long promotionId, Member member);
 }
