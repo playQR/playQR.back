@@ -4,7 +4,6 @@ import com.bandit.domain.member.entity.Member;
 import com.bandit.domain.ticket.dto.ticket.TicketRequest.TicketRegisterDto;
 import com.bandit.domain.ticket.dto.ticket.TicketResponse;
 import com.bandit.domain.ticket.entity.Ticket;
-import com.bandit.domain.ticket.service.ticket.TicketCommandService;
 import com.bandit.domain.ticket.service.ticket.TicketQueryService;
 import com.bandit.global.annotation.api.ApiErrorCodeExample;
 import com.bandit.global.annotation.auth.AuthUser;

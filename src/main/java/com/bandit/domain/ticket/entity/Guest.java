@@ -56,4 +56,8 @@ public class Guest extends BaseTimeEntity {
     public void updateGuestDetails(GuestRequest guestRequest) {
        this.name = guestRequest.getName();
     }
+
+    public void entrance() {
+        this.isEntranced = true;
+    }
 }
