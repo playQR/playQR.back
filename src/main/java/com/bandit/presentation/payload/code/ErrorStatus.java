@@ -51,7 +51,8 @@ public enum ErrorStatus implements BaseCode{
     GUEST_ONLY_CAN_BE_TOUCHED_BY_CREATOR(BAD_REQUEST, 4201, "작성자가 아닌 유저는 게스트를 수정할 수 없습니다."),
     //티켓 관련 오류(4250 ~ 4300)
     TICKET_NOT_FOUND(NOT_FOUND, 4400, "존재하지 않는 티켓입니다."),
-    TICKET_CAN_ONLY_BE_TOUCHED_BY_HOST_AND_MANAGERS(FORBIDDEN, 4401, "티켓은 호스트나 매니저만 접근할 수 있습니다.");
+    TICKET_CAN_ONLY_BE_TOUCHED_BY_HOST_AND_MANAGERS(FORBIDDEN, 4401, "티켓은 호스트나 매니저만 접근할 수 있습니다."),
+    TICKET_ONLY_CAN_BE_OPENED_BY_MANAGERS(BAD_REQUEST, 4402, "티켓 열람은 매니저와 호스트만 가능합니다.");
 
     private final HttpStatus httpStatus;
     private final Integer code;
