@@ -1,7 +1,7 @@
 package com.bandit.domain.ticket.controller;
 
 import com.bandit.domain.member.entity.Member;
-import com.bandit.domain.ticket.dto.guest.GuestRequest.GuestModifyDto;
+import com.bandit.domain.ticket.dto.guest.GuestRequest;
 import com.bandit.domain.ticket.entity.Guest;
 import com.bandit.domain.ticket.service.guest.GuestCommandService;
 import com.bandit.domain.ticket.service.guest.GuestQueryService;
@@ -30,37 +30,37 @@ public class GuestApiController {
     private final GuestCommandService guestCommandService;
     private final GuestQueryService guestQueryService;
 
-    @Operation(summary = "게스트 생성", description = "프로모션 ID와 멤버 정보, 이름을 받아 새로운 게스트를 생성합니다.")
+    @Operation(summary = "게스트 생성 🔑", description = "프로모션 ID와 멤버 정보, 이름을 받아 새로운 게스트를 생성합니다.")
     @ApiErrorCodeExample(
             {ErrorStatus._INTERNAL_SERVER_ERROR})
     @PostMapping("{promotionId}")
     public ApiResponseDto<Long> createGuest(
             @PathVariable Long promotionId,
-            @RequestParam String guestName,
+            @RequestBody GuestRequest request,
             @AuthUser Member member) {
-        Long guestId = guestCommandService.createGuest(promotionId, member, guestName);
+        Long guestId = guestCommandService.createGuest(promotionId, member, request);
         return ApiResponseDto.onSuccess(guestId);
     }
 
-    @Operation(summary = "게스트 수정", description = "게스트 ID와 게스트 정보를 받아 기존 게스트 정보를 수정합니다.")
+    @Operation(summary = "게스트 수정 🔑", description = "게스트 ID와 게스트 정보를 받아 기존 게스트 정보를 수정합니다.")
     @ApiErrorCodeExample(
             {ErrorStatus._INTERNAL_SERVER_ERROR})
     @PutMapping("/{guestId}")
-    public ApiResponseDto<Void> updateGuest(
+    public ApiResponseDto<Long> updateGuest(
             @PathVariable Long guestId,
             @AuthUser Member member,
-            @RequestBody @Valid GuestModifyDto request) {
-        guestCommandService.updateGuest(guestId, member, request);
-        return ApiResponseDto.onSuccess(null);
+            @RequestBody @Valid GuestRequest request) {
+        return ApiResponseDto.onSuccess(guestCommandService.updateGuest(guestId, member, request));
     }
 
-    @Operation(summary = "게스트 삭제", description = "게스트 ID를 받아 해당 게스트를 삭제합니다.")
+    @Operation(summary = "게스트 삭제 🔑", description = "게스트 ID를 받아 해당 게스트를 삭제합니다.")
     @ApiErrorCodeExample(
             {ErrorStatus._INTERNAL_SERVER_ERROR})
     @DeleteMapping("/{guestId}")
-    public ApiResponseDto<Void> deleteGuest(@PathVariable Long guestId) {
-        guestCommandService.deleteGuest(guestId);
-        return ApiResponseDto.onSuccess(null);
+    public ApiResponseDto<Boolean> deleteGuest(@PathVariable Long guestId,
+                                            @AuthUser Member member) {
+        guestCommandService.deleteGuest(guestId, member);
+        return ApiResponseDto.onSuccess(true);
     }
 
     @Operation(summary = "모든 게스트 조회", description = "모든 게스트 정보를 조회합니다.")
