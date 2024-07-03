@@ -7,6 +7,7 @@ import com.bandit.domain.member.dto.MemberRequest.MemberRegisterDto;
 import com.bandit.domain.member.entity.Member;
 import com.bandit.domain.member.service.MemberCommandService;
 import com.bandit.domain.member.service.MemberQueryService;
+import com.bandit.domain.ticket.dto.ticket.TicketRequest.TicketRegisterDto;
 import com.bandit.domain.ticket.entity.Guest;
 import com.bandit.domain.ticket.entity.Ticket;
 import com.bandit.domain.ticket.repository.TicketRepository;
@@ -24,7 +25,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -100,9 +101,12 @@ class TicketCommandServiceTest {
     @DisplayName("호스트가 게스트에게 티켓을 발급합니다. 이때 게스트의 isTicketIssued 값이 true로 변경됩니다.")
     void issueTicket() {
         //given
+        TicketRegisterDto request = TicketRegisterDto.builder()
+                .dueDate(LocalDate.now())
+                .build();
         //when
         //TODO logic edit (validate guest.getPromotion().getWriter().equals(hostMember)) -> 나중에 여기에 매니저 추가
-        Long ticketId = ticketCommandService.createTicket(applyGuest.getId(), host, new Date());
+        Long ticketId = ticketCommandService.createTicket(applyGuest.getId(), host, request);
         //then
         Optional<Ticket> optionalTicket = ticketRepository.findById(ticketId);
         assertThat(optionalTicket).isPresent();
@@ -115,8 +119,11 @@ class TicketCommandServiceTest {
     void executeExceptionNotFoundGuest() {
         //given
         Long proxyGuestId = 1000L;
+        TicketRegisterDto request = TicketRegisterDto.builder()
+                .dueDate(LocalDate.now())
+                .build();
         //when
-        assertThatThrownBy(() -> ticketCommandService.createTicket(proxyGuestId, host, new Date()))
+        assertThatThrownBy(() -> ticketCommandService.createTicket(proxyGuestId, host, request))
                 .isInstanceOf(TicketHandler.class)
                 .hasMessage(ErrorStatus.GUEST_NOT_FOUND.getMessage());
         //then
@@ -127,7 +134,10 @@ class TicketCommandServiceTest {
     @DisplayName("QR로부터 받아온 uuid를 통해 티켓을 가져오고, 해당 게스트의 isEntered 값이 true로 변경됩니다.")
     void checkTicket() {
         //given
-        Long ticketId = ticketCommandService.createTicket(applyGuest.getId(), host, new Date());
+        TicketRegisterDto request = TicketRegisterDto.builder()
+                .dueDate(LocalDate.now())
+                .build();
+        Long ticketId = ticketCommandService.createTicket(applyGuest.getId(), host, request);
         Ticket ticket = ticketRepository.findById(ticketId).get();
         String uuid = ticket.getUuid();
         //when
@@ -155,7 +165,10 @@ class TicketCommandServiceTest {
     @DisplayName("호스트가 발급된 티켓의 유효성을 삭제합니다.")
     void deleteTicket() {
         //given
-        Long ticketId = ticketCommandService.createTicket(applyGuest.getId(), host, new Date());
+        TicketRegisterDto request = TicketRegisterDto.builder()
+                .dueDate(LocalDate.now())
+                .build();
+        Long ticketId = ticketCommandService.createTicket(applyGuest.getId(), host, request);
         //when
         //TODO need to validate commander is host
         ticketCommandService.deleteTicket(ticketId, host);
@@ -179,8 +192,12 @@ class TicketCommandServiceTest {
     @Test
     @DisplayName("티켓의 유효성을 삭제할 때, 삭제하는 이가 호스트가 아닐 경우 예외를 발생시킵니다.")
     void executeExceptionValidateHost() {
+        //given
+        TicketRegisterDto request = TicketRegisterDto.builder()
+                .dueDate(LocalDate.now())
+                .build();
         //when & then
-        assertThatThrownBy(() -> ticketCommandService.createTicket(applyGuest.getId(), guest, new Date()))
+        assertThatThrownBy(() -> ticketCommandService.createTicket(applyGuest.getId(), guest, request))
                 .isInstanceOf(TicketHandler.class)
                 .hasMessage(ErrorStatus.TICKET_CAN_ONLY_BE_TOUCHED_BY_HOST_AND_MANAGERS.getMessage());
     }
