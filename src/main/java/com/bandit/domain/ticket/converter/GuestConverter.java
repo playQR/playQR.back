@@ -16,7 +16,7 @@ public class GuestConverter {
                 .guestId(guest.getId())
                 .name(guest.getName())
                 .depositDate(guest.getDepositDate())
-                .isEntranced(guest.getIsEntranced())
+                .isEntranced(guest.getIsEntered())
                 .reservationCount(guest.getReservationCount())
                 .writer(MemberConverter.toResponse(guest.getMember()))
                 .build();
