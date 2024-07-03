@@ -43,7 +43,7 @@ public class PromotionCommandServiceImpl implements PromotionCommandService {
         Promotion savePromotion = promotionRepository.save(Promotion.of(member, request));
         saveImageListInPromotion(request, savePromotion);
         saveMusicListInPromotion(request, savePromotion);
-        saveTicketWithPromotion(savePromotion, request);
+        saveTicketWithPromotion(request, savePromotion);
         return savePromotion.getId();
     }
 
@@ -105,7 +105,7 @@ public class PromotionCommandServiceImpl implements PromotionCommandService {
         }
     }
 
-    private void saveTicketWithPromotion(Promotion savePromotion, PromotionRequest request) {
+    private void saveTicketWithPromotion(PromotionRequest request, Promotion savePromotion) {
         ticketRepository.save(Ticket.of(savePromotion, request.getShowDate()));
     }
 

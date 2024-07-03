@@ -13,6 +13,8 @@ import com.bandit.domain.music.dto.MusicRequest;
 import com.bandit.domain.music.entity.PromotionMusic;
 import com.bandit.domain.music.repository.MusicRepository;
 import com.bandit.domain.music.repository.PromotionMusicRepository;
+import com.bandit.domain.ticket.entity.Ticket;
+import com.bandit.domain.ticket.repository.TicketRepository;
 import com.bandit.global.config.test.DatabaseCleanUp;
 import com.bandit.presentation.payload.code.ErrorStatus;
 import com.bandit.presentation.payload.exception.PromotionHandler;
@@ -47,6 +49,8 @@ class PromotionCommandServiceTest {
     MusicRepository musicRepository;
     @Autowired
     PromotionMusicRepository promotionMusicRepository;
+    @Autowired
+    TicketRepository ticketRepository;
     @Autowired
     MemberRepository memberRepository;
     //else
@@ -149,10 +153,13 @@ class PromotionCommandServiceTest {
         Long promotionId = promotionCommandService.createPromotion(member1, request);
 
         //then
+        Optional<Promotion> promotionOptional = promotionRepository.findById(promotionId);
         List<Image> imagesByBoardId = imageRepository.findImagesByBoardId(promotionId);
         List<PromotionMusic> musicsByBoardId = promotionMusicRepository.findMusicsByPromotionId(promotionId);
         assertThat(imagesByBoardId).hasSize(1);
         assertThat(musicsByBoardId).hasSize(2);
+        assertThat(promotionOptional.get().getTicket().getDueDate())
+                .isEqualTo(request.getShowDate());
 
     }
 
@@ -165,6 +172,7 @@ class PromotionCommandServiceTest {
                 .content("promotion")
                 .imageList(imageList)
                 .musicList(musicList)
+                .showDate(LocalDate.of(2024,8,2))
                 .maxAudience(3)
                 .build();
         Long promotionId = promotionCommandService.createPromotion(member1, request);
@@ -174,6 +182,7 @@ class PromotionCommandServiceTest {
                 .content("promotion")
                 .imageList(imageList)
                 .musicList(musicList)
+                .showDate(LocalDate.of(2024,9,3))
                 .maxAudience(3)
                 .build();
 
@@ -186,6 +195,7 @@ class PromotionCommandServiceTest {
         List<PromotionMusic> musicsByBoardId = promotionMusicRepository.findMusicsByPromotionId(updatePromotionId);
         assertThat(imagesByBoardId).hasSize(0);
         assertThat(musicsByBoardId).hasSize(2);
+        assertThat(promotion.getTicket().getDueDate()).isEqualTo(updateRequest.getShowDate());
     }
 
     @Test
@@ -224,7 +234,9 @@ class PromotionCommandServiceTest {
         promotionCommandService.removePromotion(member1, promotionId);
         //then
         List<Promotion> all = promotionRepository.findAll();
+        List<Ticket> allTicket = ticketRepository.findAll();
         assertThat(all).hasSize(0);
+        assertThat(allTicket).hasSize(0);
     }
     @Test
     @DisplayName("등록된 promotion을 지울 때, 작성자가 아닐 경우에 예외를 확인합니다.")

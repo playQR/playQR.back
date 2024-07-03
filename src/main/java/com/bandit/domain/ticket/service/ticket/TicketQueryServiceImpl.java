@@ -30,13 +30,14 @@ public class TicketQueryServiceImpl implements TicketQueryService {
         return ticketRepository.findAll();
     }
 
-    @Override
-    public Page<Ticket> findTicketsByGuestId(Long guestId, Pageable pageable) {
-        return ticketRepository.findByGuestId(guestId, pageable);
-    }
+//    @Override
+//    public Page<Ticket> findTicketsByGuestId(Long guestId, Pageable pageable) {
+//        return ticketRepository.findByGuestId(guestId, pageable);
+//    }
 
     @Override
-    public List<Ticket> findTicketsByPromotionId(Long promotionId) {
-        return ticketRepository.findByPromotionId(promotionId);
+    public Ticket findTicketsByPromotionId(Long promotionId) {
+        return ticketRepository.findByPromotionId(promotionId)
+                .orElseThrow(() -> new TicketHandler(ErrorStatus.TICKET_NOT_FOUND));
     }
 }

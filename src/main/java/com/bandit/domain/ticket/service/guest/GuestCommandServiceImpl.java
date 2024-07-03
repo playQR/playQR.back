@@ -44,13 +44,14 @@ public class GuestCommandServiceImpl implements GuestCommandService {
     }
 
     @Override       //TODO remove this method
-    public void updateGuest(Long guestId, Member member, GuestRequest request) {
+    public Long updateGuest(Long guestId, Member member, GuestRequest request) {
         Guest guest = guestRepository.findById(guestId)
                 .orElseThrow(() -> new GuestHandler(ErrorStatus.GUEST_NOT_FOUND));
 
         validateCreator(guest.getMember(), member);
 
         guest.updateGuestDetails(request);
+        return guest.getId();
     }
 
     @Override
