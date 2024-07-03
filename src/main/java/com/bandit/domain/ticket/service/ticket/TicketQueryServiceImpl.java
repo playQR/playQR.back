@@ -17,7 +17,7 @@ public class TicketQueryServiceImpl implements TicketQueryService {
     private final TicketRepository ticketRepository;
 
     @Override
-    public Ticket findTicketsByPromotionId(Long promotionId, Member member) {
+    public Ticket findTicketByPromotionId(Long promotionId, Member member) {
         Ticket ticket = ticketRepository.findByPromotionId(promotionId)
                 .orElseThrow(() -> new TicketHandler(ErrorStatus.TICKET_NOT_FOUND));
         validateHost(ticket, member);
