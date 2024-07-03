@@ -10,10 +10,13 @@ import com.bandit.domain.music.entity.Music;
 import com.bandit.domain.music.entity.PromotionMusic;
 import com.bandit.domain.music.repository.MusicRepository;
 import com.bandit.domain.music.repository.PromotionMusicRepository;
+import com.bandit.domain.ticket.entity.Ticket;
+import com.bandit.domain.ticket.repository.TicketRepository;
 import com.bandit.global.service.AwsS3Service;
 import com.bandit.global.util.ListUtil;
 import com.bandit.presentation.payload.code.ErrorStatus;
 import com.bandit.presentation.payload.exception.PromotionHandler;
+import com.bandit.presentation.payload.exception.TicketHandler;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -32,6 +35,7 @@ public class PromotionCommandServiceImpl implements PromotionCommandService {
     private final ImageRepository imageRepository;
     private final MusicRepository musicRepository;
     private final PromotionMusicRepository promotionMusicRepository;
+    private final TicketRepository ticketRepository;
     private final AwsS3Service awsS3Service;
 
     @Override
@@ -39,8 +43,11 @@ public class PromotionCommandServiceImpl implements PromotionCommandService {
         Promotion savePromotion = promotionRepository.save(Promotion.of(member, request));
         saveImageListInPromotion(request, savePromotion);
         saveMusicListInPromotion(request, savePromotion);
+        saveTicketWithPromotion(savePromotion, request);
         return savePromotion.getId();
     }
+
+
 
     @Override
     public Long modifyPromotion(Member member, Long promotionId, PromotionRequest request) {
@@ -53,8 +60,11 @@ public class PromotionCommandServiceImpl implements PromotionCommandService {
                 .forEach(awsS3Service::deleteFile);
         imageRepository.deleteAllByBoardId(promotionId);
         promotionMusicRepository.deleteAllByPromotionId(promotionId);
+        Ticket ticket = ticketRepository.findByPromotionId(promotionId)
+                .orElseThrow(() -> new TicketHandler(ErrorStatus.TICKET_NOT_FOUND));
 
         updatePromotion.update(request);
+        ticket.update(request.getShowDate());
         saveImageListInPromotion(request, updatePromotion);
         saveMusicListInPromotion(request, updatePromotion);
         return updatePromotion.getId();
@@ -71,6 +81,7 @@ public class PromotionCommandServiceImpl implements PromotionCommandService {
                 .forEach(awsS3Service::deleteFile);
         imageRepository.deleteAllByBoardId(promotionId);
         promotionMusicRepository.deleteAllByPromotionId(promotionId);
+        ticketRepository.deleteByPromotionId(promotionId);
         promotionRepository.delete(removePromotion);
     }
 
@@ -92,6 +103,10 @@ public class PromotionCommandServiceImpl implements PromotionCommandService {
             //TODO search -> whiteList music get & newly insert music -> save PromotionMusic
             //TODO setting each isOpen value
         }
+    }
+
+    private void saveTicketWithPromotion(Promotion savePromotion, PromotionRequest request) {
+        ticketRepository.save(Ticket.of(savePromotion, request.getShowDate()));
     }
 
     private static void validateWriter(Member member, Promotion promotion) {

@@ -1,6 +1,7 @@
 package com.bandit.domain.ticket.entity;
 
 import com.bandit.domain.auditing.entity.BaseTimeEntity;
+import com.bandit.domain.board.entity.Promotion;
 import com.bandit.domain.member.entity.Member;
 import com.bandit.domain.ticket.dto.guest.GuestRequest;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -27,8 +28,8 @@ public class Guest extends BaseTimeEntity {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "ticket_id", nullable = false)
-    private Ticket ticket;
+    @JoinColumn(name = "promotion_id", nullable = false)
+    private Promotion promotion;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id", nullable = false)
