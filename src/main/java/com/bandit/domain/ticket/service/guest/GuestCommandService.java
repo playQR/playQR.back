@@ -5,7 +5,7 @@ import com.bandit.domain.ticket.dto.guest.GuestRequest;
 
 public interface GuestCommandService {
 
-    Long createGuest(Long promotionId, Member member, String name);
-    void updateGuest(Long guestId, Member member, GuestRequest.GuestModifyDto guestRequest);
-    void deleteGuest(Long id);
+    Long createGuest(Long promotionId, Member member, GuestRequest request);
+    void updateGuest(Long guestId, Member member, GuestRequest request);
+    void deleteGuest(Long guestId, Member member);
 }
