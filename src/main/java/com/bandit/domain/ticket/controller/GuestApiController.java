@@ -1,7 +1,9 @@
 package com.bandit.domain.ticket.controller;
 
 import com.bandit.domain.member.entity.Member;
+import com.bandit.domain.ticket.converter.GuestConverter;
 import com.bandit.domain.ticket.dto.guest.GuestRequest;
+import com.bandit.domain.ticket.dto.guest.GuestResponse.GuestListDto;
 import com.bandit.domain.ticket.entity.Guest;
 import com.bandit.domain.ticket.service.guest.GuestCommandService;
 import com.bandit.domain.ticket.service.guest.GuestQueryService;
@@ -33,13 +35,22 @@ public class GuestApiController {
     @Operation(summary = "게스트 생성 🔑", description = "프로모션 ID와 멤버 정보, 이름을 받아 새로운 게스트를 생성합니다.")
     @ApiErrorCodeExample(
             {ErrorStatus._INTERNAL_SERVER_ERROR})
-    @PostMapping("{promotionId}")
+    @PostMapping("/{promotionId}")
     public ApiResponseDto<Long> createGuest(
             @PathVariable Long promotionId,
             @RequestBody GuestRequest request,
             @AuthUser Member member) {
         Long guestId = guestCommandService.createGuest(promotionId, member, request);
         return ApiResponseDto.onSuccess(guestId);
+    }
+    @Operation(summary = "게스트 입장 🔑", description = "프로모션의 티켓 uuid를 통해 게스트를 입장 처리해줍니다.")
+    @ApiErrorCodeExample(
+            {ErrorStatus._INTERNAL_SERVER_ERROR})
+    @PostMapping("/entrance")
+    public ApiResponseDto<Boolean> entranceGuest(@RequestParam String uuid,
+                                                 @AuthUser Member member) {
+        guestCommandService.entrance(uuid, member);
+        return ApiResponseDto.onSuccess(true);
     }
 
     @Operation(summary = "게스트 수정 🔑", description = "게스트 ID와 게스트 정보를 받아 기존 게스트 정보를 수정합니다.")
@@ -85,21 +96,21 @@ public class GuestApiController {
     @ApiErrorCodeExample(
             {ErrorStatus._INTERNAL_SERVER_ERROR})
     @GetMapping("/promotions/{promotionId}")
-    public ApiResponseDto<List<Guest>> getGuestsByPromotionId(@PathVariable Long promotionId) {
+    public ApiResponseDto<GuestListDto> getGuestsByPromotionId(@PathVariable Long promotionId) {
         List<Guest> guests = guestQueryService.findGuestsByPromotionId(promotionId);
-        return ApiResponseDto.onSuccess(guests);
+        return ApiResponseDto.onSuccess(GuestConverter.toListDto(guests));
     }
 
     @Operation(summary = "프로모션 ID로 게스트 페이징 조회", description = "프로모션 ID를 받아 해당 프로모션에 속한 게스트 정보를 페이지별로 조회합니다.")
     @ApiErrorCodeExample(
             {ErrorStatus._INTERNAL_SERVER_ERROR})
     @GetMapping("/promotions/{promotionId}/page")
-    public ApiResponseDto<Page<Guest>> getGuestsByPromotionIdPaged(
+    public ApiResponseDto<GuestListDto> getGuestsByPromotionIdPaged(
             @PathVariable Long promotionId,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size) {
         PageRequest pageable = PageRequest.of(page, size);
         Page<Guest> guestPage = guestQueryService.findGuestsByPromotionId(promotionId, pageable);
-        return ApiResponseDto.onSuccess(guestPage);
+        return ApiResponseDto.onSuccess(GuestConverter.toListDto(guestPage));
     }
 }

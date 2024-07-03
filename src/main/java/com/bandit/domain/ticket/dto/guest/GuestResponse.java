@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
 import java.util.List;
 
 public class GuestResponse {
@@ -14,27 +15,21 @@ public class GuestResponse {
     @Builder
     @NoArgsConstructor
     @AllArgsConstructor
-    public static class GuestDetailDto {
+    public static class GuestViewDto {
         private Long guestId;
-        private String guestname;
+        private String name;
+        private int reservationCount;
+        private Boolean isEntranced;
+        private LocalDate depositDate;
         private MemberResponse writer;
     }
 
-    @Data
-    @Builder
-    @NoArgsConstructor
-    @AllArgsConstructor
-    public static class GuestSummaryDto {
-        private Long guestId;
-        private String guestname;
-        private MemberResponse writer;
-    }
 
     @Data
     @Builder
     @NoArgsConstructor
     @AllArgsConstructor
     public static class GuestListDto {
-        private List<GuestSummaryDto> guestList;
+        private List<GuestViewDto> guestList;
     }
 }
