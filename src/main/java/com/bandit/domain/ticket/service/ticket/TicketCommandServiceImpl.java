@@ -18,19 +18,6 @@ import org.springframework.transaction.annotation.Transactional;
 public class TicketCommandServiceImpl implements TicketCommandService {
 
     private final TicketRepository ticketRepository;
-    private final GuestRepository guestRepository;
-
-    @Override
-    public Long createTicket(Long guestId, Member member, TicketRegisterDto request) {
-        Guest guest = guestRepository.findById(guestId)
-                .orElseThrow(() -> new TicketHandler(ErrorStatus.GUEST_NOT_FOUND));
-
-        Ticket ticket = Ticket.builder().dueDate(request.getDueDate()).guest(guest).build();
-
-        guest.markTicketAsIssued();
-
-        return ticketRepository.save(ticket).getId();
-    }
 
     @Override
     public void deleteTicket(Long ticketId, Member member) {
@@ -38,7 +25,6 @@ public class TicketCommandServiceImpl implements TicketCommandService {
                 .orElseThrow(() -> new TicketHandler(ErrorStatus.TICKET_NOT_FOUND));
 
         Guest guest = ticket.getGuest();
-        guest.markTicketAsNotIssued();
 
         ticketRepository.delete(ticket);
     }

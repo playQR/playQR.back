@@ -31,10 +31,6 @@ public class Ticket extends BaseTimeEntity {
     @Column(name = "due_date")
     private LocalDate dueDate;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "guest_id", nullable = false)
-    private Guest guest;
-
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "promotion_id", nullable = false)
     private Promotion promotion;
@@ -44,5 +40,16 @@ public class Ticket extends BaseTimeEntity {
         if (uuid == null) {
             uuid = UUID.randomUUID().toString();
         }
+    }
+
+    public static Ticket of(Promotion promotion, LocalDate dueDate) {
+        return Ticket.builder()
+                .promotion(promotion)
+                .dueDate(dueDate)
+                .build();
+    }
+
+    public void update(LocalDate dueDate) {
+        this.dueDate = dueDate;
     }
 }
