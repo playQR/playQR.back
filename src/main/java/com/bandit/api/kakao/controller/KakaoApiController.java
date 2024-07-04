@@ -38,8 +38,9 @@ public class KakaoApiController {
             ErrorStatus._INTERNAL_SERVER_ERROR
     })
     @PostMapping("/message")
-    public ApiResponseDto<String> sendKakaoMessage(@RequestParam String accessToken,
+    public ApiResponseDto<Boolean> sendKakaoMessage(@RequestParam String accessToken,
                                                  @RequestBody KakaoMessageRequest kakaomessageRequest) {
-        return ApiResponseDto.onSuccess(kakaoService.sendMessage(accessToken, kakaomessageRequest));
+        kakaoService.sendMessage(accessToken, kakaomessageRequest);
+        return ApiResponseDto.onSuccess(true);
     }
 }
