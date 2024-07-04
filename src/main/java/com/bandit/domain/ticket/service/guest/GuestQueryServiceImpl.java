@@ -46,14 +46,14 @@ public class GuestQueryServiceImpl implements GuestQueryService{
     }
 
     private void validateHost(Guest guest, Member member) {
-        if (guest.getPromotion().getWriter().equals(member)) {
+        if (!guest.getPromotion().getWriter().equals(member)) {
             throw new GuestHandler(ErrorStatus.GUEST_ONLY_CAN_BE_TOUCHED_BY_CREATOR);
         }
     }
     private void validateHost(Long promotionId, Member member) {
         Promotion promotion = promotionRepository.findById(promotionId)
                 .orElseThrow(() -> new PromotionHandler(ErrorStatus.PROMOTION_NOT_FOUND));
-        if (promotion.getWriter().equals(member)) {
+        if (!promotion.getWriter().equals(member)) {
             throw new GuestHandler(ErrorStatus.GUEST_ONLY_CAN_BE_TOUCHED_BY_CREATOR);
         }
     }

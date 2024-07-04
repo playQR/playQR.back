@@ -3,6 +3,7 @@ package com.bandit.domain.ticket.controller;
 import com.bandit.domain.member.entity.Member;
 import com.bandit.domain.ticket.converter.GuestConverter;
 import com.bandit.domain.ticket.dto.guest.GuestRequest;
+import com.bandit.domain.ticket.dto.guest.GuestResponse;
 import com.bandit.domain.ticket.dto.guest.GuestResponse.GuestListDto;
 import com.bandit.domain.ticket.entity.Guest;
 import com.bandit.domain.ticket.service.guest.GuestCommandService;
@@ -80,10 +81,9 @@ public class GuestApiController {
     @ApiErrorCodeExample(
             {ErrorStatus._INTERNAL_SERVER_ERROR})
     @GetMapping("/{guestId}")
-    public ApiResponseDto<Guest> getGuestById(@PathVariable Long guestId,
-                                              @AuthUser Member member) {
-        Guest guest = guestQueryService.findGuestById(guestId, member);
-        return ApiResponseDto.onSuccess(guest);
+    public ApiResponseDto<GuestResponse.GuestViewDto> getGuestById(@PathVariable Long guestId,
+                                                                   @AuthUser Member member) {
+        return ApiResponseDto.onSuccess(GuestConverter.toViewDto(guestQueryService.findGuestById(guestId, member)));
     }
 
     @Operation(summary = "프로모션 ID로 게스트 조회 🔑", description = "프로모션 ID를 받아 해당 프로모션에 속한 모든 게스트 정보를 조회합니다.")
