@@ -2,9 +2,9 @@ package com.bandit.api.kakao.service;
 
 
 import com.bandit.api.kakao.dto.KakaoFriendDto;
-import com.bandit.api.kakao.dto.KakaoMessageDto;
 import com.bandit.api.kakao.dto.KakaoMessageRequest;
 import com.bandit.global.service.HttpCallService;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.minidev.json.JSONArray;
 import net.minidev.json.JSONObject;
@@ -17,15 +17,21 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.bandit.global.util.KakaoMessageTemplateUtil.createReceiverUuidsArray;
+import static com.bandit.global.util.KakaoMessageTemplateUtil.inviteMessageTemplate;
+
 @Slf4j
+@RequiredArgsConstructor
 @Service
 public class KakaoService extends HttpCallService {
     private static final String GET_FRIENDS_LIST_URL = "https://kapi.kakao.com/v1/api/talk/friends";
     private static final String POST_MESSAGE_TO_FRIEND_URL = "https://kapi.kakao.com/v1/api/talk/friends/message/default/send";
+    private final RestTemplate restTemplate;
     public List<KakaoFriendDto> getFriendsList(String accessToken) {
         HttpHeaders header = new HttpHeaders();
         header.set("Authorization", "Bearer " + accessToken);
@@ -61,45 +67,22 @@ public class KakaoService extends HttpCallService {
                 .profile_thumbnail_image(obj.get("profile_thumbnail_image").toString())
                 .build();
     }
-    public String sendMessage(String accessToken,
+    public void sendMessage(String accessToken,
                               KakaoMessageRequest request) {
-        KakaoMessageDto msgDto = request.getMessageDto();
-        JSONObject linkObj = new JSONObject();
-        JSONObject templateObj = new JSONObject();
-        JSONArray uuidArray = new JSONArray();
-        uuidArray.addAll(request.getReceiverUuidList());
-
-        mapMessageToTemplate(linkObj, templateObj, msgDto);
-        log.info("check template = {}", templateObj.toJSONString());
 
         HttpHeaders header = new HttpHeaders();
         header.set("Content-Type", APP_TYPE_URL_ENCODED);
         header.set("Authorization", "Bearer " + accessToken);
 
         MultiValueMap<String, String> parameters = new LinkedMultiValueMap<>();
-        parameters.add("receiver_uuids", uuidArray.toString());
-        parameters.add("template_object", templateObj.toJSONString());
+        JSONArray receiverUuidsArray = createReceiverUuidsArray(request.getReceiverUuids());
+        JSONObject messageTemplate = inviteMessageTemplate(request.getButtonUrl());
+        log.info("uuid = {}", receiverUuidsArray);
+        log.info("template = {}", messageTemplate);
+        parameters.add("receiver_uuids", receiverUuidsArray.toString());
+        parameters.add("template_object", messageTemplate.toJSONString());
 
         HttpEntity<MultiValueMap<String, String>> messageRequestEntity = new HttpEntity<>(parameters, header);
-        ResponseEntity<String> response = httpRequest(POST_MESSAGE_TO_FRIEND_URL, HttpMethod.POST, messageRequestEntity);
-        JSONParser parser = new JSONParser();
-        JSONObject jsonObject = null;
-        try {
-            jsonObject = (JSONObject) parser.parse(response.getBody());
-        } catch (ParseException e) {
-            throw new RuntimeException(e);
-        }
-
-        return jsonObject.get("result_code").toString();
-    }
-
-    private void mapMessageToTemplate(JSONObject linkObj, JSONObject templateObj, KakaoMessageDto msgDto) {
-        linkObj.put("web_url", msgDto.getWebUrl());
-        linkObj.put("mobile_web_url", msgDto.getMobileUrl());
-
-        templateObj.put("object_type", msgDto.getObjType());
-        templateObj.put("text", msgDto.getText());
-        templateObj.put("link", linkObj);
-        templateObj.put("button_title", msgDto.getBtnTitle());
+        httpRequest(POST_MESSAGE_TO_FRIEND_URL, HttpMethod.POST, messageRequestEntity);
     }
 }

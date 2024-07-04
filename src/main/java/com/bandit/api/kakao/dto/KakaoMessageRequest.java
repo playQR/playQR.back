@@ -12,7 +12,7 @@ import java.util.List;
 @NoArgsConstructor
 @Builder
 public class KakaoMessageRequest {
-    private KakaoMessageDto messageDto;
-    private List<String> receiverUuidList;
+    private String buttonUrl;
+    private List<String> receiverUuids;
 
 }
