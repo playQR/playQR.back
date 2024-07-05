@@ -36,7 +36,6 @@ public class ManagerCommandServiceImpl implements ManagerCommandService {
 
     @Override
     public void deleteManager(Long promotionId,  Member member) {
-
         Promotion promotion = promotionRepository.findById(promotionId)
                 .orElseThrow(() -> new PromotionHandler(ErrorStatus.PROMOTION_NOT_FOUND));
 
