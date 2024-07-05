@@ -21,7 +21,7 @@ public class ManagerCommandServiceImpl implements ManagerCommandService {
     private final PromotionRepository promotionRepository;
 
     @Override
-    public void addManager(Long promotionId, Member member) {
+    public void createManager(Long promotionId, Member member) {
         Promotion promotion = promotionRepository.findById(promotionId)
                 .orElseThrow(() -> new PromotionHandler(ErrorStatus.PROMOTION_NOT_FOUND));
 
@@ -35,7 +35,7 @@ public class ManagerCommandServiceImpl implements ManagerCommandService {
     }
 
     @Override
-    public void removeManager(Long promotionId,  Member member) {
+    public void deleteManager(Long promotionId,  Member member) {
         Promotion promotion = promotionRepository.findById(promotionId)
                 .orElseThrow(() -> new PromotionHandler(ErrorStatus.PROMOTION_NOT_FOUND));
 
