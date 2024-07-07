@@ -2,6 +2,7 @@ package com.bandit.domain.board.dto.promotion;
 
 import com.bandit.domain.member.dto.MemberResponse;
 import com.bandit.domain.music.dto.MusicResponse;
+import com.bandit.domain.ticket.dto.ticket.TicketResponse;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -50,6 +51,14 @@ public class PromotionResponse {
         private String endTime;
         private int entranceFee;
         private MemberResponse writer;
+    }
+    @Data
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class MyPromotionSummaryDto{
+        private PromotionSummaryDto promotion;
+        private TicketResponse ticket;
     }
     @Data
     @Builder
