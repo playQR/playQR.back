@@ -13,6 +13,7 @@ import java.util.stream.Collectors;
 public class CommentConverter {
     public static CommentViewDto toViewDto(Comment comment) {
         return CommentViewDto.builder()
+                .id(comment.getId())
                 .createdTime(comment.getCreatedDate())
                 .memberResponse(MemberConverter.toResponse(comment.getWriter()))
                 .content(comment.getContent())
@@ -27,6 +28,7 @@ public class CommentConverter {
         return CommentListDto.builder()
                 .commentList(collect)
                 .nextPageParam(PageUtil.getNextPageParam(commentPage))
+                .totalCount(commentPage.getTotalElements())
                 .build();
     }
 }
