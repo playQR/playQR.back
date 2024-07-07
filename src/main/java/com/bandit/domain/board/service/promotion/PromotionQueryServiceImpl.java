@@ -42,11 +42,6 @@ public class PromotionQueryServiceImpl implements PromotionQueryService{
     }
 
     @Override
-    public MyPromotionListDto getMyPaginationPromotionWithTicket(Member member, Pageable pageable) {
-        return promotionRepository.getMyPromotionWithTicket(member, pageable);
-    }
-
-    @Override
     public Page<Promotion> searchPaginationPromotion(String keyword, Pageable pageable) {
         return promotionRepository.searchPromotion(keyword, pageable);
     }

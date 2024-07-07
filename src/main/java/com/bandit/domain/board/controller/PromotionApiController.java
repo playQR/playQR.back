@@ -2,7 +2,6 @@ package com.bandit.domain.board.controller;
 
 import com.bandit.domain.board.converter.PromotionConverter;
 import com.bandit.domain.board.dto.promotion.PromotionRequest;
-import com.bandit.domain.board.dto.promotion.PromotionResponse.MyPromotionListDto;
 import com.bandit.domain.board.dto.promotion.PromotionResponse.PromotionListDto;
 import com.bandit.domain.board.service.promotion.PromotionCommandService;
 import com.bandit.domain.board.service.promotion.PromotionQueryService;
@@ -137,19 +136,6 @@ public class PromotionApiController {
         );
     }
 
-    @Operation(summary = "마이 프로모션 조회(티켓 정보 포함) 🔑", description = "사용자가 소유하는 프로모션을 티켓정보와 함께 페이징 조회합니다." +
-            "한페이지당 사이즈는 10개입니다.")
-    @ApiErrorCodeExample({
-            ErrorStatus._INTERNAL_SERVER_ERROR,
-            ErrorStatus.PROMOTION_NOT_FOUND
-    })
-    @GetMapping("/my/ticket")
-    public ApiResponseDto<MyPromotionListDto> getMyPromotionListWithTicket(
-            @AuthUser Member member,
-            @RequestParam(defaultValue = "0") int currentPage) {
-        Pageable pageable = PageRequest.of(currentPage, PageUtil.PROMOTION_SIZE);
-        return ApiResponseDto.onSuccess(promotionQueryService.getMyPaginationPromotionWithTicket(member, pageable));
-    }
 
     @Operation(summary = "프로모션 삭제 🔑", description = "로그인한 회원이 프로모션(홍보글)을 작성했던 글을 삭제합니다." +
             "권한은 작성자에게만 있습니다.")
