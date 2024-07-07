@@ -30,6 +30,10 @@ app:
     uri: ${app.server.uri}
   oauth2:
     authorizedRedirectUri: ${app.oauth2.authorizedRedirectUri}
+  kakao:
+    friend_list: https://kapi.kakao.com/v1/api/talk/friends
+    sending_message: https://kapi.kakao.com/v1/api/talk/friends/message/default/send
+
 
 cloud:
   aws:

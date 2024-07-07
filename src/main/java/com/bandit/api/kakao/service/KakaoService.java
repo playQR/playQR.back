@@ -4,12 +4,15 @@ package com.bandit.api.kakao.service;
 import com.bandit.api.kakao.dto.KakaoFriendDto;
 import com.bandit.api.kakao.dto.KakaoMessageRequest;
 import com.bandit.global.service.HttpCallService;
+import com.bandit.presentation.payload.code.ErrorStatus;
+import com.bandit.presentation.payload.exception.KakaoHandler;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.minidev.json.JSONArray;
 import net.minidev.json.JSONObject;
 import net.minidev.json.parser.JSONParser;
 import net.minidev.json.parser.ParseException;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -17,7 +20,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
-import org.springframework.web.client.RestTemplate;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,9 +31,10 @@ import static com.bandit.global.util.KakaoMessageTemplateUtil.inviteMessageTempl
 @RequiredArgsConstructor
 @Service
 public class KakaoService extends HttpCallService {
-    private static final String GET_FRIENDS_LIST_URL = "https://kapi.kakao.com/v1/api/talk/friends";
-    private static final String POST_MESSAGE_TO_FRIEND_URL = "https://kapi.kakao.com/v1/api/talk/friends/message/default/send";
-    private final RestTemplate restTemplate;
+    @Value("${app.kakao.friend_list}")
+    private String GET_FRIENDS_LIST_URL;
+    @Value("${app.kakao.sending_message}")
+    private String POST_MESSAGE_TO_FRIEND_URL;
     public List<KakaoFriendDto> getFriendsList(String accessToken) {
         HttpHeaders header = new HttpHeaders();
         header.set("Authorization", "Bearer " + accessToken);
@@ -52,7 +55,7 @@ public class KakaoService extends HttpCallService {
             }
 
         } catch (ParseException e) {
-            log.error("JSON parsing error", e);
+            throw new KakaoHandler(ErrorStatus.KAKAO_API_PARSING_ERROR);
         }
 
         return list;
@@ -77,8 +80,6 @@ public class KakaoService extends HttpCallService {
         MultiValueMap<String, String> parameters = new LinkedMultiValueMap<>();
         JSONArray receiverUuidsArray = createReceiverUuidsArray(request.getReceiverUuids());
         JSONObject messageTemplate = inviteMessageTemplate(request.getButtonUrl());
-        log.info("uuid = {}", receiverUuidsArray);
-        log.info("template = {}", messageTemplate);
         parameters.add("receiver_uuids", receiverUuidsArray.toString());
         parameters.add("template_object", messageTemplate.toJSONString());
 

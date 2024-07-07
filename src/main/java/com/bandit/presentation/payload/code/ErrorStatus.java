@@ -49,10 +49,12 @@ public enum ErrorStatus implements BaseCode{
     //게스트 관련 오류(4350 ~ 4399)
     GUEST_NOT_FOUND(NOT_FOUND, 4350, "존재하지 않는 게스트입니다."),
     GUEST_ONLY_CAN_BE_TOUCHED_BY_CREATOR(BAD_REQUEST, 4201, "작성자가 아닌 유저는 게스트를 수정할 수 없습니다."),
-    //티켓 관련 오류(4250 ~ 4300)
+    //티켓 관련 오류(4250 ~ 4299)
     TICKET_NOT_FOUND(NOT_FOUND, 4400, "존재하지 않는 티켓입니다."),
     TICKET_CAN_ONLY_BE_TOUCHED_BY_HOST_AND_MANAGERS(FORBIDDEN, 4401, "티켓은 호스트나 매니저만 접근할 수 있습니다."),
-    TICKET_ONLY_CAN_BE_OPENED_BY_MANAGERS(BAD_REQUEST, 4402, "티켓 열람은 매니저와 호스트만 가능합니다.");
+    TICKET_ONLY_CAN_BE_OPENED_BY_MANAGERS(BAD_REQUEST, 4402, "티켓 열람은 매니저와 호스트만 가능합니다."),
+    //카카오 api 관련 오류(4300 ~ 4349)
+    KAKAO_API_PARSING_ERROR(BAD_REQUEST, 4300, "카카오로부터 얻어온 데이터 파싱에서 오류가 발생했습니다");
 
     private final HttpStatus httpStatus;
     private final Integer code;
