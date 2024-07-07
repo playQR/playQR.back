@@ -4,12 +4,14 @@ import com.bandit.domain.board.dto.promotion.PromotionResponse.MyPromotionListDt
 import com.bandit.domain.board.dto.promotion.PromotionResponse.MyPromotionSummaryDto;
 import com.bandit.domain.board.entity.Promotion;
 import com.bandit.domain.board.entity.QPromotion;
+import com.bandit.domain.image.entity.QImage;
 import com.bandit.domain.member.dto.MemberResponse;
 import com.bandit.domain.member.entity.Member;
 import com.bandit.domain.member.entity.QMember;
 import com.bandit.domain.ticket.dto.ticket.TicketResponse;
 import com.bandit.domain.ticket.entity.QTicket;
 import com.querydsl.core.types.Projections;
+import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
@@ -48,22 +50,28 @@ public class PromotionQueryRepositoryImpl implements PromotionQueryRepository{
         QPromotion promotion = QPromotion.promotion;
         QTicket ticket = QTicket.ticket;
         QMember writer = QMember.member;
+        QImage image = QImage.image;
+
         List<MyPromotionSummaryDto> myPromotionList = queryFactory
                 .select(Projections.constructor(MyPromotionSummaryDto.class,
                         Projections.constructor(PromotionSummaryDto.class,
                                 promotion.id,
                                 promotion.title,
                                 promotion.team,
-                                promotion.boardImageList.get(0),
+                                JPAExpressions.select(image.imageUrl)
+                                        .from(image)
+                                        .where(image.in(promotion.boardImageList))
+                                        .orderBy(image.id.asc())
+                                        .limit(1),
                                 promotion.showDate,
                                 promotion.showLocation,
                                 promotion.startTime,
                                 promotion.endTime,
                                 promotion.entranceFee,
                                 Projections.constructor(MemberResponse.class,
-                                        writer.id,
                                         writer.name,
-                                        writer.kakaoEmail
+                                        writer.nickname,
+                                        writer.profileImg
                                 )
                         ),
                         Projections.constructor(TicketResponse.class,
@@ -75,6 +83,7 @@ public class PromotionQueryRepositoryImpl implements PromotionQueryRepository{
                 .from(promotion)
                 .leftJoin(promotion.ticket, ticket)
                 .leftJoin(promotion.writer, writer)
+                .leftJoin(promotion.boardImageList, image)
                 .where(writer.eq(member))
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
@@ -83,7 +92,7 @@ public class PromotionQueryRepositoryImpl implements PromotionQueryRepository{
         long totalCount = queryFactory
                 .select(promotion.count())
                 .from(promotion)
-                .where(writer.eq(member))
+                .where(promotion.writer.eq(member))
                 .fetchOne();
 
         return MyPromotionListDto.builder()
