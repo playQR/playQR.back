@@ -118,6 +118,23 @@ public class PromotionApiController {
                 )
         );
     }
+    @Operation(summary = "마이 프로모션 페이징 조회", description = "사용자가 소유하는 프로모션을 페이징 조회합니다." +
+            "한페이지당 사이즈는 10개입니다.")
+    @ApiErrorCodeExample({
+            ErrorStatus._INTERNAL_SERVER_ERROR,
+            ErrorStatus.PROMOTION_NOT_FOUND
+    })
+    @GetMapping("/my")
+    public ApiResponseDto<PromotionListDto> getMyPromotionList(
+            @AuthUser Member member,
+            @RequestParam(defaultValue = "0") int currentPage) {
+        Pageable pageable = PageRequest.of(currentPage, PageUtil.PROMOTION_SIZE);
+        return ApiResponseDto.onSuccess(
+                PromotionConverter.toListDto(
+                        promotionQueryService.getMyPaginationPromotion(member, pageable)
+                )
+        );
+    }
 
     @Operation(summary = "프로모션 삭제 🔑", description = "로그인한 회원이 프로모션(홍보글)을 작성했던 글을 삭제합니다." +
             "권한은 작성자에게만 있습니다.")
