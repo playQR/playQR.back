@@ -1,6 +1,7 @@
 package com.bandit.domain.board.service.promotion;
 
 import com.bandit.domain.board.entity.Promotion;
+import com.bandit.domain.member.entity.Member;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -12,6 +13,8 @@ public interface PromotionQueryService {
     List<Promotion> getAllByLatest();
 
     Page<Promotion> getPaginationPromotion(Pageable pageable);
+
+    Page<Promotion> getMyPaginationPromotion(Member member, Pageable pageable);
 
     Page<Promotion> searchPaginationPromotion(String keyword, Pageable pageable);
     Promotion getPromotionById(Long promotionId);

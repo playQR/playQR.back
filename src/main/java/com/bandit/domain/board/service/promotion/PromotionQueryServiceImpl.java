@@ -2,6 +2,7 @@ package com.bandit.domain.board.service.promotion;
 
 import com.bandit.domain.board.entity.Promotion;
 import com.bandit.domain.board.repository.PromotionRepository;
+import com.bandit.domain.member.entity.Member;
 import com.bandit.presentation.payload.code.ErrorStatus;
 import com.bandit.presentation.payload.exception.PromotionHandler;
 import lombok.RequiredArgsConstructor;
@@ -32,6 +33,11 @@ public class PromotionQueryServiceImpl implements PromotionQueryService{
     @Override
     public Page<Promotion> getPaginationPromotion(Pageable pageable) {
         return promotionRepository.findAll(pageable);
+    }
+
+    @Override
+    public Page<Promotion> getMyPaginationPromotion(Member member, Pageable pageable) {
+        return promotionRepository.findByWriter(member, pageable);
     }
 
     @Override
