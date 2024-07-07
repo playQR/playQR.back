@@ -1,5 +1,6 @@
 package com.bandit.domain.board.service.promotion;
 
+import com.bandit.domain.board.dto.promotion.PromotionResponse.MyPromotionListDto;
 import com.bandit.domain.board.entity.Promotion;
 import com.bandit.domain.board.repository.PromotionRepository;
 import com.bandit.domain.member.entity.Member;
@@ -38,6 +39,11 @@ public class PromotionQueryServiceImpl implements PromotionQueryService{
     @Override
     public Page<Promotion> getMyPaginationPromotion(Member member, Pageable pageable) {
         return promotionRepository.findByWriter(member, pageable);
+    }
+
+    @Override
+    public MyPromotionListDto getMyPaginationPromotionWithTicket(Member member, Pageable pageable) {
+        return promotionRepository.getMyPromotionWithTicket(member, pageable);
     }
 
     @Override
