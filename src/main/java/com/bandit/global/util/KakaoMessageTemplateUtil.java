@@ -19,6 +19,10 @@ public class KakaoMessageTemplateUtil {
         contentObj.put("image_height", 640);
         contentObj.put("link", linkObj);
 
+        JSONObject socialObj = new JSONObject();
+        socialObj.put("like_count", 100);
+        socialObj.put("comment_count", 200);
+
         JSONObject buttonObj = new JSONObject();
         buttonObj.put("title", "링크로 이동");
 
@@ -32,8 +36,9 @@ public class KakaoMessageTemplateUtil {
 
         JSONObject templateObj = new JSONObject();
         templateObj.put("object_type", "feed");
-        templateObj.put("buttons", buttonsArray);
         templateObj.put("content", contentObj);
+        templateObj.put("social", socialObj);
+        templateObj.put("buttons", buttonsArray);
 
         return templateObj;
     }
