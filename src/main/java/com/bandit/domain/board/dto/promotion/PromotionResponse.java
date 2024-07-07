@@ -67,4 +67,12 @@ public class PromotionResponse {
     public static class PromotionListDto{
         private List<PromotionSummaryDto> promotionList;
     }
+    @Data
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class MyPromotionListDto{
+        private List<MyPromotionSummaryDto> promotionList;
+        private long totalCount;
+    }
 }
