@@ -7,6 +7,7 @@ import com.bandit.global.util.ImageUtil;
 public class MemberConverter {
     public static MemberResponse toResponse(Member member) {
         return MemberResponse.builder()
+                .id(member.getId())
                 .name(member.getName())
                 .profileImg(ImageUtil.appendUri(member))
                 .nickname(member.getNickname())

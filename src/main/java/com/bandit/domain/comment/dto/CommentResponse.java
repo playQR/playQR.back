@@ -15,6 +15,7 @@ public class CommentResponse {
     @NoArgsConstructor
     @AllArgsConstructor
     public static class CommentViewDto{
+        private Long id;
         private String content;
         private LocalDateTime createdTime;
         private MemberResponse memberResponse;
@@ -26,5 +27,6 @@ public class CommentResponse {
     public static class CommentListDto{
         private List<CommentViewDto> commentList;
         private int nextPageParam;
+        private long totalCount;
     }
 }
