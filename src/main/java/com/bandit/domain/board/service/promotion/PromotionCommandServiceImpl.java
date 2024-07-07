@@ -57,6 +57,7 @@ public class PromotionCommandServiceImpl implements PromotionCommandService {
 
         updatePromotion.getBoardImageList().stream()
                 .map(Image::getImageUrl)
+                .filter(image -> !request.getImageList().contains(image))
                 .forEach(awsS3Service::deleteFile);
         imageRepository.deleteAllByBoardId(promotionId);
         promotionMusicRepository.deleteAllByPromotionId(promotionId);
