@@ -39,7 +39,7 @@ public class KakaoApiController {
     })
     @PostMapping("/message")
     public ApiResponseDto<Boolean> sendKakaoMessage(@RequestParam String accessToken,
-                                                 @RequestBody KakaoMessageRequest kakaomessageRequest) {
+                                                    @RequestBody KakaoMessageRequest kakaomessageRequest) {
         kakaoService.sendMessage(accessToken, kakaomessageRequest);
         return ApiResponseDto.onSuccess(true);
     }
