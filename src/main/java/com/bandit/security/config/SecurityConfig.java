@@ -123,6 +123,7 @@ public class SecurityConfig {
                 antMatcher(HttpMethod.GET, "/api/promotions/{promotionId}"),
                 antMatcher(HttpMethod.GET, "/api/promotions"),
                 antMatcher(HttpMethod.GET, "/api/promotions/search"),
+                antMatcher(HttpMethod.GET, "/api/comments/**"),
                 antMatcher(HttpMethod.GET, "/api/likes/music/{promotionMusicId}/count"),
                 antMatcher(HttpMethod.POST, "/api/tokens/reissue"),
                 antMatcher(HttpMethod.POST, "/api/images"),
