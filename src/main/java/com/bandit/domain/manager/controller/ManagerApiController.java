@@ -2,6 +2,7 @@ package com.bandit.domain.manager.controller;
 
 import com.bandit.domain.manager.service.ManagerCommandService;
 import com.bandit.domain.manager.service.ManagerQueryService;
+import com.bandit.domain.member.dto.MemberResponse;
 import com.bandit.domain.member.entity.Member;
 import com.bandit.global.annotation.api.ApiErrorCodeExample;
 import com.bandit.global.annotation.auth.AuthUser;
@@ -14,6 +15,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Tag(name = "Manager API", description = "매니저 관련 API")
 @ApiResponse(responseCode = "2000", description = "성공")
@@ -29,7 +31,7 @@ public class ManagerApiController {
     @ApiErrorCodeExample(
             {ErrorStatus._INTERNAL_SERVER_ERROR}
     )
-    @PostMapping("/{promotionId")
+    @PostMapping("/{promotionId}")
     public ApiResponseDto<Boolean> createManager(
             @PathVariable Long promotionId,
             @AuthUser Member member) {
@@ -37,7 +39,7 @@ public class ManagerApiController {
         return ApiResponseDto.onSuccess(true);
     }
 
-    @Operation(summary = "매니저 삭제", description = "매니저 ID를 받아 해당 매니저를 삭제합니다.")
+    @Operation(summary = "매니저 삭제", description = "프로모션 ID와 멤버 정보를 받아 해당 매니저를 삭제합니다.")
     @ApiErrorCodeExample(
             {ErrorStatus._INTERNAL_SERVER_ERROR})
     @DeleteMapping("/{promotionId}")
@@ -52,10 +54,17 @@ public class ManagerApiController {
     @ApiErrorCodeExample(
             {ErrorStatus._INTERNAL_SERVER_ERROR})
     @GetMapping("/promotions/{promotionId}")
-    public ApiResponseDto<List<Member>> getManagersByPromotionId(
+    public ApiResponseDto<List<MemberResponse>> getManagersByPromotionId(
             @PathVariable Long promotionId,
             @AuthUser Member member) {
         List<Member> managers = managerQueryService.getManagers(promotionId);
-        return ApiResponseDto.onSuccess(managers);
+        List<MemberResponse> managerResponses = managers.stream()
+                .map(manager -> MemberResponse.builder()
+                        .name(manager.getName())
+                        .nickname(manager.getNickname())
+                        .profileImg(manager.getProfileImg())
+                        .build())
+                .collect(Collectors.toList());
+        return ApiResponseDto.onSuccess(managerResponses);
     }
 }
