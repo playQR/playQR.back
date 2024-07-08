@@ -35,6 +35,7 @@ public enum ErrorStatus implements BaseCode{
     //프로모션 관련 오류(4150 ~ 4199)
     PROMOTION_NOT_FOUND(NOT_FOUND, 4150, "존재하지 않는 프로모션입니다."),
     PROMOTION_ONLY_CAN_BE_TOUCHED_BY_WRITER(BAD_REQUEST, 4151, "작성자가 아닌 유저는 프로모션을 수정이 불가합니다."),
+    PROMOTION_MUSIC_NOT_FOUND(NOT_FOUND, 4152, "존재하지 않는 프로모션 음악입니다."),
 
     //댓글 관련 오류(4200 ~ 4249)
     COMMENT_NOT_FOUND(NOT_FOUND, 4200, "존재하지 않는 댓글입니다"),
