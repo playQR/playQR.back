@@ -12,6 +12,9 @@ spring:
 app:
   jwt:
     secret: e64467d9d73df5387e2379a0db11abe1a243b01d4d3283630933bd68d0494d8a
+  kakao:
+    friend_list: https://kapi.kakao.com/v1/api/talk/friends
+    sending_message: https://kapi.kakao.com/v1/api/talk/friends/message/default/send
 
 
 cloud:
