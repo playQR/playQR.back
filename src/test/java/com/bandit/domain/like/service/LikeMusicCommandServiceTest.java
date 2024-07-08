@@ -8,7 +8,7 @@ import com.bandit.domain.board.service.promotion.PromotionCommandService;
 import com.bandit.domain.board.service.promotion.PromotionQueryService;
 import com.bandit.domain.like.entity.LikeMusic;
 import com.bandit.domain.like.repository.LikeMusicRepository;
-import com.bandit.domain.like.service.music_like.LikeMusicCommandService;
+import com.bandit.domain.like.service.like_music.LikeMusicCommandService;
 import com.bandit.domain.member.dto.MemberRequest.MemberRegisterDto;
 import com.bandit.domain.member.entity.Member;
 import com.bandit.domain.member.service.MemberCommandService;

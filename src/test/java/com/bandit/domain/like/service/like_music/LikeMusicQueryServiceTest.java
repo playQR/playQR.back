@@ -1,4 +1,4 @@
-package com.bandit.domain.like.service.music_like;
+package com.bandit.domain.like.service.like_music;
 
 import com.bandit.domain.board.dto.promotion.PromotionRequest;
 import com.bandit.domain.board.entity.Promotion;

@@ -1,4 +1,4 @@
-package com.bandit.domain.like.service.music_like;
+package com.bandit.domain.like.service.like_music;
 
 import com.bandit.domain.like.entity.LikeMusic;
 import com.bandit.domain.member.entity.Member;
