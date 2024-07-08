@@ -7,6 +7,7 @@ import java.util.Date;
 
 public interface TokenService {
 
+    JwtToken login(String kakaoEmail);
     JwtToken issueTokens(String refreshToken);
 
     JwtToken generateToken(Authentication authentication);

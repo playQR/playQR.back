@@ -3,6 +3,7 @@ package com.bandit.domain.board.service.promotion;
 import com.bandit.domain.board.dto.promotion.PromotionRequest;
 import com.bandit.domain.board.entity.Promotion;
 import com.bandit.domain.board.repository.PromotionRepository;
+import com.bandit.domain.comment.repository.CommentRepository;
 import com.bandit.domain.image.entity.Image;
 import com.bandit.domain.image.repository.ImageRepository;
 import com.bandit.domain.member.entity.Member;
@@ -38,6 +39,7 @@ public class PromotionCommandServiceImpl implements PromotionCommandService {
     private final PromotionMusicRepository promotionMusicRepository;
     private final GuestRepository guestRepository;
     private final TicketRepository ticketRepository;
+    private final CommentRepository commentRepository;
     private final AwsS3Service awsS3Service;
 
     @Override
@@ -86,6 +88,7 @@ public class PromotionCommandServiceImpl implements PromotionCommandService {
         promotionMusicRepository.deleteMusicWithRelations(promotionId);
         ticketRepository.deleteByPromotionId(promotionId);
         guestRepository.deleteByPromotionId(promotionId);
+        commentRepository.deleteByPromotionId(promotionId);
         promotionRepository.delete(removePromotion);
     }
 
