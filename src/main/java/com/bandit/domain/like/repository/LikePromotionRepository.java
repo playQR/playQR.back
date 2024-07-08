@@ -6,4 +6,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface LikePromotionRepository extends JpaRepository<LikePromotion, Long> {
     void deleteByPromotionIdAndMember(Long promotionId, Member member);
+
+    boolean existsByPromotionIdAndMember(Long promotionId, Member member);
+
+    long countByPromotionId(Long promotionId);
 }
