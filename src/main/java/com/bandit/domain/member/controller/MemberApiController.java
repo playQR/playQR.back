@@ -77,4 +77,14 @@ public class MemberApiController {
     public ApiResponseDto<MemberResponse> getMemberInfo(@AuthUser Member member) {
         return ApiResponseDto.onSuccess(MemberConverter.toResponse(member));
     }
+
+    @Operation(summary = "회원 삭제 🔑", description = "액세스 토큰을 통해 사용자에 관한 정보를 모두 지웁니다.")
+    @ApiErrorCodeExample({
+            ErrorStatus._INTERNAL_SERVER_ERROR
+    })
+    @DeleteMapping
+    public ApiResponseDto<Boolean> removeMember(@AuthUser Member member) {
+        memberCommandService.removeMember(member);
+        return ApiResponseDto.onSuccess(true);
+    }
 }

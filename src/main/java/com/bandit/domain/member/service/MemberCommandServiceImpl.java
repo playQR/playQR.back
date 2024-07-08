@@ -35,4 +35,10 @@ public class MemberCommandServiceImpl implements MemberCommandService {
         member.modifyInfo(memberRequest);
         return member.getId();
     }
+
+    @Override
+    public void removeMember(Member member) {
+        //TODO image remove in s3
+        memberRepository.deleteWithRelations(member);
+    }
 }
