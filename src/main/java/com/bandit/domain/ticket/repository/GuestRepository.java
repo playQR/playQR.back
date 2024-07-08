@@ -18,4 +18,6 @@ public interface GuestRepository extends JpaRepository<Guest, Long> {
     Page<Guest> findByPromotionId(Long promotionId, Pageable pageable);
 
     Optional<Guest> findByMemberAndPromotion(Member member, Promotion promotion);
+
+    void deleteByPromotionId(Long promotionId);
 }

@@ -5,13 +5,13 @@ import com.bandit.domain.board.entity.Promotion;
 import com.bandit.domain.board.repository.PromotionRepository;
 import com.bandit.domain.image.entity.Image;
 import com.bandit.domain.image.repository.ImageRepository;
-import com.bandit.domain.like.repository.LikeMusicRepository;
 import com.bandit.domain.member.entity.Member;
 import com.bandit.domain.music.entity.Music;
 import com.bandit.domain.music.entity.PromotionMusic;
 import com.bandit.domain.music.repository.MusicRepository;
 import com.bandit.domain.music.repository.PromotionMusicRepository;
 import com.bandit.domain.ticket.entity.Ticket;
+import com.bandit.domain.ticket.repository.GuestRepository;
 import com.bandit.domain.ticket.repository.TicketRepository;
 import com.bandit.global.service.AwsS3Service;
 import com.bandit.global.util.ListUtil;
@@ -36,7 +36,7 @@ public class PromotionCommandServiceImpl implements PromotionCommandService {
     private final ImageRepository imageRepository;
     private final MusicRepository musicRepository;
     private final PromotionMusicRepository promotionMusicRepository;
-    private final LikeMusicRepository likeMusicRepository;
+    private final GuestRepository guestRepository;
     private final TicketRepository ticketRepository;
     private final AwsS3Service awsS3Service;
 
@@ -83,8 +83,9 @@ public class PromotionCommandServiceImpl implements PromotionCommandService {
                 .map(Image::getImageUrl)
                 .forEach(awsS3Service::deleteFile);
         imageRepository.deleteAllByBoardId(promotionId);
-        promotionMusicRepository.deleteAllByPromotionId(promotionId);
+        promotionMusicRepository.deleteMusicWithRelations(promotionId);
         ticketRepository.deleteByPromotionId(promotionId);
+        guestRepository.deleteByPromotionId(promotionId);
         promotionRepository.delete(removePromotion);
     }
 
