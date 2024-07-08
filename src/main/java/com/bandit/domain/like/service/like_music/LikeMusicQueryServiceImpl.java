@@ -1,8 +1,7 @@
-package com.bandit.domain.like.service.music_like;
+package com.bandit.domain.like.service.like_music;
 
 import com.bandit.domain.like.repository.LikeMusicRepository;
 import com.bandit.domain.member.entity.Member;
-import com.bandit.domain.music.repository.PromotionMusicRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

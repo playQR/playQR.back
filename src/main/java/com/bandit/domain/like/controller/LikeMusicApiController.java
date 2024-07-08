@@ -1,7 +1,7 @@
 package com.bandit.domain.like.controller;
 
-import com.bandit.domain.like.service.music_like.LikeMusicCommandService;
-import com.bandit.domain.like.service.music_like.LikeMusicQueryService;
+import com.bandit.domain.like.service.like_music.LikeMusicCommandService;
+import com.bandit.domain.like.service.like_music.LikeMusicQueryService;
 import com.bandit.domain.member.entity.Member;
 import com.bandit.global.annotation.api.ApiErrorCodeExample;
 import com.bandit.global.annotation.auth.AuthUser;
