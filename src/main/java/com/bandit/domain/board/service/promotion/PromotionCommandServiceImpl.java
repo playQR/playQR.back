@@ -63,7 +63,7 @@ public class PromotionCommandServiceImpl implements PromotionCommandService {
         imageRepository.deleteAllByBoardId(promotionId);
         Ticket ticket = ticketRepository.findByPromotionId(promotionId)
                 .orElseThrow(() -> new TicketHandler(ErrorStatus.TICKET_NOT_FOUND));
-        musicRepository.deleteByPromotionId(promotionId);       //TODO convert remove it with relations
+        musicRepository.deleteWithRelations(promotionId);
 
         updatePromotion.update(request);
         ticket.update(request.getShowDate());
@@ -85,7 +85,7 @@ public class PromotionCommandServiceImpl implements PromotionCommandService {
         ticketRepository.deleteByPromotionId(promotionId);
         guestRepository.deleteByPromotionId(promotionId);
         commentRepository.deleteByPromotionId(promotionId);
-        //TODO remove music and relations
+        musicRepository.deleteWithRelations(promotionId);
         promotionRepository.delete(removePromotion);
     }
 
