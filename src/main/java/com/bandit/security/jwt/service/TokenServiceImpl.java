@@ -46,6 +46,13 @@ public class TokenServiceImpl implements TokenService{
         this.redisService = redisService;
         this.memberQueryService = memberQueryService;
     }
+    @Override       //TODO oauth2적용시 필요 없음
+    public JwtToken login(String kakaoEmail) {
+        Member member = memberQueryService.getByKakaoEmail(kakaoEmail);
+        Authentication authentication = new UsernamePasswordAuthenticationToken(member, "",
+                member.getAuthorities());
+        return generateToken(authentication);
+    }
 
     @Override
     public JwtToken issueTokens(String refreshToken) {
