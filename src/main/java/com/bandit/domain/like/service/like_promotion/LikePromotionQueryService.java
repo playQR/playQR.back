@@ -6,5 +6,5 @@ public interface LikePromotionQueryService {
 
     boolean isLiked(Long promotionId, Member member);
 
-    long countLike(Long promotionId, Member member);
+    long countLike(Long promotionId);
 }
