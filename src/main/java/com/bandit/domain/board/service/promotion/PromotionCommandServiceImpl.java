@@ -5,6 +5,7 @@ import com.bandit.domain.board.entity.Promotion;
 import com.bandit.domain.board.repository.PromotionRepository;
 import com.bandit.domain.image.entity.Image;
 import com.bandit.domain.image.repository.ImageRepository;
+import com.bandit.domain.like.repository.LikeMusicRepository;
 import com.bandit.domain.member.entity.Member;
 import com.bandit.domain.music.entity.Music;
 import com.bandit.domain.music.entity.PromotionMusic;
@@ -35,6 +36,7 @@ public class PromotionCommandServiceImpl implements PromotionCommandService {
     private final ImageRepository imageRepository;
     private final MusicRepository musicRepository;
     private final PromotionMusicRepository promotionMusicRepository;
+    private final LikeMusicRepository likeMusicRepository;
     private final TicketRepository ticketRepository;
     private final AwsS3Service awsS3Service;
 
