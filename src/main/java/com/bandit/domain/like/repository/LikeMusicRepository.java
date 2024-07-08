@@ -7,9 +7,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.Optional;
 
 public interface LikeMusicRepository extends JpaRepository<LikeMusic, Long> {
-    Optional<LikeMusic> findByPromotionMusicIdAndMember(Long promotionMusicId, Member member);
+    Optional<LikeMusic> findByMusicIdAndMember(Long musicId, Member member);
 
-    boolean existsByPromotionMusicIdAndMember(Long promotionMusicId, Member member);
+    boolean existsByMusicIdAndMember(Long musicId, Member member);
 
-    long countByPromotionMusicId(Long promotionMusicId);
+    long countByMusicId(Long musicId);
 }

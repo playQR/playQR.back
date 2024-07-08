@@ -2,7 +2,7 @@ package com.bandit.domain.board.entity;
 
 import com.bandit.domain.board.dto.promotion.PromotionRequest;
 import com.bandit.domain.member.entity.Member;
-import com.bandit.domain.music.entity.PromotionMusic;
+import com.bandit.domain.music.entity.Music;
 import com.bandit.domain.ticket.entity.Ticket;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -40,7 +40,7 @@ public class Promotion extends Board {
 
     @Builder.Default
     @OneToMany(mappedBy = "promotion", cascade = CascadeType.PERSIST, orphanRemoval = true)
-    private List<PromotionMusic> promotionMusicList = new ArrayList<>();
+    private List<Music> musicList = new ArrayList<>();
 
     public static Promotion of(Member member, PromotionRequest request) {
         return Promotion.builder()

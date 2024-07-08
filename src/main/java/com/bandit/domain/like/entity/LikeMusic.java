@@ -1,7 +1,7 @@
 package com.bandit.domain.like.entity;
 
 import com.bandit.domain.member.entity.Member;
-import com.bandit.domain.music.entity.PromotionMusic;
+import com.bandit.domain.music.entity.Music;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -22,17 +22,17 @@ public class LikeMusic {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "promotion_music_id")
-    private PromotionMusic promotionMusic;          //연관관계 depth를 낮추기 위함
+    @JoinColumn(name = "music_id")
+    private Music music;          //연관관계 depth를 낮추기 위함
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private Member member;
 
-    public static LikeMusic of(PromotionMusic promotionMusic, Member member) {
+    public static LikeMusic of(Music music, Member member) {
         return LikeMusic.builder()
                 .member(member)
-                .promotionMusic(promotionMusic)
+                .music(music)
                 .build();
     }
 }

@@ -29,10 +29,10 @@ public class LikeMusicApiController {
             ErrorStatus._ASSIGNABLE_PARAMETER,
             ErrorStatus.MEMBER_NOT_FOUND
     })
-    @PostMapping("/{promotionMusicId}")
+    @PostMapping("/{musicId}")
     public ApiResponseDto<Long> likeSetList(@AuthUser Member member,
-                                            @PathVariable Long promotionMusicId) {
-        Long likeId = likeMusicCommandService.likeMusic(promotionMusicId, member);
+                                            @PathVariable Long musicId) {
+        Long likeId = likeMusicCommandService.likeMusic(musicId, member);
         return ApiResponseDto.onSuccess(likeId);
     }
 
@@ -44,10 +44,10 @@ public class LikeMusicApiController {
             ErrorStatus.MEMBER_NOT_FOUND,
             ErrorStatus.LIKE_NOT_FOUND
     })
-    @DeleteMapping("/{promotionMusicId}")
+    @DeleteMapping("/{musicId}")
     public ApiResponseDto<Boolean> unlikeSetList(@AuthUser Member member,
-                                              @PathVariable Long promotionMusicId) {
-        likeMusicCommandService.unlikeMusic(promotionMusicId, member);
+                                                 @PathVariable Long musicId) {
+        likeMusicCommandService.unlikeMusic(musicId, member);
         return ApiResponseDto.onSuccess(true);
     }
 
@@ -59,10 +59,10 @@ public class LikeMusicApiController {
             ErrorStatus.MEMBER_NOT_FOUND,
             ErrorStatus.LIKE_NOT_FOUND
     })
-    @GetMapping("/{promotionMusicId}")
+    @GetMapping("/{musicId}")
     public ApiResponseDto<Boolean> checkIsLiked(@AuthUser Member member,
-                                                 @PathVariable Long promotionMusicId) {
-        return ApiResponseDto.onSuccess(likeMusicQueryService.isLiked(promotionMusicId, member));
+                                                 @PathVariable Long musicId) {
+        return ApiResponseDto.onSuccess(likeMusicQueryService.isLiked(musicId, member));
     }
 
     @Operation(summary = "셑리스트 좋아요 확인", description = "셑리스트의 좋아요 개수를 확인합니다.")
@@ -73,8 +73,8 @@ public class LikeMusicApiController {
             ErrorStatus.MEMBER_NOT_FOUND,
             ErrorStatus.LIKE_NOT_FOUND
     })
-    @GetMapping("/{promotionMusicId}/count")
-    public ApiResponseDto<Long> countLike(@PathVariable Long promotionMusicId) {
-        return ApiResponseDto.onSuccess(likeMusicQueryService.countLike(promotionMusicId));
+    @GetMapping("/{musicId}/count")
+    public ApiResponseDto<Long> countLike(@PathVariable Long musicId) {
+        return ApiResponseDto.onSuccess(likeMusicQueryService.countLike(musicId));
     }
 }

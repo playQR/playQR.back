@@ -10,9 +10,8 @@ import com.bandit.domain.member.entity.Member;
 import com.bandit.domain.member.entity.Role;
 import com.bandit.domain.member.repository.MemberRepository;
 import com.bandit.domain.music.dto.MusicRequest;
-import com.bandit.domain.music.entity.PromotionMusic;
+import com.bandit.domain.music.entity.Music;
 import com.bandit.domain.music.repository.MusicRepository;
-import com.bandit.domain.music.repository.PromotionMusicRepository;
 import com.bandit.domain.ticket.entity.Ticket;
 import com.bandit.domain.ticket.repository.TicketRepository;
 import com.bandit.global.config.test.DatabaseCleanUp;
@@ -47,8 +46,6 @@ class PromotionCommandServiceTest {
     ImageRepository imageRepository;
     @Autowired
     MusicRepository musicRepository;
-    @Autowired
-    PromotionMusicRepository promotionMusicRepository;
     @Autowired
     TicketRepository ticketRepository;
     @Autowired
@@ -155,7 +152,7 @@ class PromotionCommandServiceTest {
         //then
         Optional<Promotion> promotionOptional = promotionRepository.findById(promotionId);
         List<Image> imagesByBoardId = imageRepository.findImagesByBoardId(promotionId);
-        List<PromotionMusic> musicsByBoardId = promotionMusicRepository.findMusicsByPromotionId(promotionId);
+        List<Music> musicsByBoardId = musicRepository.findByPromotionId(promotionId);
         assertThat(imagesByBoardId).hasSize(1);
         assertThat(musicsByBoardId).hasSize(2);
         assertThat(promotionOptional.get().getTicket().getDueDate())
@@ -192,7 +189,7 @@ class PromotionCommandServiceTest {
         Promotion promotion = promotionRepository.findById(updatePromotionId).get();
         assertThat(promotion.getTitle()).isEqualTo(updateRequest.getTitle());
         List<Image> imagesByBoardId = imageRepository.findImagesByBoardId(updatePromotionId);
-        List<PromotionMusic> musicsByBoardId = promotionMusicRepository.findMusicsByPromotionId(updatePromotionId);
+        List<Music> musicsByBoardId = musicRepository.findByPromotionId(updatePromotionId);
         assertThat(imagesByBoardId).hasSize(0);
         assertThat(musicsByBoardId).hasSize(2);
         assertThat(promotion.getTicket().getDueDate()).isEqualTo(updateRequest.getShowDate());

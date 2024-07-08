@@ -1,7 +1,6 @@
 package com.bandit.domain.like.service.like_music;
 
 import com.bandit.domain.board.dto.promotion.PromotionRequest;
-import com.bandit.domain.board.entity.Promotion;
 import com.bandit.domain.board.repository.PromotionRepository;
 import com.bandit.domain.board.service.promotion.PromotionCommandService;
 import com.bandit.domain.board.service.promotion.PromotionQueryService;
@@ -11,8 +10,8 @@ import com.bandit.domain.member.entity.Member;
 import com.bandit.domain.member.service.MemberCommandService;
 import com.bandit.domain.member.service.MemberQueryService;
 import com.bandit.domain.music.dto.MusicRequest;
-import com.bandit.domain.music.entity.PromotionMusic;
-import com.bandit.domain.music.repository.PromotionMusicRepository;
+import com.bandit.domain.music.entity.Music;
+import com.bandit.domain.music.repository.MusicRepository;
 import com.bandit.global.config.test.DatabaseCleanUp;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.AfterEach;
@@ -52,7 +51,7 @@ class LikeMusicQueryServiceTest {
     @Autowired
     PromotionRepository promotionRepository;
     @Autowired
-    PromotionMusicRepository promotionMusicRepository;
+    MusicRepository musicRepository;
     //Entity & dto & else
     Member hostMember;
     Member guestMember;
@@ -80,9 +79,9 @@ class LikeMusicQueryServiceTest {
         guestMember = memberQueryService.getByMemberId(guestId);
 
         List<MusicRequest> setList = new ArrayList<>();
-        setList.add(MusicRequest.builder().title("title1").artist("artist1").build());
-        setList.add(MusicRequest.builder().title("title2").artist("artist2").build());
-        setList.add(MusicRequest.builder().title("title3").artist("artist3").build());
+        setList.add(MusicRequest.builder().title("title1").artist("artist1").isOpen(true).build());
+        setList.add(MusicRequest.builder().title("title2").artist("artist2").isOpen(true).build());
+        setList.add(MusicRequest.builder().title("title3").artist("artist3").isOpen(true).build());
 
         PromotionRequest request = PromotionRequest.builder()
                 .maxAudience(3)
@@ -104,12 +103,12 @@ class LikeMusicQueryServiceTest {
     @DisplayName("사용자가 해당 셑리스트에 좋아요를 눌렀는지 확인합니다.")
     void checkLikeIt() {
         //given
-        Promotion promotion = promotionRepository.findById(promotionId).get();
-        List<PromotionMusic> promotionMusicList = promotion.getPromotionMusicList();
-        likeMusicCommandService.likeMusic(promotionMusicList.get(0).getId(), guestMember);
+        List<Music> musicList = musicRepository.findByPromotionId(promotionId);
+        log.info("size = {}", musicList.size());
+        likeMusicCommandService.likeMusic(musicList.get(0).getId(), guestMember);
         //when
-        boolean liked0 = likeMusicQueryService.isLiked(promotionMusicList.get(0).getId(), guestMember);
-        boolean liked1 = likeMusicQueryService.isLiked(promotionMusicList.get(1).getId(), guestMember);
+        boolean liked0 = likeMusicQueryService.isLiked(musicList.get(0).getId(), guestMember);
+        boolean liked1 = likeMusicQueryService.isLiked(musicList.get(1).getId(), guestMember);
         //then
         assertThat(liked0).isTrue();
         assertThat(liked1).isFalse();
@@ -120,11 +119,11 @@ class LikeMusicQueryServiceTest {
     @DisplayName("해당 노래의 좋아요 개수를 조회합니다.")
     void countLikeMusic() {
         //given
-        Promotion promotion = promotionRepository.findById(promotionId).get();
-        List<PromotionMusic> promotionMusicList = promotion.getPromotionMusicList();
-        likeMusicCommandService.likeMusic(promotionMusicList.get(0).getId(), guestMember);
+        List<Music> musicList = musicRepository.findByPromotionId(promotionId);
+        log.info("size = {}", musicList.size());
+        likeMusicCommandService.likeMusic(musicList.get(0).getId(), guestMember);
         //when
-        long count = likeMusicQueryService.countLike(promotionMusicList.get(0).getId());
+        long count = likeMusicQueryService.countLike(musicList.get(0).getId());
         //then
         assertThat(count).isOne();
     }

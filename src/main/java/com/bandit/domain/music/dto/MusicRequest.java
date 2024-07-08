@@ -12,4 +12,5 @@ import lombok.NoArgsConstructor;
 public class MusicRequest {
     private String title;
     private String artist;
+    private Boolean isOpen;
 }

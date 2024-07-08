@@ -5,7 +5,7 @@ import com.bandit.domain.member.entity.Member;
 
 public interface LikeMusicQueryService {
 
-    boolean isLiked(Long promotionMusicId, Member member);
+    boolean isLiked(Long musicId, Member member);
 
-    long countLike(Long promotionMusicId);
+    long countLike(Long musicId);
 }
