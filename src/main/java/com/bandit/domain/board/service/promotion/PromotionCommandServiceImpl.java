@@ -8,9 +8,7 @@ import com.bandit.domain.image.entity.Image;
 import com.bandit.domain.image.repository.ImageRepository;
 import com.bandit.domain.member.entity.Member;
 import com.bandit.domain.music.entity.Music;
-import com.bandit.domain.music.entity.PromotionMusic;
 import com.bandit.domain.music.repository.MusicRepository;
-import com.bandit.domain.music.repository.PromotionMusicRepository;
 import com.bandit.domain.ticket.entity.Ticket;
 import com.bandit.domain.ticket.repository.GuestRepository;
 import com.bandit.domain.ticket.repository.TicketRepository;
@@ -36,7 +34,6 @@ public class PromotionCommandServiceImpl implements PromotionCommandService {
     private final PromotionRepository promotionRepository;
     private final ImageRepository imageRepository;
     private final MusicRepository musicRepository;
-    private final PromotionMusicRepository promotionMusicRepository;
     private final GuestRepository guestRepository;
     private final TicketRepository ticketRepository;
     private final CommentRepository commentRepository;
@@ -64,9 +61,9 @@ public class PromotionCommandServiceImpl implements PromotionCommandService {
                 .filter(image -> !request.getImageList().contains(image))
                 .forEach(awsS3Service::deleteFile);
         imageRepository.deleteAllByBoardId(promotionId);
-        promotionMusicRepository.deleteAllByPromotionId(promotionId);
         Ticket ticket = ticketRepository.findByPromotionId(promotionId)
                 .orElseThrow(() -> new TicketHandler(ErrorStatus.TICKET_NOT_FOUND));
+        musicRepository.deleteByPromotionId(promotionId);       //TODO convert remove it with relations
 
         updatePromotion.update(request);
         ticket.update(request.getShowDate());
@@ -85,30 +82,28 @@ public class PromotionCommandServiceImpl implements PromotionCommandService {
                 .map(Image::getImageUrl)
                 .forEach(awsS3Service::deleteFile);
         imageRepository.deleteAllByBoardId(promotionId);
-        promotionMusicRepository.deleteMusicWithRelations(promotionId);
         ticketRepository.deleteByPromotionId(promotionId);
         guestRepository.deleteByPromotionId(promotionId);
         commentRepository.deleteByPromotionId(promotionId);
+        //TODO remove music and relations
         promotionRepository.delete(removePromotion);
     }
 
     private void saveImageListInPromotion(PromotionRequest request, Promotion savePromotion) {
         if (!ListUtil.isNullOrEmpty(request.getImageList())) {
             imageRepository.saveAll(request.getImageList().stream()
-                    .map(imageRequest -> Image.of(savePromotion, imageRequest)).collect(Collectors.toList()));
+                    .map(imageRequest -> Image.of(savePromotion, imageRequest))
+                    .collect(Collectors.toList()));
         }
     }
 
 
     private void saveMusicListInPromotion(PromotionRequest request, Promotion savePromotion) {
         if (!ListUtil.isNullOrEmpty(request.getMusicList())) {
-            List<Music> musicList = musicRepository.saveAll(request.getMusicList().stream()
-                    .map(musicRequest -> Music.of(musicRequest)).collect(Collectors.toList()));
-            musicList.forEach(music -> promotionMusicRepository.save(
-                    PromotionMusic.of(savePromotion, music, true))
-            );
-            //TODO search -> whiteList music get & newly insert music -> save PromotionMusic
-            //TODO setting each isOpen value
+            List<Music> music = musicRepository.saveAll(request.getMusicList().stream()
+                    .map(musicRequest -> Music.of(musicRequest, savePromotion))
+                    .collect(Collectors.toList()));
+            music.forEach(music1 -> log.info("music title = {}", music1.getTitle()));
         }
     }
 

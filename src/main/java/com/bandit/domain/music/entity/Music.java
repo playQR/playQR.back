@@ -1,6 +1,7 @@
 package com.bandit.domain.music.entity;
 
 import com.bandit.domain.auditing.entity.BaseTimeEntity;
+import com.bandit.domain.board.entity.Promotion;
 import com.bandit.domain.music.dto.MusicRequest;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -24,11 +25,19 @@ public class Music extends BaseTimeEntity {
 
     private String title;
     private String artist;
+    private Boolean isOpen;
 
-    public static Music of(MusicRequest musicRequest) {
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "promotion_id")
+    private Promotion promotion;
+
+    public static Music of(MusicRequest musicRequest, Promotion promotion) {
         return Music.builder()
                 .artist(musicRequest.getArtist())
                 .title(musicRequest.getTitle())
+                .isOpen(musicRequest.getIsOpen())
+                .promotion(promotion)
                 .build();
     }
 }

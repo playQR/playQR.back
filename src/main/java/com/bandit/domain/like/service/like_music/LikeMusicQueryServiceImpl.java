@@ -13,12 +13,12 @@ public class LikeMusicQueryServiceImpl implements LikeMusicQueryService {
 
     private final LikeMusicRepository likeMusicRepository;
     @Override
-    public boolean isLiked(Long promotionMusicId, Member member) {
-        return likeMusicRepository.existsByPromotionMusicIdAndMember(promotionMusicId, member);
+    public boolean isLiked(Long musicId, Member member) {
+        return likeMusicRepository.existsByMusicIdAndMember(musicId, member);
     }
 
     @Override
-    public long countLike(Long promotionMusicId) {
-        return likeMusicRepository.countByPromotionMusicId(promotionMusicId);
+    public long countLike(Long musicId) {
+        return likeMusicRepository.countByMusicId(musicId);
     }
 }

@@ -29,7 +29,7 @@ public class PromotionConverter {
                 .bankName(promotion.getBankName())
                 .refundInfo(promotion.getRefundInfo())
                 .writer(MemberConverter.toResponse(promotion.getWriter()))
-                .musicList(promotion.getPromotionMusicList().stream()
+                .musicList(promotion.getMusicList().stream()
                         .map(MusicConverter::toViewDto).collect(Collectors.toList()))
                 .imageList(promotion.getBoardImageList().stream()
                         .map(ImageUtil::appendUri).collect(Collectors.toList()))

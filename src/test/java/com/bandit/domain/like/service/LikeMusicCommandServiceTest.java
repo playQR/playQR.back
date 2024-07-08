@@ -2,7 +2,6 @@ package com.bandit.domain.like.service;
 
 
 import com.bandit.domain.board.dto.promotion.PromotionRequest;
-import com.bandit.domain.board.entity.Promotion;
 import com.bandit.domain.board.repository.PromotionRepository;
 import com.bandit.domain.board.service.promotion.PromotionCommandService;
 import com.bandit.domain.board.service.promotion.PromotionQueryService;
@@ -14,8 +13,8 @@ import com.bandit.domain.member.entity.Member;
 import com.bandit.domain.member.service.MemberCommandService;
 import com.bandit.domain.member.service.MemberQueryService;
 import com.bandit.domain.music.dto.MusicRequest;
-import com.bandit.domain.music.entity.PromotionMusic;
-import com.bandit.domain.music.repository.PromotionMusicRepository;
+import com.bandit.domain.music.entity.Music;
+import com.bandit.domain.music.repository.MusicRepository;
 import com.bandit.global.config.test.DatabaseCleanUp;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.AfterEach;
@@ -54,7 +53,7 @@ class LikeMusicCommandServiceTest {
     @Autowired
     PromotionRepository promotionRepository;
     @Autowired
-    PromotionMusicRepository promotionMusicRepository;
+    MusicRepository musicRepository;
     //Entity & dto & else
     Member hostMember;
     Member guestMember;
@@ -82,9 +81,9 @@ class LikeMusicCommandServiceTest {
         guestMember = memberQueryService.getByMemberId(guestId);
 
         List<MusicRequest> setList = new ArrayList<>();
-        setList.add(MusicRequest.builder().title("title1").artist("artist1").build());
-        setList.add(MusicRequest.builder().title("title2").artist("artist2").build());
-        setList.add(MusicRequest.builder().title("title3").artist("artist3").build());
+        setList.add(MusicRequest.builder().title("title1").artist("artist1").isOpen(true).build());
+        setList.add(MusicRequest.builder().title("title2").artist("artist2").isOpen(true).build());
+        setList.add(MusicRequest.builder().title("title3").artist("artist3").isOpen(false).build());
 
         PromotionRequest request = PromotionRequest.builder()
                 .maxAudience(3)
@@ -106,11 +105,10 @@ class LikeMusicCommandServiceTest {
     @DisplayName("게스트가 셑리스트에 좋아요를 누릅니다.")
     void LikeSetList() {
         //given
-        Promotion promotion = promotionRepository.findById(promotionId).get();
-        log.info("size = {}", promotion.getPromotionMusicList().size());
-        List<PromotionMusic> promotionMusicList = promotion.getPromotionMusicList();
+        List<Music> musicList = musicRepository.findByPromotionId(promotionId);
+        log.info("size = {}", musicList.size());
         //when
-        Long likeId = likeMusicCommandService.likeMusic(promotionMusicList.get(0).getId(), guestMember);
+        Long likeId = likeMusicCommandService.likeMusic(musicList.get(0).getId(), guestMember);
         //then
         Optional<LikeMusic> optionalLike = likeMusicRepository.findById(likeId);
         assertThat(optionalLike).isPresent();
@@ -121,12 +119,11 @@ class LikeMusicCommandServiceTest {
     @DisplayName("게스트가 셑리스트에 좋아요를 누르고 취소합니다.")
     void testMethodName() {
         //given
-        Promotion promotion = promotionRepository.findById(promotionId).get();
-        log.info("size = {}", promotion.getPromotionMusicList().size());
-        List<PromotionMusic> promotionMusicList = promotion.getPromotionMusicList();
-        promotionMusicList.forEach(promotionMusic -> likeMusicCommandService.likeMusic(promotionMusic.getId(),guestMember));
+        List<Music> musicList = musicRepository.findByPromotionId(promotionId);
+        log.info("size = {}", musicList.size());
+        musicList.forEach(music -> likeMusicCommandService.likeMusic(music.getId(),guestMember));
         //when
-        likeMusicCommandService.unlikeMusic(promotionMusicList.get(0).getId(), guestMember);
+        likeMusicCommandService.unlikeMusic(musicList.get(0).getId(), guestMember);
         //then
         List<LikeMusic> all = likeMusicRepository.findAll();
         assertThat(all.size()).isEqualTo(2);
