@@ -21,6 +21,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import static com.bandit.domain.board.dto.promotion.PromotionResponse.PromotionDetailDto;
@@ -46,6 +47,7 @@ public class PromotionApiController {
                                                 @RequestBody PromotionRequest promotionRequest) {
         List<String> imageList = promotionRequest.getImageList().stream()
                 .map(ImageUtil::removePrefix)
+                .filter(Objects::nonNull)
                 .collect(Collectors.toList());
         promotionRequest.setImageList(imageList);
         return ApiResponseDto.onSuccess(promotionCommandService.createPromotion(member, promotionRequest));
