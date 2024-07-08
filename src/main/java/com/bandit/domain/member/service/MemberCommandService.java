@@ -11,4 +11,6 @@ public interface MemberCommandService {
 
     Long modifyMemberInfo(Member member , MemberModifyDto memberRequest);
 
+    void removeMember(Member member);
+
 }

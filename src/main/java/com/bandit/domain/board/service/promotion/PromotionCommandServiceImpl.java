@@ -22,7 +22,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 import java.util.stream.Collectors;
 
 
@@ -100,10 +99,9 @@ public class PromotionCommandServiceImpl implements PromotionCommandService {
 
     private void saveMusicListInPromotion(PromotionRequest request, Promotion savePromotion) {
         if (!ListUtil.isNullOrEmpty(request.getMusicList())) {
-            List<Music> music = musicRepository.saveAll(request.getMusicList().stream()
+            musicRepository.saveAll(request.getMusicList().stream()
                     .map(musicRequest -> Music.of(musicRequest, savePromotion))
                     .collect(Collectors.toList()));
-            music.forEach(music1 -> log.info("music title = {}", music1.getTitle()));
         }
     }
 
