@@ -66,5 +66,14 @@ public class Promotion extends Board {
         this.team = updateRequest.getTeam();
         this.title = updateRequest.getTitle();
         this.content = updateRequest.getContent();
+        this.entranceFee = updateRequest.getEntranceFee();
+        this.showDate = updateRequest.getShowDate();
+        this.startTime = updateRequest.getStartTime();
+        this.endTime = updateRequest.getEndTime();
+        this.showLocation = updateRequest.getShowLocation();
+        this.bankName = updateRequest.getBankName();
+        this.account = updateRequest.getAccount();
+        this.accountHolder = updateRequest.getAccountHolder();
+        this.refundInfo = updateRequest.getRefundInfo();
     }
 }
