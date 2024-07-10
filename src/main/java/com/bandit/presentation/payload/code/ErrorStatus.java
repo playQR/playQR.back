@@ -46,6 +46,7 @@ public enum ErrorStatus implements BaseCode{
 
     //셑리스트 좋아요 관련 오류(4300 ~ 4349)
     LIKE_NOT_FOUND(NOT_FOUND, 4300, "존재하지 않는 좋아요 정보입니다."),
+    LIKE_ALREADY_EXIST(BAD_REQUEST, 4301, "이미 존재하는 좋아요 정보입니다"),
 
     //게스트 관련 오류(4350 ~ 4399)
     GUEST_NOT_FOUND(NOT_FOUND, 4350, "존재하지 않는 게스트입니다."),
