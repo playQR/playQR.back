@@ -1,6 +1,5 @@
 package com.bandit.domain.board.service.promotion;
 
-import com.bandit.domain.board.dto.promotion.PromotionResponse.MyPromotionListDto;
 import com.bandit.domain.board.entity.Promotion;
 import com.bandit.domain.board.repository.PromotionRepository;
 import com.bandit.domain.member.entity.Member;
@@ -50,6 +49,11 @@ public class PromotionQueryServiceImpl implements PromotionQueryService{
     public Promotion getPromotionById(Long promotionId) {
         return promotionRepository.findById(promotionId)
                 .orElseThrow(() -> new PromotionHandler(ErrorStatus.PROMOTION_NOT_FOUND));
+    }
+
+    @Override
+    public List<Promotion> getPromotionIdByMember(Member member) {
+        return promotionRepository.findByWriter(member);
     }
 
 }

@@ -18,4 +18,6 @@ public interface PromotionQueryService {
 
     Page<Promotion> searchPaginationPromotion(String keyword, Pageable pageable);
     Promotion getPromotionById(Long promotionId);
+
+    List<Promotion> getPromotionIdByMember(Member member);
 }
