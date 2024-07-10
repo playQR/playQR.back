@@ -68,7 +68,7 @@ public class ManagerApiController {
         return ApiResponseDto.onSuccess(managerResponses);
     }
 
-    @Operation(summary = "입장 완료", description = "게스트의 입장을 완료합니다.")
+    @Operation(summary = "게스트 입장 완료", description = "게스트 ID를 받아 해당 게스트의 입장을 완료합니다.")
     @ApiErrorCodeExample(
             {ErrorStatus._INTERNAL_SERVER_ERROR})
     @PostMapping("/entrance/{guestId}")
@@ -79,7 +79,7 @@ public class ManagerApiController {
         return ApiResponseDto.onSuccess(true);
     }
 
-    @Operation(summary = "예약 취소", description = "게스트의 예약을 취소합니다.")
+    @Operation(summary = "게스트 예약 취소", description = "게스트 ID를 받아 해당 게스트의 예약을 취소합니다.")
     @ApiErrorCodeExample(
             {ErrorStatus._INTERNAL_SERVER_ERROR})
     @PostMapping("/cancel-reservation/{guestId}")
@@ -90,7 +90,7 @@ public class ManagerApiController {
         return ApiResponseDto.onSuccess(true);
     }
 
-    @Operation(summary = "예약 완료", description = "게스트의 예약을 완료합니다.")
+    @Operation(summary = "게스트 예약 확정", description = "게스트 ID를 받아 해당 게스트의 예약을 확정합니다.")
     @ApiErrorCodeExample(
             {ErrorStatus._INTERNAL_SERVER_ERROR})
     @PostMapping("/confirm-reservation/{guestId}")
