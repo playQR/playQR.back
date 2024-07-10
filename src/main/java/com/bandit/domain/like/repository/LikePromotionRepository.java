@@ -10,4 +10,7 @@ public interface LikePromotionRepository extends JpaRepository<LikePromotion, Lo
     boolean existsByPromotionIdAndMember(Long promotionId, Member member);
 
     long countByPromotionId(Long promotionId);
+
+    void deleteByPromotionId(Long promotionId);
+
 }

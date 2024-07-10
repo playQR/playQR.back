@@ -1,5 +1,8 @@
 package com.bandit.domain.member.controller;
 
+import com.bandit.domain.board.entity.Promotion;
+import com.bandit.domain.board.service.promotion.PromotionCommandService;
+import com.bandit.domain.board.service.promotion.PromotionQueryService;
 import com.bandit.domain.member.converter.MemberConverter;
 import com.bandit.domain.member.dto.MemberRequest.MemberModifyDto;
 import com.bandit.domain.member.dto.MemberRequest.MemberRegisterDto;
@@ -18,6 +21,8 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @Tag(name = "Member API", description = "회원 API")
 @ApiResponse(responseCode = "2000", description = "성공")
 @RequestMapping("/api/members")
@@ -25,6 +30,8 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 public class MemberApiController {
     private final MemberCommandService memberCommandService;
+    private final PromotionCommandService promotionCommandService;
+    private final PromotionQueryService promotionQueryService;
     private final MemberQueryService memberQueryService;
 
     @Operation(summary = "회원가입", description = "회원정보를 통해 서버 내 회원가입을 진행합니다. " +
@@ -84,6 +91,8 @@ public class MemberApiController {
     })
     @DeleteMapping
     public ApiResponseDto<Boolean> removeMember(@AuthUser Member member) {
+        List<Promotion> promotionIdList = promotionQueryService.getPromotionIdByMember(member);
+        promotionIdList.forEach(promotion -> promotionCommandService.removePromotion(member, promotion.getId()));
         memberCommandService.removeMember(member);
         return ApiResponseDto.onSuccess(true);
     }

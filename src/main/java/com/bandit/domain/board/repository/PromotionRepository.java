@@ -15,4 +15,6 @@ public interface PromotionRepository extends JpaRepository<Promotion, Long>, Pro
     List<Promotion> findPromotionsByOrderByCreatedDateAsc();
 
     Page<Promotion> findByWriter(Member member, Pageable pageable);
+
+    List<Promotion> findByWriter(Member member);
 }
