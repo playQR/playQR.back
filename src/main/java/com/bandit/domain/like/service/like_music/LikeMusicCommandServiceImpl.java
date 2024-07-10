@@ -21,6 +21,7 @@ public class LikeMusicCommandServiceImpl implements LikeMusicCommandService {
     private final MusicRepository musicRepository;
     @Override
     public Long likeMusic(Long musicId, Member member) {
+        validateAlreadyExist(musicId, member);
         Music music = musicRepository.findById(musicId)
                 .orElseThrow(() -> new PromotionMusicHandler(ErrorStatus.PROMOTION_MUSIC_NOT_FOUND));
         LikeMusic saveLikeMusic = likeMusicRepository.save(LikeMusic.of(music, member));
@@ -29,8 +30,21 @@ public class LikeMusicCommandServiceImpl implements LikeMusicCommandService {
 
     @Override
     public void unlikeMusic(Long musicId, Member member) {
+        validateNotFound(musicId, member);
         LikeMusic likeMusic = likeMusicRepository.findByMusicIdAndMember(musicId, member)
                 .orElseThrow(() -> new LikeHandler(ErrorStatus.LIKE_NOT_FOUND));
         likeMusicRepository.delete(likeMusic);
+    }
+
+    private void validateAlreadyExist(Long musicId, Member member) {
+        if (likeMusicRepository.existsByMusicIdAndMember(musicId, member)) {
+            throw new LikeHandler(ErrorStatus.LIKE_ALREADY_EXIST);
+        }
+    }
+
+    private void validateNotFound(Long musicId, Member member) {
+        if (!likeMusicRepository.existsByMusicIdAndMember(musicId, member)) {
+            throw new LikeHandler(ErrorStatus.LIKE_NOT_FOUND);
+        }
     }
 }
