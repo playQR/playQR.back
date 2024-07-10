@@ -67,4 +67,37 @@ public class ManagerApiController {
                 .collect(Collectors.toList());
         return ApiResponseDto.onSuccess(managerResponses);
     }
+
+    @Operation(summary = "입장 완료", description = "게스트의 입장을 완료합니다.")
+    @ApiErrorCodeExample(
+            {ErrorStatus._INTERNAL_SERVER_ERROR})
+    @PostMapping("/entrance/{guestId}")
+    public ApiResponseDto<Boolean> completeEntrance(
+            @PathVariable Long guestId,
+            @AuthUser Member member) {
+        managerCommandService.completeEntrance(guestId, member);
+        return ApiResponseDto.onSuccess(true);
+    }
+
+    @Operation(summary = "예약 취소", description = "게스트의 예약을 취소합니다.")
+    @ApiErrorCodeExample(
+            {ErrorStatus._INTERNAL_SERVER_ERROR})
+    @PostMapping("/cancel-reservation/{guestId}")
+    public ApiResponseDto<Boolean> cancelReservation(
+            @PathVariable Long guestId,
+            @AuthUser Member member) {
+        managerCommandService.cancelReservation(guestId, member);
+        return ApiResponseDto.onSuccess(true);
+    }
+
+    @Operation(summary = "예약 완료", description = "게스트의 예약을 완료합니다.")
+    @ApiErrorCodeExample(
+            {ErrorStatus._INTERNAL_SERVER_ERROR})
+    @PostMapping("/confirm-reservation/{guestId}")
+    public ApiResponseDto<Boolean> confirmReservation(
+            @PathVariable Long guestId,
+            @AuthUser Member member) {
+        managerCommandService.confirmReservation(guestId, member);
+        return ApiResponseDto.onSuccess(true);
+    }
 }

@@ -7,4 +7,8 @@ public interface ManagerCommandService {
     void createManager(Long promotionId,  Member member);
     void deleteManager(Long promotionId,  Member member);
 
+
+    void completeEntrance(Long guestId, Member member);
+    void cancelReservation(Long guestId, Member member);
+    void confirmReservation(Long guestId, Member member);
 }

@@ -5,6 +5,8 @@ import com.bandit.domain.board.repository.PromotionRepository;
 import com.bandit.domain.manager.entity.Manager;
 import com.bandit.domain.manager.repository.ManagerRepository;
 import com.bandit.domain.member.entity.Member;
+import com.bandit.domain.ticket.entity.Guest;
+import com.bandit.domain.ticket.repository.GuestRepository;
 import com.bandit.presentation.payload.code.ErrorStatus;
 import com.bandit.presentation.payload.exception.ManagerHandler;
 import com.bandit.presentation.payload.exception.PromotionHandler;
@@ -19,6 +21,7 @@ public class ManagerCommandServiceImpl implements ManagerCommandService {
 
     private final ManagerRepository managerRepository;
     private final PromotionRepository promotionRepository;
+    private final GuestRepository guestRepository;
 
     @Override
     public void createManager(Long promotionId, Member member) {
@@ -43,5 +46,29 @@ public class ManagerCommandServiceImpl implements ManagerCommandService {
                 .orElseThrow(() -> new ManagerHandler(ErrorStatus.MANAGER_NOT_FOUND));
 
         managerRepository.delete(manager);
+    }
+
+    @Override
+    public void completeEntrance(Long guestId, Member member) {
+        Guest guest = guestRepository.findById(guestId)
+                .orElseThrow(() -> new IllegalArgumentException("Guest not found"));
+        guest.completeEntrance();
+        guestRepository.save(guest);
+    }
+
+    @Override
+    public void cancelReservation(Long guestId, Member member) {
+        Guest guest = guestRepository.findById(guestId)
+                .orElseThrow(() -> new IllegalArgumentException("Guest not found"));
+        guest.cancelReservation();
+        guestRepository.save(guest);
+    }
+
+    @Override
+    public void confirmReservation(Long guestId, Member member) {
+        Guest guest = guestRepository.findById(guestId)
+                .orElseThrow(() -> new IllegalArgumentException("Guest not found"));
+        guest.confirmReservation();
+        guestRepository.save(guest);
     }
 }
