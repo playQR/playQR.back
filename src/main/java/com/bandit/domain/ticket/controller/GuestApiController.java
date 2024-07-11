@@ -24,6 +24,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+import static com.bandit.global.annotation.api.PredefinedErrorStatus.AUTH;
+
 @Tag(name = "Guest API", description = "게스트 관련 API")
 @ApiResponse(responseCode = "2000", description = "성공")
 @RestController
@@ -35,8 +37,9 @@ public class GuestApiController {
     private final GuestQueryService guestQueryService;
 
     @Operation(summary = "게스트 생성 🔑", description = "프로모션 ID와 멤버 정보, 이름을 받아 새로운 게스트를 생성합니다.")
-    @ApiErrorCodeExample(
-            {ErrorStatus._INTERNAL_SERVER_ERROR})
+    @ApiErrorCodeExample(value = {
+            ErrorStatus.PROMOTION_NOT_FOUND
+    }, status = AUTH)
     @PostMapping("/{promotionId}")
     public ApiResponseDto<Long> createGuest(
             @PathVariable Long promotionId,
@@ -46,8 +49,10 @@ public class GuestApiController {
         return ApiResponseDto.onSuccess(guestId);
     }
     @Operation(summary = "게스트 입장 🔑", description = "프로모션의 티켓 uuid를 통해 게스트를 입장 처리해줍니다.")
-    @ApiErrorCodeExample(
-            {ErrorStatus._INTERNAL_SERVER_ERROR})
+    @ApiErrorCodeExample(value = {
+            ErrorStatus.TICKET_NOT_FOUND,
+            ErrorStatus.GUEST_NOT_FOUND
+    }, status = AUTH)
     @PostMapping("/entrance")
     public ApiResponseDto<Boolean> entranceGuest(@RequestParam String uuid,
                                                  @AuthUser Member member) {
@@ -56,9 +61,11 @@ public class GuestApiController {
     }
 
     @Operation(summary = "게스트 수정 🔑", description = "게스트 ID와 게스트 정보를 받아 기존 게스트 정보를 수정합니다.")
-    @ApiErrorCodeExample(
-            {ErrorStatus._INTERNAL_SERVER_ERROR})
-    @PutMapping("/{guestId}")
+    @ApiErrorCodeExample(value = {
+            ErrorStatus.GUEST_NOT_FOUND,
+            ErrorStatus.GUEST_ONLY_CAN_BE_TOUCHED_BY_CREATOR
+    }, status = AUTH)
+    @PutMapping("/{guestId}")       //TODO remove this api(not use)
     public ApiResponseDto<Long> updateGuest(
             @PathVariable Long guestId,
             @AuthUser Member member,
@@ -67,8 +74,10 @@ public class GuestApiController {
     }
 
     @Operation(summary = "게스트 삭제 🔑", description = "게스트 ID를 받아 해당 게스트를 삭제합니다.")
-    @ApiErrorCodeExample(
-            {ErrorStatus._INTERNAL_SERVER_ERROR})
+    @ApiErrorCodeExample(value = {
+            ErrorStatus.GUEST_NOT_FOUND,
+            ErrorStatus.GUEST_ONLY_CAN_BE_TOUCHED_BY_CREATOR
+    }, status = AUTH)
     @DeleteMapping("/{guestId}")
     public ApiResponseDto<Boolean> deleteGuest(@PathVariable Long guestId,
                                             @AuthUser Member member) {
@@ -78,8 +87,10 @@ public class GuestApiController {
 
 
     @Operation(summary = "게스트 조회 🔑", description = "게스트 ID를 받아 해당 게스트 정보를 조회합니다.")
-    @ApiErrorCodeExample(
-            {ErrorStatus._INTERNAL_SERVER_ERROR})
+    @ApiErrorCodeExample(value = {
+            ErrorStatus.GUEST_NOT_FOUND,
+            ErrorStatus.GUEST_ONLY_CAN_BE_TOUCHED_BY_CREATOR
+    }, status = AUTH)
     @GetMapping("/{guestId}")
     public ApiResponseDto<GuestResponse.GuestViewDto> getGuestById(@PathVariable Long guestId,
                                                                    @AuthUser Member member) {
@@ -87,8 +98,10 @@ public class GuestApiController {
     }
 
     @Operation(summary = "프로모션 ID로 게스트 조회 🔑", description = "프로모션 ID를 받아 해당 프로모션에 속한 모든 게스트 정보를 조회합니다.")
-    @ApiErrorCodeExample(
-            {ErrorStatus._INTERNAL_SERVER_ERROR})
+    @ApiErrorCodeExample(value = {
+            ErrorStatus.PROMOTION_NOT_FOUND,
+            ErrorStatus.GUEST_ONLY_CAN_BE_TOUCHED_BY_CREATOR
+    }, status = AUTH)
     @GetMapping("/promotions/{promotionId}")
     public ApiResponseDto<GuestListDto> getGuestsByPromotionId(@PathVariable Long promotionId,
                                                                @AuthUser Member member) {
@@ -97,8 +110,10 @@ public class GuestApiController {
     }
 
     @Operation(summary = "프로모션 ID로 게스트 페이징 조회 🔑", description = "프로모션 ID를 받아 해당 프로모션에 속한 게스트 정보를 페이지별로 조회합니다.")
-    @ApiErrorCodeExample(
-            {ErrorStatus._INTERNAL_SERVER_ERROR})
+    @ApiErrorCodeExample(value = {
+            ErrorStatus.PROMOTION_NOT_FOUND,
+            ErrorStatus.GUEST_ONLY_CAN_BE_TOUCHED_BY_CREATOR
+    }, status = AUTH)
     @GetMapping("/promotions/{promotionId}/page")
     public ApiResponseDto<GuestListDto> getGuestsByPromotionIdPaged(
             @PathVariable Long promotionId,
