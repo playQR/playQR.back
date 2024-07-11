@@ -23,6 +23,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+import static com.bandit.global.annotation.api.PredefinedErrorStatus.AUTH;
+
 @Tag(name = "Member API", description = "회원 API")
 @ApiResponse(responseCode = "2000", description = "성공")
 @RequestMapping("/api/members")
@@ -36,9 +38,7 @@ public class MemberApiController {
 
     @Operation(summary = "회원가입", description = "회원정보를 통해 서버 내 회원가입을 진행합니다. " +
             "kakaoEmail, profileImg, nickname, name의 정보를 받습니다.")
-    @ApiErrorCodeExample({
-            ErrorStatus._INTERNAL_SERVER_ERROR
-    })
+    @ApiErrorCodeExample
     @PostMapping        //TODO 나중에 지워도 됨
     public ApiResponseDto<Long> registerMember(@RequestBody MemberRegisterDto memberRegisterDto) {
         memberRegisterDto.setProfileImg(ImageUtil.removePrefix(memberRegisterDto.getProfileImg()));
@@ -47,12 +47,7 @@ public class MemberApiController {
 
     @Operation(summary = "회원 정보 수정 🔑", description = "로그인한 회원의 정보를 수정합니다. " +
             "profileImg, nickname, name을 변경할 수 있습니다.")
-    @ApiErrorCodeExample({
-            ErrorStatus._INTERNAL_SERVER_ERROR,
-            ErrorStatus._UNAUTHORIZED_LOGIN_DATA_RETRIEVAL_ERROR,
-            ErrorStatus._ASSIGNABLE_PARAMETER,
-            ErrorStatus.MEMBER_NOT_FOUND
-    })
+    @ApiErrorCodeExample(status = AUTH)
     @PutMapping
     public ApiResponseDto<Long> modifyMemberInfo(@AuthUser Member member,
                                                  @RequestBody MemberModifyDto memberModifyDto) {
@@ -62,7 +57,6 @@ public class MemberApiController {
 
     @Operation(summary = "회원 정보 조회", description = "PK를 통해 사용자의 정보를 조회합니다.")
     @ApiErrorCodeExample({
-            ErrorStatus._INTERNAL_SERVER_ERROR,
             ErrorStatus.MEMBER_NOT_FOUND
     })
     @GetMapping("/{memberId}")
@@ -74,21 +68,19 @@ public class MemberApiController {
         );
     }
     @Operation(summary = "회원 정보 조회 🔑", description = "액세스토큰을 통해 사용자의 정보를 조회합니다.")
-    @ApiErrorCodeExample({
-            ErrorStatus._INTERNAL_SERVER_ERROR,
-            ErrorStatus._UNAUTHORIZED_LOGIN_DATA_RETRIEVAL_ERROR,
-            ErrorStatus._ASSIGNABLE_PARAMETER,
-            ErrorStatus.MEMBER_NOT_FOUND
-    })
+    @ApiErrorCodeExample(status = AUTH)
     @GetMapping
     public ApiResponseDto<MemberResponse> getMemberInfo(@AuthUser Member member) {
         return ApiResponseDto.onSuccess(MemberConverter.toResponseNotPrivate(member));
     }
 
     @Operation(summary = "회원 삭제 🔑", description = "액세스 토큰을 통해 사용자에 관한 정보를 모두 지웁니다.")
-    @ApiErrorCodeExample({
-            ErrorStatus._INTERNAL_SERVER_ERROR
-    })
+    @ApiErrorCodeExample(value = {
+            ErrorStatus.PROMOTION_NOT_FOUND,
+            ErrorStatus.PROMOTION_ONLY_CAN_BE_TOUCHED_BY_WRITER,
+            ErrorStatus.IMAGE_REQUEST_IS_EMPTY
+
+    }, status = AUTH)
     @DeleteMapping
     public ApiResponseDto<Boolean> removeMember(@AuthUser Member member) {
         List<Promotion> promotionIdList = promotionQueryService.getPromotionIdByMember(member);
