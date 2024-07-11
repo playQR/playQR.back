@@ -50,13 +50,15 @@ public class GuestQueryServiceImpl implements GuestQueryService{
     public ReservationViewDto getReservationInfo(Long promotionId) {
         Promotion promotion = promotionRepository.findById(promotionId)
                 .orElseThrow(() -> new PromotionHandler(ErrorStatus.PROMOTION_NOT_FOUND));
-        ReservationViewDto build = ReservationViewDto.builder()
-                .currentCount(1)
+        return builderReservationDto(promotionId, promotion);
+    }
+
+    private ReservationViewDto builderReservationDto(Long promotionId, Promotion promotion) {
+        return ReservationViewDto.builder()
+                .currentCount(guestRepository.findTotalReservationCountByPromotionId(promotionId))
                 .maxAudience(promotion.getMaxAudience())
                 .promotionId(promotion.getId())
                 .build();
-
-        return null;
     }
 
     private void validateHost(Guest guest, Member member) {
