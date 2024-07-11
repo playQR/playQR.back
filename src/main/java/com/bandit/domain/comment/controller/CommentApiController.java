@@ -19,6 +19,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
+import static com.bandit.global.annotation.api.PredefinedErrorStatus.AUTH;
+
 @Tag(name = "Comment API", description = "댓글 API")
 @ApiResponse(responseCode = "2000", description = "성공")
 @RequestMapping("/api/comments")
@@ -29,12 +31,9 @@ public class CommentApiController {
     private final CommentQueryService commentQueryService;
 
     @Operation(summary = "댓글 작성 🔑", description = "로그인한 회원이 프로모션(홍보글)에 댓글을 작성합니다.")
-    @ApiErrorCodeExample({
-            ErrorStatus._INTERNAL_SERVER_ERROR,
-            ErrorStatus._UNAUTHORIZED_LOGIN_DATA_RETRIEVAL_ERROR,
-            ErrorStatus._ASSIGNABLE_PARAMETER,
-            ErrorStatus.MEMBER_NOT_FOUND
-    })
+    @ApiErrorCodeExample(value = {
+            ErrorStatus.PROMOTION_NOT_FOUND
+    }, status = AUTH)
     @PostMapping("/{promotionId}")
     public ApiResponseDto<Long> createComment(@AuthUser Member member,
                                               @PathVariable Long promotionId,
@@ -42,22 +41,18 @@ public class CommentApiController {
         return ApiResponseDto.onSuccess(commentCommandService.createComment(member, promotionId, commentRequest));
     }
     @Operation(summary = "댓글 삭제 🔑", description = "작성자가 등록한 댓글을 삭제합니다")
-    @ApiErrorCodeExample({
-            ErrorStatus._INTERNAL_SERVER_ERROR,
-            ErrorStatus._UNAUTHORIZED_LOGIN_DATA_RETRIEVAL_ERROR,
-            ErrorStatus._ASSIGNABLE_PARAMETER,
-            ErrorStatus.MEMBER_NOT_FOUND
-    })
+    @ApiErrorCodeExample(value = {
+            ErrorStatus.COMMENT_NOT_FOUND,
+            ErrorStatus.COMMENT_CAN_BE_ONLY_TOUCHED_BY_WRITER
+    }, status = AUTH)
     @DeleteMapping("/{commentId}")
     public ApiResponseDto<Boolean> removeComment(@AuthUser Member member,
-                                              @PathVariable Long commentId) {
+                                                 @PathVariable Long commentId) {
         commentCommandService.removeComment(member, commentId);
         return ApiResponseDto.onSuccess(true);
     }
     @Operation(summary = "댓글 조회(페이징)", description = "프로모션에 등록된 댓글들을 조회합니다.")
-    @ApiErrorCodeExample({
-            ErrorStatus._INTERNAL_SERVER_ERROR
-    })
+    @ApiErrorCodeExample
     @GetMapping("/{promotionId}")
     public ApiResponseDto<CommentListDto> removeComment(@PathVariable Long promotionId,
                                                         @RequestParam(defaultValue = "0") int currentPage) {
