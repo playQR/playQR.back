@@ -3,8 +3,8 @@ package com.bandit.security.oauth.service;
 import com.bandit.domain.member.entity.Member;
 import com.bandit.domain.member.entity.Role;
 import com.bandit.domain.member.repository.MemberRepository;
-import com.bandit.global.util.RandomNameUtil;
-import com.bandit.global.util.RandomNameUtil.NameType;
+import com.bandit.global.util.NameUtil;
+import com.bandit.global.util.NameUtil.NameType;
 import com.bandit.presentation.payload.code.ErrorStatus;
 import com.bandit.presentation.payload.exception.security.OAuth2Exception;
 import com.bandit.security.oauth.dto.CustomUserDetails;
@@ -24,7 +24,7 @@ import org.springframework.util.StringUtils;
 
 import java.util.Optional;
 
-import static com.bandit.global.util.RandomNameUtil.NameType.*;
+import static com.bandit.global.util.NameUtil.NameType.*;
 
 @Slf4j
 @Transactional
@@ -69,18 +69,18 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
         switch (nameType) {
             case NAME -> {
                 do {
-                    randomName = RandomNameUtil.generateAuto(NAME);
+                    randomName = NameUtil.generateRandomName(NAME);
 
                 } while (memberRepository.existsByName(randomName));
             }
             case NICKNAME -> {
                 do {
-                    randomName = RandomNameUtil.generateAuto(NameType.NICKNAME);
+                    randomName = NameUtil.generateRandomName(NameType.NICKNAME);
                 } while (memberRepository.existsByNickname(randomName));
             }
             case USERNAME -> {
                 do {
-                    randomName = RandomNameUtil.generateAuto(NameType.USERNAME);
+                    randomName = NameUtil.generateRandomName(NameType.USERNAME);
                 }
                 while (memberRepository.existsByUsername(randomName));
             }
