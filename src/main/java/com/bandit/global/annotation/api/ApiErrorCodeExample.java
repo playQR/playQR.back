@@ -7,8 +7,12 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+import static com.bandit.global.annotation.api.PredefinedErrorStatus.DEFAULT;
+
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface ApiErrorCodeExample {
-    ErrorStatus[] value();
+    ErrorStatus[] value() default {ErrorStatus._INTERNAL_SERVER_ERROR};
+
+    PredefinedErrorStatus status() default DEFAULT;
 }

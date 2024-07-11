@@ -1,12 +1,13 @@
 package com.bandit.global.config.swagger;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.bandit.global.annotation.api.ApiErrorCodeExample;
+import com.bandit.global.annotation.api.PredefinedErrorStatus;
 import com.bandit.presentation.payload.code.ErrorStatus;
 import com.bandit.presentation.payload.code.Reason;
 import com.bandit.presentation.payload.dto.ApiResponseDto;
 import com.bandit.presentation.payload.holder.ExampleHolder;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.Operation;
@@ -24,6 +25,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.method.HandlerMethod;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -36,9 +38,9 @@ public class SwaggerConfig {
     public OpenAPI api() {
         Info info = new Info()
                 .version("v1.0.0")
-                .title("Play-BarCode API Document")
+                .title("BANDIT API Document")
                 .description("""
-                        ## Play-BarCode API 명세서입니다. 🐾
+                        ## BANDIT API 명세서입니다.
                                                 
                         ---
                                                 
@@ -76,17 +78,21 @@ public class SwaggerConfig {
             ApiErrorCodeExample apiErrorCodeExample =
                     handlerMethod.getMethodAnnotation(ApiErrorCodeExample.class);
             if (apiErrorCodeExample != null) {
-                generateErrorCodeResponseExample(operation, apiErrorCodeExample.value());
+                generateErrorCodeResponseExample(operation, apiErrorCodeExample.value(), apiErrorCodeExample.status());
             }
             return operation;
         };
     }
 
-    private void generateErrorCodeResponseExample(Operation operation, ErrorStatus[] errorStatuses) {
+    private void generateErrorCodeResponseExample(
+            Operation operation, ErrorStatus[] errorStatuses, PredefinedErrorStatus status) {
         ApiResponses responses = operation.getResponses();
+        List<ErrorStatus> showErrorStatus = new ArrayList<>();
+        showErrorStatus.addAll(status.getErrorStatuses());
+        showErrorStatus.addAll(Arrays.asList(errorStatuses));
 
         Map<Integer, List<ExampleHolder>> statusWithExampleHolders =
-                Arrays.stream(errorStatuses)
+                showErrorStatus.stream()
                         .map(
                                 errorStatus -> {
                                     Reason errorReason = errorStatus.getReason();
@@ -105,7 +111,7 @@ public class SwaggerConfig {
     }
 
     private Example getSwaggerExample(String value, Reason errorReason) {
-        ApiResponseDto<Object> responseDto = ApiResponseDto.onFailure(errorReason.getCode(), value, null);
+        ApiResponseDto<Object> responseDto = new ApiResponseDto<>(false, errorReason.getCode(), value, null);
         Example example = new Example();
         example.description(value);
 
