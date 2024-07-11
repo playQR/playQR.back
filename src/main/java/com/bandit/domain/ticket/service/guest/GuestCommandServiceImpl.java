@@ -29,7 +29,7 @@ public class GuestCommandServiceImpl implements GuestCommandService {
     public Long createGuest(Long promotionId, Member member, GuestRequest request) {
         Promotion promotion = promotionRepository.findById(promotionId)
                 .orElseThrow(() -> new GuestHandler(ErrorStatus.PROMOTION_NOT_FOUND));
-
+        validateReservationCount(promotion, request.getReservationCount());
         return guestRepository.save(Guest.of(promotion, member, request)).getId();
     }
 
@@ -65,6 +65,13 @@ public class GuestCommandServiceImpl implements GuestCommandService {
     private void validateCreator(Member creator, Member currentUser) {
         if (!creator.equals(currentUser)) {
             throw new GuestHandler(ErrorStatus.GUEST_ONLY_CAN_BE_TOUCHED_BY_CREATOR);
+        }
+    }
+
+    private void validateReservationCount(Promotion promotion, int reservationCount) {
+        int currentCount = 0;
+        if (promotion.getMaxAudience() < reservationCount + currentCount) {
+            throw new GuestHandler(ErrorStatus.GUEST_RESERVATION_EXCEEDS_THE_AVAILABLE_CAPACITY);
         }
     }
 }
