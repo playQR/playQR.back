@@ -25,6 +25,7 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 import static com.bandit.domain.board.dto.promotion.PromotionResponse.PromotionDetailDto;
+import static com.bandit.global.annotation.api.PredefinedErrorStatus.AUTH;
 
 @Tag(name = "Promotion API", description = "프로모션 API")
 @ApiResponse(responseCode = "2000", description = "성공")
@@ -36,12 +37,7 @@ public class PromotionApiController {
     private final PromotionQueryService promotionQueryService;
 
     @Operation(summary = "프로모션 작성 🔑", description = "로그인한 회원이 프로모션(홍보글)을 작성합니다.")
-    @ApiErrorCodeExample({
-            ErrorStatus._INTERNAL_SERVER_ERROR,
-            ErrorStatus._UNAUTHORIZED_LOGIN_DATA_RETRIEVAL_ERROR,
-            ErrorStatus._ASSIGNABLE_PARAMETER,
-            ErrorStatus.MEMBER_NOT_FOUND
-    })
+    @ApiErrorCodeExample(status = AUTH)
     @PostMapping
     public ApiResponseDto<Long> createPromotion(@AuthUser Member member,
                                                 @RequestBody PromotionRequest promotionRequest) {
@@ -55,20 +51,19 @@ public class PromotionApiController {
 
     @Operation(summary = "프로모션 수정 🔑", description = "로그인한 회원이 프로모션(홍보글)을 작성했던 글을 수정합니다." +
             "권한은 작성자에게만 있습니다.")
-    @ApiErrorCodeExample({
-            ErrorStatus._INTERNAL_SERVER_ERROR,
-            ErrorStatus._UNAUTHORIZED_LOGIN_DATA_RETRIEVAL_ERROR,
-            ErrorStatus._ASSIGNABLE_PARAMETER,
-            ErrorStatus.MEMBER_NOT_FOUND,
+    @ApiErrorCodeExample(value = {
             ErrorStatus.PROMOTION_NOT_FOUND,
-            ErrorStatus.PROMOTION_ONLY_CAN_BE_TOUCHED_BY_WRITER
-    })
+            ErrorStatus.PROMOTION_ONLY_CAN_BE_TOUCHED_BY_WRITER,
+            ErrorStatus.TICKET_NOT_FOUND,
+            ErrorStatus.IMAGE_REQUEST_IS_EMPTY
+    }, status = AUTH)
     @PutMapping("/{promotionId}")
     public ApiResponseDto<Long> modifyPromotion(@AuthUser Member member,
                                                 @PathVariable Long promotionId,
                                                 @RequestBody PromotionRequest promotionRequest) {
         List<String> imageList = promotionRequest.getImageList().stream()
                 .map(ImageUtil::removePrefix)
+                .filter(Objects::nonNull)
                 .collect(Collectors.toList());
         promotionRequest.setImageList(imageList);
         return ApiResponseDto.onSuccess(promotionCommandService.modifyPromotion(member, promotionId, promotionRequest));
@@ -76,7 +71,6 @@ public class PromotionApiController {
 
     @Operation(summary = "프로모션 조회", description = "프로모션의 PK를 통해 글을 조회합니다.")
     @ApiErrorCodeExample({
-            ErrorStatus._INTERNAL_SERVER_ERROR,
             ErrorStatus.PROMOTION_NOT_FOUND
     })
     @GetMapping("/{promotionId}")
@@ -90,10 +84,7 @@ public class PromotionApiController {
 
     @Operation(summary = "프로모션 페이징 조회", description = "프로모션의 리스트를 페이징을 통해 조회합니다." +
             "한페이지당 사이즈는 10개입니다.")
-    @ApiErrorCodeExample({
-            ErrorStatus._INTERNAL_SERVER_ERROR,
-            ErrorStatus.PROMOTION_NOT_FOUND
-    })
+    @ApiErrorCodeExample
     @GetMapping
     public ApiResponseDto<PromotionListDto> getPromotionList(@RequestParam(defaultValue = "0") int currentPage) {
         Pageable pageable = PageRequest.of(currentPage, PageUtil.PROMOTION_SIZE);
@@ -105,10 +96,7 @@ public class PromotionApiController {
     }
     @Operation(summary = "프로모션 페이징 검색", description = "프로모션을 키워드를 통해 조회합니다." +
             "한페이지당 사이즈는 10개입니다.")
-    @ApiErrorCodeExample({
-            ErrorStatus._INTERNAL_SERVER_ERROR,
-            ErrorStatus.PROMOTION_NOT_FOUND
-    })
+    @ApiErrorCodeExample
     @GetMapping("/search")
     public ApiResponseDto<PromotionListDto> searchPromotionList(
             @RequestParam(defaultValue = "0") int currentPage,
@@ -120,12 +108,12 @@ public class PromotionApiController {
                 )
         );
     }
+
     @Operation(summary = "마이 프로모션 페이징 조회 🔑", description = "사용자가 소유하는 프로모션을 페이징 조회합니다." +
             "한페이지당 사이즈는 10개입니다.")
-    @ApiErrorCodeExample({
-            ErrorStatus._INTERNAL_SERVER_ERROR,
+    @ApiErrorCodeExample(value = {
             ErrorStatus.PROMOTION_NOT_FOUND
-    })
+    }, status = AUTH)
     @GetMapping("/my")
     public ApiResponseDto<PromotionListDto> getMyPromotionList(
             @AuthUser Member member,
@@ -141,14 +129,11 @@ public class PromotionApiController {
 
     @Operation(summary = "프로모션 삭제 🔑", description = "로그인한 회원이 프로모션(홍보글)을 작성했던 글을 삭제합니다." +
             "권한은 작성자에게만 있습니다.")
-    @ApiErrorCodeExample({
-            ErrorStatus._INTERNAL_SERVER_ERROR,
-            ErrorStatus._UNAUTHORIZED_LOGIN_DATA_RETRIEVAL_ERROR,
-            ErrorStatus._ASSIGNABLE_PARAMETER,
-            ErrorStatus.MEMBER_NOT_FOUND,
+    @ApiErrorCodeExample(value = {
             ErrorStatus.PROMOTION_NOT_FOUND,
-            ErrorStatus.PROMOTION_ONLY_CAN_BE_TOUCHED_BY_WRITER
-    })
+            ErrorStatus.PROMOTION_ONLY_CAN_BE_TOUCHED_BY_WRITER,
+            ErrorStatus.IMAGE_REQUEST_IS_EMPTY
+    }, status = AUTH)
     @DeleteMapping("/{promotionId}")
     public ApiResponseDto<Boolean> deletePromotion(@AuthUser Member member,
                                                    @PathVariable Long promotionId) {
