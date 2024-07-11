@@ -8,7 +8,7 @@ import com.bandit.global.util.RandomNameUtil.NameType;
 import com.bandit.presentation.payload.code.ErrorStatus;
 import com.bandit.presentation.payload.exception.security.OAuth2Exception;
 import com.bandit.security.oauth.dto.CustomUserDetails;
-import com.bandit.security.oauth.dto.OAuth2UserInfo;
+import com.bandit.security.oauth.dto.KakaoOAuth2User;
 import com.bandit.security.oauth.factory.OAuth2UserInfoFactory;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -41,8 +41,8 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
     }
     protected OAuth2User processOAuth2User(OAuth2User oAuth2User, OAuth2AccessToken oAuth2AccessToken) {
         //OAuth2 로그인 플랫폼 구분 과정 생략, 카카오에서 필요한 정보 가져오기(이메일)
-        OAuth2UserInfo oAuth2UserInfo = OAuth2UserInfoFactory.getOAuth2UserInfo(oAuth2User.getAttributes());
-
+        KakaoOAuth2User oAuth2UserInfo = OAuth2UserInfoFactory.getOAuth2UserInfo(oAuth2User.getAttributes());
+        log.info("nickname = {}",oAuth2UserInfo.getNickname());
         if (!StringUtils.hasText(oAuth2UserInfo.getEmail())) {
             throw new OAuth2Exception(ErrorStatus.AUTH_OAUTH2_EMAIL_NOT_FOUND_FROM_PROVIDER);
         }
@@ -52,12 +52,12 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
         return CustomUserDetails.create(member, oAuth2AccessToken);
     }
 
-    private Member registerMember(OAuth2UserInfo oAuth2UserInfo) {
+    private Member registerMember(KakaoOAuth2User oAuth2UserInfo) {
         Member register = Member.builder()
                 .kakaoEmail(oAuth2UserInfo.getEmail())
                 .username(generateRandomName(USERNAME))
                 .nickname(generateRandomName(NICKNAME))
-                .name(generateRandomName(NAME))
+                .name(oAuth2UserInfo.getNickname())
                 .role(Role.USER)           //회원가입시에만 guest로 두고 이후 사용에는 user로 돌린다
                 .build();
 
