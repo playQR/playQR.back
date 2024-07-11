@@ -20,7 +20,6 @@ public class TokenApiController {
     private final TokenService tokenService;
     @Operation(summary = "로그인(토큰 생성)", description = "카카오이메일을 통해 로그인합니다.")
     @ApiErrorCodeExample({
-            ErrorStatus._INTERNAL_SERVER_ERROR,
             ErrorStatus.MEMBER_NOT_FOUND
     })
     @GetMapping("/login")       //test용
@@ -30,7 +29,6 @@ public class TokenApiController {
 
     @Operation(summary = "토큰 재발행", description = "리프레시 토큰을 통해 토큰을 재발행 받습니다.")
     @ApiErrorCodeExample({
-            ErrorStatus._INTERNAL_SERVER_ERROR,
             ErrorStatus.MEMBER_NOT_FOUND
     })
     @PostMapping("/reissue")
