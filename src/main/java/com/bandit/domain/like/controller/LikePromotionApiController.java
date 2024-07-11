@@ -13,6 +13,8 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import static com.bandit.global.annotation.api.PredefinedErrorStatus.AUTH;
+
 @Tag(name = "LikePromotion API", description = "프로모션 좋아요 API")
 @ApiResponse(responseCode = "2000", description = "성공")
 @RequestMapping("/api/likes/promotion")
@@ -23,12 +25,10 @@ public class LikePromotionApiController {
     private final LikePromotionCommandService likePromotionCommandService;
 
     @Operation(summary = "프로모션 좋아요 🔑", description = "로그인한 회원이 프로모션 좋아요를 누릅니다.")
-    @ApiErrorCodeExample({
-            ErrorStatus._INTERNAL_SERVER_ERROR,
-            ErrorStatus._UNAUTHORIZED_LOGIN_DATA_RETRIEVAL_ERROR,
-            ErrorStatus._ASSIGNABLE_PARAMETER,
-            ErrorStatus.MEMBER_NOT_FOUND
-    })
+    @ApiErrorCodeExample(value = {
+            ErrorStatus.PROMOTION_NOT_FOUND,
+            ErrorStatus.LIKE_ALREADY_EXIST
+    }, status = AUTH)
     @PostMapping("/{promotionId}")
     public ApiResponseDto<Long> likeSetList(@AuthUser Member member,
                                             @PathVariable Long promotionId) {
@@ -37,13 +37,9 @@ public class LikePromotionApiController {
     }
 
     @Operation(summary = "프로모션 좋아요 취소 🔑", description = "로그인한 회원이 프로모션의 좋아요를 취소합니다.")
-    @ApiErrorCodeExample({
-            ErrorStatus._INTERNAL_SERVER_ERROR,
-            ErrorStatus._UNAUTHORIZED_LOGIN_DATA_RETRIEVAL_ERROR,
-            ErrorStatus._ASSIGNABLE_PARAMETER,
-            ErrorStatus.MEMBER_NOT_FOUND,
+    @ApiErrorCodeExample(value = {
             ErrorStatus.LIKE_NOT_FOUND
-    })
+    }, status = AUTH)
     @DeleteMapping("/{promotionId}")
     public ApiResponseDto<Boolean> unlikeSetList(@AuthUser Member member,
                                                  @PathVariable Long promotionId) {
@@ -52,13 +48,7 @@ public class LikePromotionApiController {
     }
 
     @Operation(summary = "프로모션 좋아요 확인 🔑", description = "로그인한 회원이 프로모션을 좋아요 했는지 확인합니다.")
-    @ApiErrorCodeExample({
-            ErrorStatus._INTERNAL_SERVER_ERROR,
-            ErrorStatus._UNAUTHORIZED_LOGIN_DATA_RETRIEVAL_ERROR,
-            ErrorStatus._ASSIGNABLE_PARAMETER,
-            ErrorStatus.MEMBER_NOT_FOUND,
-            ErrorStatus.LIKE_NOT_FOUND
-    })
+    @ApiErrorCodeExample(status = AUTH)
     @GetMapping("/{promotionId}")
     public ApiResponseDto<Boolean> checkIsLiked(@AuthUser Member member,
                                                 @PathVariable Long promotionId) {
@@ -66,13 +56,7 @@ public class LikePromotionApiController {
     }
 
     @Operation(summary = "프로모션 좋아요 개수 확인", description = "프로모션 좋아요 개수를 확인합니다.")
-    @ApiErrorCodeExample({
-            ErrorStatus._INTERNAL_SERVER_ERROR,
-            ErrorStatus._UNAUTHORIZED_LOGIN_DATA_RETRIEVAL_ERROR,
-            ErrorStatus._ASSIGNABLE_PARAMETER,
-            ErrorStatus.MEMBER_NOT_FOUND,
-            ErrorStatus.LIKE_NOT_FOUND
-    })
+    @ApiErrorCodeExample
     @GetMapping("/{promotionId}/count")
     public ApiResponseDto<Long> countLike(@PathVariable Long promotionId) {
         return ApiResponseDto.onSuccess(likePromotionQueryService.countLike(promotionId));
