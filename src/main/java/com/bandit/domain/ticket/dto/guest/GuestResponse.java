@@ -32,4 +32,15 @@ public class GuestResponse {
     public static class GuestListDto {
         private List<GuestViewDto> guestList;
     }
+    @Data
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class ReservationViewDto {
+        private Long promotionId;
+        private Integer currentCount;
+        private Integer maxAudience;
+    }
+
+
 }

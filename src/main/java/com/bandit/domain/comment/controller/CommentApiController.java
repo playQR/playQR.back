@@ -62,7 +62,7 @@ public class CommentApiController {
                 commentQueryService.getPaginationCommentByPromotionId(promotionId, pageable)));
     }
 
-    @Operation(summary = "댓글 조회(페이징)🔑", description = "로그인한 유저가 자신이 작성한 댓글들을 조회합니다.")
+    @Operation(summary = "나의 댓글 조회(페이징) 🔑", description = "로그인한 유저가 자신이 작성한 댓글들을 조회합니다.")
     @ApiErrorCodeExample({
             ErrorStatus._INTERNAL_SERVER_ERROR
     })
