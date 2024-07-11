@@ -13,5 +13,6 @@ public class MusicResponse {
     private Long id;
     private String title;
     private String artist;
+    private long count;
     private boolean isOpen;
 }

@@ -5,6 +5,7 @@ import com.bandit.domain.board.dto.promotion.PromotionRequest;
 import com.bandit.domain.board.dto.promotion.PromotionResponse.PromotionListDto;
 import com.bandit.domain.board.service.promotion.PromotionCommandService;
 import com.bandit.domain.board.service.promotion.PromotionQueryService;
+import com.bandit.domain.like.service.like_music.LikeMusicQueryService;
 import com.bandit.domain.member.entity.Member;
 import com.bandit.global.annotation.api.ApiErrorCodeExample;
 import com.bandit.global.annotation.auth.AuthUser;
@@ -35,6 +36,7 @@ import static com.bandit.global.annotation.api.PredefinedErrorStatus.AUTH;
 public class PromotionApiController {
     private final PromotionCommandService promotionCommandService;
     private final PromotionQueryService promotionQueryService;
+    private final LikeMusicQueryService likeMusicQueryService;
 
     @Operation(summary = "프로모션 작성 🔑", description = "로그인한 회원이 프로모션(홍보글)을 작성합니다.")
     @ApiErrorCodeExample(status = AUTH)
@@ -75,11 +77,9 @@ public class PromotionApiController {
     })
     @GetMapping("/{promotionId}")
     public ApiResponseDto<PromotionDetailDto> getPromotionById(@PathVariable Long promotionId) {
-        return ApiResponseDto.onSuccess(
-                PromotionConverter.toDetailDto(
-                        promotionQueryService.getPromotionById(promotionId)
-                )
-        );
+        PromotionDetailDto detailDto = PromotionConverter.toDetailDto(promotionQueryService.getPromotionById(promotionId));
+        likeMusicQueryService.countLike(detailDto);
+        return ApiResponseDto.onSuccess(detailDto);
     }
 
     @Operation(summary = "프로모션 페이징 조회", description = "프로모션의 리스트를 페이징을 통해 조회합니다." +
