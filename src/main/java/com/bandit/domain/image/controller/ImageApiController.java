@@ -29,8 +29,7 @@ public class ImageApiController {
 
     @Operation(summary = "이미지 요청 🔑", description = "이미지 파일들을 로컬 환경에서 불러와 s3에 업로드합니다." +
             "s3저장된 이미지 url을 반환합니다.")
-    @ApiErrorCodeExample({
-            ErrorStatus._INTERNAL_SERVER_ERROR,
+    @ApiErrorCodeExample(value = {
             ErrorStatus.IMAGE_REQUEST_IS_EMPTY
     })
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
