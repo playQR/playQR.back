@@ -109,7 +109,7 @@ class ManagerCommandServiceTest {
         GuestRequest guestRequest = GuestRequest.builder()
                 .name("Test Guest")
                 .reservationCount(1)
-                .depositDate(LocalDate.now())
+                .DepositDate(LocalDate.now())
                 .build();
         Guest guest = Guest.of(promotion, member, guestRequest);
         guestRepository.save(guest);

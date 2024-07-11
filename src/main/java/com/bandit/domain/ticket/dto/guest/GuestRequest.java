@@ -11,6 +11,6 @@ import java.time.LocalDate;
 public class GuestRequest {
 
     private String name;
-    private LocalDate depositDate;
+    private LocalDate DepositDate;
     private int reservationCount;
 }

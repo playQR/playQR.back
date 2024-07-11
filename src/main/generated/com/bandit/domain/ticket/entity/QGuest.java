@@ -33,6 +33,10 @@ public class QGuest extends EntityPathBase<Guest> {
 
     public final BooleanPath isEntered = createBoolean("isEntered");
 
+    public final BooleanPath isReservationCancelled = createBoolean("isReservationCancelled");
+
+    public final BooleanPath isReservationConfirmed = createBoolean("isReservationConfirmed");
+
     //inherited
     public final DateTimePath<java.time.LocalDateTime> lastModifiedDate = _super.lastModifiedDate;
 
