@@ -24,8 +24,27 @@ public class CommentResponse {
     @Builder
     @NoArgsConstructor
     @AllArgsConstructor
+    public static class MyCommentViewDto{
+        private Long id;
+        private Long promotionId;
+        private String content;
+        private LocalDateTime createdTime;
+    }
+    @Data
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
     public static class CommentListDto{
         private List<CommentViewDto> commentList;
+        private int nextPageParam;
+        private long totalCount;
+    }
+    @Data
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class MyCommentListDto{
+        private List<MyCommentViewDto> commentList;
         private int nextPageParam;
         private long totalCount;
     }
