@@ -3,6 +3,7 @@ package com.bandit.domain.comment.controller;
 import com.bandit.domain.comment.converter.CommentConverter;
 import com.bandit.domain.comment.dto.CommentRequest;
 import com.bandit.domain.comment.dto.CommentResponse.CommentListDto;
+import com.bandit.domain.comment.dto.CommentResponse.MyCommentListDto;
 import com.bandit.domain.comment.service.CommentCommandService;
 import com.bandit.domain.comment.service.CommentQueryService;
 import com.bandit.domain.member.entity.Member;
@@ -54,10 +55,22 @@ public class CommentApiController {
     @Operation(summary = "댓글 조회(페이징)", description = "프로모션에 등록된 댓글들을 조회합니다.")
     @ApiErrorCodeExample
     @GetMapping("/{promotionId}")
-    public ApiResponseDto<CommentListDto> removeComment(@PathVariable Long promotionId,
+    public ApiResponseDto<CommentListDto> getComments(@PathVariable Long promotionId,
                                                         @RequestParam(defaultValue = "0") int currentPage) {
         Pageable pageable = PageRequest.of(currentPage, PageUtil.COMMENT_SIZE);
         return ApiResponseDto.onSuccess(CommentConverter.toListDto(
                 commentQueryService.getPaginationCommentByPromotionId(promotionId, pageable)));
+    }
+
+    @Operation(summary = "댓글 조회(페이징)🔑", description = "로그인한 유저가 자신이 작성한 댓글들을 조회합니다.")
+    @ApiErrorCodeExample({
+            ErrorStatus._INTERNAL_SERVER_ERROR
+    })
+    @GetMapping("/my")
+    public ApiResponseDto<MyCommentListDto> getMyComments(@AuthUser Member member,
+                                                          @RequestParam(defaultValue = "0") int currentPage) {
+        Pageable pageable = PageRequest.of(currentPage, PageUtil.COMMENT_SIZE);
+        return ApiResponseDto.onSuccess(CommentConverter.toMyListDto(
+                commentQueryService.getPaginationCommentsByWriter(member, pageable)));
     }
 }
