@@ -1,6 +1,7 @@
 package com.bandit.domain.board.repository.querydsl;
 
 import com.bandit.domain.board.entity.Promotion;
+import com.bandit.domain.member.entity.Member;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 import static com.bandit.domain.board.entity.QPromotion.promotion;
+import static com.bandit.domain.ticket.entity.QGuest.guest;
 
 @RequiredArgsConstructor
 @Repository
@@ -27,6 +29,17 @@ public class PromotionQueryRepositoryImpl implements PromotionQueryRepository{
         }
         List<Promotion> promotionList = baseQuery
                 .orderBy(promotion.createdDate.desc())
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .fetch();
+        return PageableExecutionUtils.getPage(promotionList, pageable, countQuery::fetchCount);
+    }
+
+    @Override
+    public Page<Promotion> findAsGuest(Member member, Pageable pageable) {
+        JPAQuery<Promotion> baseQuery = queryFactory.select(guest.promotion).from(guest);
+        JPAQuery<Long> countQuery = queryFactory.select(guest.promotion.count()).from(guest);
+        List<Promotion> promotionList = baseQuery.orderBy(promotion.createdDate.desc())
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetch();
