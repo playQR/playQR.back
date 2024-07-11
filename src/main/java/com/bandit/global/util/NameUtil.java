@@ -8,7 +8,7 @@ import java.util.UUID;
 public class NameUtil {
 
     private static final String BANDIT_AUTO_NAME = "이름";
-    private static final String BANDIT_AUTO_NICKNAME = "nickname";
+    private static final String BANDIT_AUTO_NICKNAME = "band#";
 
     public enum NameType {
         USERNAME, NICKNAME, NAME
