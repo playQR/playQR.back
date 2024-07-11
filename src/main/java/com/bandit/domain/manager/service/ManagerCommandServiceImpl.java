@@ -28,10 +28,10 @@ public class ManagerCommandServiceImpl implements ManagerCommandService {
         Promotion promotion = promotionRepository.findById(promotionId)
                 .orElseThrow(() -> new PromotionHandler(ErrorStatus.PROMOTION_NOT_FOUND));
 
-        managerRepository.findByPromotionAndMember(promotion, member)
-                .ifPresent(manager -> {
-                    throw new ManagerHandler(ErrorStatus.MANAGER_ALREADY_EXISTS);
-                });
+        boolean managerExists = managerRepository.existsByPromotionAndMember(promotion, member);
+        if (managerExists) {
+            throw new ManagerHandler(ErrorStatus.MANAGER_ALREADY_EXISTS);
+        }
 
         Manager manager = Manager.of(promotion, member);
         managerRepository.save(manager);

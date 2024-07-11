@@ -11,7 +11,7 @@ import java.util.Optional;
 public interface ManagerRepository extends JpaRepository<Manager, Long> {
 
     Optional<Manager> findByPromotionAndMember(Promotion promotion, Member member);
-
+    boolean existsByPromotionAndMember(Promotion promotion, Member member);
     List<Manager> findByPromotion(Promotion promotion);
 }
 
