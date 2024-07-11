@@ -55,10 +55,11 @@ public class LikeMusicApiController {
         return ApiResponseDto.onSuccess(likeMusicQueryService.isLiked(musicId, member));
     }
 
-    @Operation(summary = "셑리스트 좋아요 확인", description = "셑리스트의 좋아요 개수를 확인합니다.")
+    @Operation(summary = "셑리스트 좋아요 개수 확인", description = "셑리스트의 좋아요 개수를 확인합니다.")
     @ApiErrorCodeExample
     @GetMapping("/{musicId}/count")
     public ApiResponseDto<Long> countLike(@PathVariable Long musicId) {
         return ApiResponseDto.onSuccess(likeMusicQueryService.countLike(musicId));
     }
+
 }

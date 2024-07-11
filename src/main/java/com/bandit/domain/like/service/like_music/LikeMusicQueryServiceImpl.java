@@ -1,5 +1,6 @@
 package com.bandit.domain.like.service.like_music;
 
+import com.bandit.domain.board.dto.promotion.PromotionResponse.PromotionDetailDto;
 import com.bandit.domain.like.repository.LikeMusicRepository;
 import com.bandit.domain.member.entity.Member;
 import lombok.RequiredArgsConstructor;
@@ -20,5 +21,12 @@ public class LikeMusicQueryServiceImpl implements LikeMusicQueryService {
     @Override
     public long countLike(Long musicId) {
         return likeMusicRepository.countByMusicId(musicId);
+    }
+
+    @Override
+    public void countLike(PromotionDetailDto response) {
+        response.getMusicList().forEach(musicResponse ->
+            musicResponse.setCount(likeMusicRepository.countByMusicId(musicResponse.getId()))
+        );
     }
 }
