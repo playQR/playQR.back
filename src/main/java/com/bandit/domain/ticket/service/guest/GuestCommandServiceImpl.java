@@ -27,6 +27,7 @@ public class GuestCommandServiceImpl implements GuestCommandService {
 
     @Override
     public Long createGuest(Long promotionId, Member member, GuestRequest request) {
+        //TODO validate already exist
         Promotion promotion = promotionRepository.findById(promotionId)
                 .orElseThrow(() -> new GuestHandler(ErrorStatus.PROMOTION_NOT_FOUND));
         validateReservationCount(promotion, request.getReservationCount());
@@ -39,6 +40,7 @@ public class GuestCommandServiceImpl implements GuestCommandService {
                 .orElseThrow(() -> new TicketHandler(ErrorStatus.TICKET_NOT_FOUND));
         Guest guest = guestRepository.findByMemberAndPromotion(member, ticket.getPromotion())
                 .orElseThrow(() -> new GuestHandler(ErrorStatus.GUEST_NOT_FOUND));
+        //TODO validate already entranced
         guest.entrance();
     }
 

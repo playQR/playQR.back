@@ -137,7 +137,7 @@ public class GuestApiController {
             @AuthUser Member member,
             @RequestParam(defaultValue = "0") int page) {
         PageRequest pageable = PageRequest.of(page, PageUtil.PROMOTION_SIZE);
-        Page<Promotion> promotionPage = promotionQueryService.findAsGuest(member, pageable);
+        Page<Promotion> promotionPage = promotionQueryService.getPaginationPromotionAsGuest(member, pageable);
         return ApiResponseDto.onSuccess(PromotionConverter.toListDto(promotionPage));
     }
 }
