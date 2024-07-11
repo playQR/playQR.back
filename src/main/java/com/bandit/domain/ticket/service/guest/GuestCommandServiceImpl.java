@@ -27,7 +27,7 @@ public class GuestCommandServiceImpl implements GuestCommandService {
 
     @Override
     public Long createGuest(Long promotionId, Member member, GuestRequest request) {
-        //TODO validate already exist
+        validateAlreadyExist(promotionId, member);
         Promotion promotion = promotionRepository.findById(promotionId)
                 .orElseThrow(() -> new GuestHandler(ErrorStatus.PROMOTION_NOT_FOUND));
         validateReservationCount(promotion, request.getReservationCount());
@@ -40,8 +40,14 @@ public class GuestCommandServiceImpl implements GuestCommandService {
                 .orElseThrow(() -> new TicketHandler(ErrorStatus.TICKET_NOT_FOUND));
         Guest guest = guestRepository.findByMemberAndPromotion(member, ticket.getPromotion())
                 .orElseThrow(() -> new GuestHandler(ErrorStatus.GUEST_NOT_FOUND));
-        //TODO validate already entranced
+        validateEntrance(guest);
         guest.entrance();
+    }
+
+    private static void validateEntrance(Guest guest) {
+        if (guest.getIsEntered()) {
+            throw new GuestHandler(ErrorStatus.GUEST_ALREADY_ENTRNACED);
+        }
     }
 
     @Override       //TODO remove this method
@@ -74,6 +80,11 @@ public class GuestCommandServiceImpl implements GuestCommandService {
         if (promotion.getMaxAudience() <
                 reservationCount + guestRepository.findTotalReservationCountByPromotionId(promotion.getId())) {
             throw new GuestHandler(ErrorStatus.GUEST_RESERVATION_EXCEEDS_THE_AVAILABLE_CAPACITY);
+        }
+    }
+    private void validateAlreadyExist(Long promotionId, Member member) {
+        if (guestRepository.existsByPromotionIdAndMember(promotionId, member)) {
+            throw new GuestHandler(ErrorStatus.GUEST_ALREADY_EXIST);
         }
     }
 }
