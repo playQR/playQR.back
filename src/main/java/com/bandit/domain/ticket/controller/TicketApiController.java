@@ -18,6 +18,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import static com.bandit.global.annotation.api.PredefinedErrorStatus.AUTH;
+
 @Tag(name = "Ticket API", description = "티켓 관련 API")
 @ApiResponse(responseCode = "2000", description = "성공")
 @RestController
@@ -28,7 +30,10 @@ public class TicketApiController {
     private final TicketQueryService ticketQueryService;
 
     @Operation(summary = "티켓 조회 🔑", description = "티켓 ID를 받아 해당 티켓의 정보를 조회합니다.")
-    @ApiErrorCodeExample({ErrorStatus._INTERNAL_SERVER_ERROR})
+    @ApiErrorCodeExample(value = {
+            ErrorStatus.TICKET_NOT_FOUND,
+            ErrorStatus.TICKET_ONLY_CAN_BE_OPENED_BY_MANAGERS
+    }, status = AUTH)
     @GetMapping("/promotions/{promotionId}")
     public ApiResponseDto<TicketResponse> getTicketById(@PathVariable Long promotionId,
                                                         @AuthUser Member member) {
