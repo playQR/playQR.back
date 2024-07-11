@@ -69,8 +69,8 @@ public class GuestCommandServiceImpl implements GuestCommandService {
     }
 
     private void validateReservationCount(Promotion promotion, int reservationCount) {
-        int currentCount = 0;
-        if (promotion.getMaxAudience() < reservationCount + currentCount) {
+        if (promotion.getMaxAudience() <
+                reservationCount + guestRepository.findTotalReservationCountByPromotionId(promotion.getId())) {
             throw new GuestHandler(ErrorStatus.GUEST_RESERVATION_EXCEEDS_THE_AVAILABLE_CAPACITY);
         }
     }
