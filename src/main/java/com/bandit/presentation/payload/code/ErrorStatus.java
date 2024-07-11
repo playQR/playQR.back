@@ -51,6 +51,7 @@ public enum ErrorStatus implements BaseCode{
     //게스트 관련 오류(4350 ~ 4399)
     GUEST_NOT_FOUND(NOT_FOUND, 4350, "존재하지 않는 게스트입니다."),
     GUEST_ONLY_CAN_BE_TOUCHED_BY_CREATOR(BAD_REQUEST, 4201, "작성자가 아닌 유저는 게스트를 수정할 수 없습니다."),
+    GUEST_RESERVATION_EXCEEDS_THE_AVAILABLE_CAPACITY(BAD_REQUEST,4202,"시도 중인 예약은 총 예약 정원을 초과하는 시도입니다"),
     //티켓 관련 오류(4250 ~ 4299)
     TICKET_NOT_FOUND(NOT_FOUND, 4400, "존재하지 않는 티켓입니다."),
     TICKET_CAN_ONLY_BE_TOUCHED_BY_HOST_AND_MANAGERS(FORBIDDEN, 4401, "티켓은 호스트나 매니저만 접근할 수 있습니다."),
