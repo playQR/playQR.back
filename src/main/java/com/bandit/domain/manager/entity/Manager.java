@@ -30,11 +30,6 @@ public class Manager {
     @JoinColumn(name = "member_id", nullable = false)
     private Member member;
 
-    public Manager(Promotion promotion, Member member) {
-        this.promotion = promotion;
-        this.member = member;
-    }
-
     public static Manager of(Promotion promotion, Member member) {
         return Manager.builder()
                 .promotion(promotion)
