@@ -146,8 +146,7 @@ public class GuestApiController {
     @ApiErrorCodeExample(
             {ErrorStatus._INTERNAL_SERVER_ERROR})
     @GetMapping("/{promotionId}/reservation/count")
-    public ApiResponseDto<ReservationViewDto> getReservationCount(
-            @PathVariable Long promotionId) {
+    public ApiResponseDto<ReservationViewDto> getReservationCount(@PathVariable Long promotionId) {
         return ApiResponseDto.onSuccess(guestQueryService.getReservationInfo(promotionId));
     }
 }
