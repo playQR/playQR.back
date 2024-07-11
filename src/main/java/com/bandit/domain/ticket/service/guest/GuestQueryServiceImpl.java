@@ -3,6 +3,7 @@ package com.bandit.domain.ticket.service.guest;
 import com.bandit.domain.board.entity.Promotion;
 import com.bandit.domain.board.repository.PromotionRepository;
 import com.bandit.domain.member.entity.Member;
+import com.bandit.domain.ticket.dto.guest.GuestResponse.ReservationViewDto;
 import com.bandit.domain.ticket.entity.Guest;
 import com.bandit.domain.ticket.repository.GuestRepository;
 import com.bandit.presentation.payload.code.ErrorStatus;
@@ -43,6 +44,19 @@ public class GuestQueryServiceImpl implements GuestQueryService{
     public Page<Guest> findGuestsByPromotionId(Long promotionId, Member member, Pageable pageable) {
         validateHost(promotionId, member);
         return guestRepository.findByPromotionId(promotionId, pageable);
+    }
+
+    @Override
+    public ReservationViewDto getReservationInfo(Long promotionId) {
+        Promotion promotion = promotionRepository.findById(promotionId)
+                .orElseThrow(() -> new PromotionHandler(ErrorStatus.PROMOTION_NOT_FOUND));
+        ReservationViewDto build = ReservationViewDto.builder()
+                .currentCount(1)
+                .maxAudience(promotion.getMaxAudience())
+                .promotionId(promotion.getId())
+                .build();
+
+        return null;
     }
 
     private void validateHost(Guest guest, Member member) {

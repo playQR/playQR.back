@@ -9,6 +9,7 @@ import com.bandit.domain.ticket.converter.GuestConverter;
 import com.bandit.domain.ticket.dto.guest.GuestRequest;
 import com.bandit.domain.ticket.dto.guest.GuestResponse;
 import com.bandit.domain.ticket.dto.guest.GuestResponse.GuestListDto;
+import com.bandit.domain.ticket.dto.guest.GuestResponse.ReservationViewDto;
 import com.bandit.domain.ticket.entity.Guest;
 import com.bandit.domain.ticket.service.guest.GuestCommandService;
 import com.bandit.domain.ticket.service.guest.GuestQueryService;
@@ -139,5 +140,14 @@ public class GuestApiController {
         PageRequest pageable = PageRequest.of(page, PageUtil.PROMOTION_SIZE);
         Page<Promotion> promotionPage = promotionQueryService.getPaginationPromotionAsGuest(member, pageable);
         return ApiResponseDto.onSuccess(PromotionConverter.toListDto(promotionPage));
+    }
+
+    @Operation(summary = "프로모션 예약 현황조회", description = "프로모션의 예매 현황을 알려줍니다.")
+    @ApiErrorCodeExample(
+            {ErrorStatus._INTERNAL_SERVER_ERROR})
+    @GetMapping("/{promotionId}/reservation/count")
+    public ApiResponseDto<ReservationViewDto> getReservationCount(
+            @PathVariable Long promotionId) {
+        return ApiResponseDto.onSuccess(guestQueryService.getReservationInfo(promotionId));
     }
 }
