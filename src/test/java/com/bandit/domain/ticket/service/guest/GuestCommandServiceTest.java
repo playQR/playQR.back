@@ -15,6 +15,8 @@ import com.bandit.domain.ticket.entity.Ticket;
 import com.bandit.domain.ticket.repository.GuestRepository;
 import com.bandit.domain.ticket.service.ticket.TicketQueryService;
 import com.bandit.global.config.test.DatabaseCleanUp;
+import com.bandit.presentation.payload.code.ErrorStatus;
+import com.bandit.presentation.payload.exception.GuestHandler;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -29,6 +31,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @Slf4j
 @SpringBootTest
@@ -121,6 +124,22 @@ class GuestCommandServiceTest {
     }
 
     @Test
+    @DisplayName("이미 입장처리된 멤버의 경우 예외를 발생시킵니다.")
+    void executeExceptionWhenTryToBookDuplication() {
+        //given
+        GuestRequest request = GuestRequest.builder()
+                .DepositDate(LocalDate.of(2024, 7, 6))
+                .reservationCount(2)
+                .name("이정한")
+                .build();
+        Long guestId = guestCommandService.createGuest(promotion.getId(), guest, request);
+        //when & then
+        assertThatThrownBy(() -> guestCommandService.createGuest(promotion.getId(), guest, request))
+                .isInstanceOf(GuestHandler.class)
+                .hasMessage(ErrorStatus.GUEST_ALREADY_EXIST.getMessage());
+    }
+
+    @Test
     @Transactional
     @DisplayName("티켓의 uuid를 통해 게스트 입장처리를 합니다.")
     void entrance() {
@@ -141,6 +160,24 @@ class GuestCommandServiceTest {
                 .get()
                 .extracting("isEntered", "depositDate")
                 .containsExactly(true, request.getDepositDate());
+    }
+    @Test
+    @Transactional
+    @DisplayName("입장을 두번 이상 시도하려고 하면 예외를 발생시킵니다.")
+    void executeExceptionWhenTryToEntranceOverThanTwice() {
+        //given
+        GuestRequest request = GuestRequest.builder()
+                .DepositDate(LocalDate.of(2024, 7, 6))
+                .reservationCount(2)
+                .name("이정한")
+                .build();
+        Long guestId = guestCommandService.createGuest(promotion.getId(), guest, request);
+        Ticket ticket = ticketQueryService.findTicketByPromotionId(promotion.getId(), host);
+        guestCommandService.entrance(ticket.getUuid(), guest);
+        //when & then
+        assertThatThrownBy(() -> guestCommandService.entrance(ticket.getUuid(), guest))
+                .isInstanceOf(GuestHandler.class)
+                .hasMessage(ErrorStatus.GUEST_ALREADY_ENTRNACED.getMessage());
     }
 
     @Test

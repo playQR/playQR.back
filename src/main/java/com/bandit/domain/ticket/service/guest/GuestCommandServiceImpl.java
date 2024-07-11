@@ -27,7 +27,7 @@ public class GuestCommandServiceImpl implements GuestCommandService {
 
     @Override
     public Long createGuest(Long promotionId, Member member, GuestRequest request) {
-        validateAlreadyExist(promotionId, member);
+        validateAlreadyBooked(promotionId, member);
         Promotion promotion = promotionRepository.findById(promotionId)
                 .orElseThrow(() -> new GuestHandler(ErrorStatus.PROMOTION_NOT_FOUND));
         validateReservationCount(promotion, request.getReservationCount());
@@ -42,12 +42,6 @@ public class GuestCommandServiceImpl implements GuestCommandService {
                 .orElseThrow(() -> new GuestHandler(ErrorStatus.GUEST_NOT_FOUND));
         validateEntrance(guest);
         guest.entrance();
-    }
-
-    private static void validateEntrance(Guest guest) {
-        if (guest.getIsEntered()) {
-            throw new GuestHandler(ErrorStatus.GUEST_ALREADY_ENTRNACED);
-        }
     }
 
     @Override       //TODO remove this method
@@ -82,9 +76,16 @@ public class GuestCommandServiceImpl implements GuestCommandService {
             throw new GuestHandler(ErrorStatus.GUEST_RESERVATION_EXCEEDS_THE_AVAILABLE_CAPACITY);
         }
     }
-    private void validateAlreadyExist(Long promotionId, Member member) {
+
+    private void validateAlreadyBooked(Long promotionId, Member member) {
         if (guestRepository.existsByPromotionIdAndMember(promotionId, member)) {
             throw new GuestHandler(ErrorStatus.GUEST_ALREADY_EXIST);
+        }
+    }
+
+    private static void validateEntrance(Guest guest) {
+        if (guest.getIsEntered()) {
+            throw new GuestHandler(ErrorStatus.GUEST_ALREADY_ENTRNACED);
         }
     }
 }
