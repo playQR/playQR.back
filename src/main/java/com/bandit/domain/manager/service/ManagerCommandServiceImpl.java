@@ -52,7 +52,7 @@ public class ManagerCommandServiceImpl implements ManagerCommandService {
     public void completeEntrance(Long guestId, Member member) {
         Guest guest = guestRepository.findById(guestId)
                 .orElseThrow(() -> new IllegalArgumentException("Guest not found"));
-        guest.completeEntrance();
+        guest.entrance();
         guestRepository.save(guest);
     }
 
