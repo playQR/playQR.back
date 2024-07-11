@@ -22,5 +22,5 @@ public interface PromotionQueryService {
 
     List<Promotion> getPromotionIdByMember(Member member);
 
-    Page<Promotion> findAsGuest(Member member, PageRequest pageable);
+    Page<Promotion> getPaginationPromotionAsGuest(Member member, PageRequest pageable);
 }

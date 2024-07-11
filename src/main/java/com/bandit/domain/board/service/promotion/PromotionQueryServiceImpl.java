@@ -58,7 +58,7 @@ public class PromotionQueryServiceImpl implements PromotionQueryService{
     }
 
     @Override
-    public Page<Promotion> findAsGuest(Member member, PageRequest pageable) {
+    public Page<Promotion> getPaginationPromotionAsGuest(Member member, PageRequest pageable) {
         return promotionRepository.findAsGuest(member, pageable);
     }
 
