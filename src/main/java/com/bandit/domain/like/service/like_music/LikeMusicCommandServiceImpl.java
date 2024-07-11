@@ -30,7 +30,6 @@ public class LikeMusicCommandServiceImpl implements LikeMusicCommandService {
 
     @Override
     public void unlikeMusic(Long musicId, Member member) {
-        validateNotFound(musicId, member);
         LikeMusic likeMusic = likeMusicRepository.findByMusicIdAndMember(musicId, member)
                 .orElseThrow(() -> new LikeHandler(ErrorStatus.LIKE_NOT_FOUND));
         likeMusicRepository.delete(likeMusic);
@@ -39,12 +38,6 @@ public class LikeMusicCommandServiceImpl implements LikeMusicCommandService {
     private void validateAlreadyExist(Long musicId, Member member) {
         if (likeMusicRepository.existsByMusicIdAndMember(musicId, member)) {
             throw new LikeHandler(ErrorStatus.LIKE_ALREADY_EXIST);
-        }
-    }
-
-    private void validateNotFound(Long musicId, Member member) {
-        if (!likeMusicRepository.existsByMusicIdAndMember(musicId, member)) {
-            throw new LikeHandler(ErrorStatus.LIKE_NOT_FOUND);
         }
     }
 }
