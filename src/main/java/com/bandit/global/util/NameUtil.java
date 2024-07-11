@@ -5,7 +5,7 @@ import com.bandit.presentation.payload.exception.MemberHandler;
 
 import java.util.UUID;
 
-public class RandomNameUtil {
+public class NameUtil {
 
     private static final String BANDIT_AUTO_NAME = "이름";
     private static final String BANDIT_AUTO_NICKNAME = "nickname";
@@ -14,7 +14,7 @@ public class RandomNameUtil {
         USERNAME, NICKNAME, NAME
     }
 
-    public static String generateAuto(NameType nameType) {
+    public static String generateRandomName(NameType nameType) {
         String generatedName;
         switch (nameType) {
             case NAME -> {
@@ -31,6 +31,14 @@ public class RandomNameUtil {
             }
         }
         return generatedName;
+    }
+
+    public static String maskLastName(String fullName) {
+        if (fullName == null || fullName.isEmpty()) {
+            return "홍**";
+        }
+        String maskedName = fullName.charAt(0) + "**";
+        return maskedName;
     }
     private static StringBuilder getStringBuilder(String prefix) {
         String uniqueValue = UUID.randomUUID().toString().substring(0, 5).replace("-", "#");
