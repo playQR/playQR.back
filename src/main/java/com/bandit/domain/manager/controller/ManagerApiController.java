@@ -54,9 +54,7 @@ public class ManagerApiController {
     @ApiErrorCodeExample(
             {ErrorStatus._INTERNAL_SERVER_ERROR})
     @GetMapping("/promotions/{promotionId}")
-    public ApiResponseDto<List<MemberResponse>> getManagersByPromotionId(
-            @PathVariable Long promotionId,
-            @AuthUser Member member) {
+    public ApiResponseDto<List<MemberResponse>> getManagersByPromotionId(@PathVariable Long promotionId) {
         List<Member> managers = managerQueryService.getManagers(promotionId);
         List<MemberResponse> managerResponses = managers.stream()
                 .map(manager -> MemberResponse.builder()
