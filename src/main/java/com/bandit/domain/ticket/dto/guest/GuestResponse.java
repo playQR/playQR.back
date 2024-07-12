@@ -19,8 +19,6 @@ public class GuestResponse {
         private Long guestId;
         private String name;
         private int reservationCount;
-        private Boolean isEntranced;
-        private Boolean isApproved;
         private ReservationStatus reservationStatus;
         private LocalDate depositDate;
         private MemberResponse writer;
@@ -43,15 +41,5 @@ public class GuestResponse {
         private Integer currentCount;
         private Integer maxAudience;
     }
-    @Data
-    @Builder
-    @NoArgsConstructor
-    @AllArgsConstructor
-    public static class GuestReservationDto {
-        private Long promotionId;
-        private Integer currentCount;
-        private Integer maxAudience;
-    }
-
 
 }
