@@ -60,7 +60,13 @@ public enum ErrorStatus implements BaseCode{
     TICKET_CAN_ONLY_BE_TOUCHED_BY_HOST_AND_MANAGERS(FORBIDDEN, 4401, "티켓은 호스트나 매니저만 접근할 수 있습니다."),
     TICKET_ONLY_CAN_BE_OPENED_BY_MANAGERS(BAD_REQUEST, 4402, "티켓 열람은 매니저와 호스트만 가능합니다."),
     //카카오 api 관련 오류(4300 ~ 4349)
-    KAKAO_API_PARSING_ERROR(BAD_REQUEST, 4300, "카카오로부터 얻어온 데이터 파싱에서 오류가 발생했습니다");
+    KAKAO_API_PARSING_ERROR(BAD_REQUEST, 4300, "카카오로부터 얻어온 데이터 파싱에서 오류가 발생했습니다"),
+
+    //매니저 관련 오류(4350 ~ 4399)
+    MANAGER_NOT_FOUND(NOT_FOUND, 4350, "존재하지 않는 매니저입니다."),
+    MANAGER_ALREADY_EXISTS(BAD_REQUEST, 4351, "이미 존재하는 매니저입니다."),
+    MANAGER_ONLY_CAN_BE_TOUCHED_BY_PROMOTION_WRITER(FORBIDDEN, 4352, "프로모션 작성자만 매니저를 관리할 수 있습니다."),
+    MANAGER_ONLY_CAN_BE_TOUCHED_BY_SELF(FORBIDDEN, 4353, "매니저 본인만 접근할 수 있습니다.");
 
     private final HttpStatus httpStatus;
     private final Integer code;
