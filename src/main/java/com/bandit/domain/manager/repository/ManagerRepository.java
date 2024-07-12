@@ -14,5 +14,7 @@ public interface ManagerRepository extends JpaRepository<Manager, Long> {
     boolean existsByPromotionAndMember(Promotion promotion, Member member);
     List<Manager> findByPromotionId(Long promotionId);
     Optional<Manager> findByPromotionIdAndMember(Long promotionId, Member member);
+
+    void deleteByPromotionId(Long promotionId);
 }
 

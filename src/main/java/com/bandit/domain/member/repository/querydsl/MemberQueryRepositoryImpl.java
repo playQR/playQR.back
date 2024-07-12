@@ -10,6 +10,7 @@ import static com.bandit.domain.comment.entity.QComment.comment;
 import static com.bandit.domain.image.entity.QImage.image;
 import static com.bandit.domain.like.entity.QLikeMusic.likeMusic;
 import static com.bandit.domain.like.entity.QLikePromotion.likePromotion;
+import static com.bandit.domain.manager.entity.QManager.manager;
 import static com.bandit.domain.ticket.entity.QGuest.guest;
 
 @RequiredArgsConstructor
@@ -27,7 +28,7 @@ public class MemberQueryRepositoryImpl implements MemberQueryRepository{
         //likePromotion
         queryFactory.delete(likePromotion).where(likePromotion.member.eq(member)).execute();
         //manager
-
+        queryFactory.delete(manager).where(manager.member.eq(member)).execute();
         //comment
         queryFactory.delete(comment).where(comment.writer.eq(member)).execute();
         //Member
