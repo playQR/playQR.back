@@ -7,4 +7,6 @@ import java.util.List;
 public interface ManagerQueryService {
 
     List<Member> getManagers(Long promotionId);
+
+    boolean isManager(Long promotionId, Member member);
 }
