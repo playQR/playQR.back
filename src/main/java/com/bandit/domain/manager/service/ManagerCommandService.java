@@ -6,4 +6,5 @@ public interface ManagerCommandService {
 
     void createManager(Long promotionId,  Member member);
     void deleteManager(Long promotionId,  Member member);
+
 }

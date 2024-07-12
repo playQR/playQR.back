@@ -2,6 +2,7 @@ package com.bandit.domain.manager.entity;
 
 import com.bandit.domain.board.entity.Promotion;
 
+
 import com.bandit.domain.member.entity.Member;
 import jakarta.persistence.*;
 import lombok.AccessLevel;

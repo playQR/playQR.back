@@ -1,6 +1,5 @@
 package com.bandit.domain.manager.repository;
 
-
 import com.bandit.domain.board.entity.Promotion;
 import com.bandit.domain.manager.entity.Manager;
 import com.bandit.domain.member.entity.Member;
@@ -14,5 +13,6 @@ public interface ManagerRepository extends JpaRepository<Manager, Long> {
     Optional<Manager> findByPromotionAndMember(Promotion promotion, Member member);
 
     List<Manager> findByPromotion(Promotion promotion);
+
 }
 
