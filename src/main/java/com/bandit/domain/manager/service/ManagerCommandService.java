@@ -4,7 +4,7 @@ import com.bandit.domain.member.entity.Member;
 
 public interface ManagerCommandService {
 
-    void createManager(Long promotionId,  Member member);
+    Long createManager(Long promotionId,  Member member);
     void deleteManager(Long promotionId,  Member member);
 
 

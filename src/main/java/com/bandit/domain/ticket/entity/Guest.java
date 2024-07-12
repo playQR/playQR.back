@@ -44,9 +44,6 @@ public class Guest extends BaseTimeEntity {
 
     private Boolean isApproved;
 
-    private Boolean isReservationCancelled;
-
-    private Boolean isReservationConfirmed;
 
     public static Guest of(Promotion promotion, Member member, GuestRequest request) {
         return Guest.builder()
@@ -72,22 +69,5 @@ public class Guest extends BaseTimeEntity {
 
     public void approve() {
         this.isApproved = true;
-    }
-    public void completeEntrance() {
-        this.isEntered = true;
-    }
-
-    public void cancelReservation() {
-        if (this.isEntered) {
-            throw new IllegalStateException("Cannot cancel reservation after entrance is completed");
-        }
-        this.isReservationCancelled = true;
-    }
-
-    public void confirmReservation() {
-        if (this.isReservationCancelled) {
-            throw new IllegalStateException("Cannot confirm a cancelled reservation");
-        }
-        this.isReservationConfirmed = true;
     }
 }
