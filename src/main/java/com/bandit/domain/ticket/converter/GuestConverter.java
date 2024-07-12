@@ -9,6 +9,8 @@ import org.springframework.data.domain.Page;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static com.bandit.domain.ticket.dto.guest.ReservationStatus.getStatus;
+
 
 public class GuestConverter {
     public static GuestViewDto toViewDto(Guest guest) {
@@ -17,6 +19,8 @@ public class GuestConverter {
                 .name(guest.getName())
                 .depositDate(guest.getDepositDate())
                 .isEntranced(guest.getIsEntered())
+                .isApproved(guest.getIsApproved())
+                .reservationStatus(getStatus(guest))
                 .reservationCount(guest.getReservationCount())
                 .writer(MemberConverter.toResponse(guest.getMember()))
                 .build();

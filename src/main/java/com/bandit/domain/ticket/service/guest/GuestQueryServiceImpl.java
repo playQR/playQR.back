@@ -3,7 +3,7 @@ package com.bandit.domain.ticket.service.guest;
 import com.bandit.domain.board.entity.Promotion;
 import com.bandit.domain.board.repository.PromotionRepository;
 import com.bandit.domain.member.entity.Member;
-import com.bandit.domain.ticket.dto.guest.GuestResponse.ReservationViewDto;
+import com.bandit.domain.ticket.dto.guest.GuestResponse.PromotionReservationDto;
 import com.bandit.domain.ticket.entity.Guest;
 import com.bandit.domain.ticket.repository.GuestRepository;
 import com.bandit.presentation.payload.code.ErrorStatus;
@@ -47,14 +47,14 @@ public class GuestQueryServiceImpl implements GuestQueryService{
     }
 
     @Override
-    public ReservationViewDto getReservationInfo(Long promotionId) {
+    public PromotionReservationDto getReservationInfo(Long promotionId) {
         Promotion promotion = promotionRepository.findById(promotionId)
                 .orElseThrow(() -> new PromotionHandler(ErrorStatus.PROMOTION_NOT_FOUND));
         return builderReservationDto(promotionId, promotion);
     }
 
-    private ReservationViewDto builderReservationDto(Long promotionId, Promotion promotion) {
-        return ReservationViewDto.builder()
+    private PromotionReservationDto builderReservationDto(Long promotionId, Promotion promotion) {
+        return PromotionReservationDto.builder()
                 .currentCount(guestRepository.findTotalReservationCountByPromotionId(promotionId))
                 .maxAudience(promotion.getMaxAudience())
                 .promotionId(promotion.getId())

@@ -9,7 +9,7 @@ import com.bandit.domain.ticket.converter.GuestConverter;
 import com.bandit.domain.ticket.dto.guest.GuestRequest;
 import com.bandit.domain.ticket.dto.guest.GuestResponse;
 import com.bandit.domain.ticket.dto.guest.GuestResponse.GuestListDto;
-import com.bandit.domain.ticket.dto.guest.GuestResponse.ReservationViewDto;
+import com.bandit.domain.ticket.dto.guest.GuestResponse.PromotionReservationDto;
 import com.bandit.domain.ticket.entity.Guest;
 import com.bandit.domain.ticket.service.guest.GuestCommandService;
 import com.bandit.domain.ticket.service.guest.GuestQueryService;
@@ -54,6 +54,7 @@ public class GuestApiController {
         Long guestId = guestCommandService.createGuest(promotionId, member, request);
         return ApiResponseDto.onSuccess(guestId);
     }
+
     @Operation(summary = "게스트 입장 🔑", description = "프로모션의 티켓 uuid를 통해 게스트를 입장 처리해줍니다.")
     @ApiErrorCodeExample(value = {
             ErrorStatus.TICKET_NOT_FOUND,
@@ -86,7 +87,7 @@ public class GuestApiController {
     }, status = AUTH)
     @DeleteMapping("/{guestId}")
     public ApiResponseDto<Boolean> deleteGuest(@PathVariable Long guestId,
-                                            @AuthUser Member member) {
+                                               @AuthUser Member member) {
         guestCommandService.deleteGuest(guestId, member);
         return ApiResponseDto.onSuccess(true);
     }
@@ -156,7 +157,7 @@ public class GuestApiController {
     @Operation(summary = "프로모션 예약 현황조회", description = "프로모션의 예매 현황을 알려줍니다.")
     @ApiErrorCodeExample({ErrorStatus.PROMOTION_NOT_FOUND})
     @GetMapping("/{promotionId}/reservation/count")
-    public ApiResponseDto<ReservationViewDto> getReservationInfo(@PathVariable Long promotionId) {
+    public ApiResponseDto<PromotionReservationDto> getReservationInfoAsPromotion(@PathVariable Long promotionId) {
         return ApiResponseDto.onSuccess(guestQueryService.getReservationInfo(promotionId));
     }
 }

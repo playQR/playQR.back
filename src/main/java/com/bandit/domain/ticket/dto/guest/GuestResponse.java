@@ -20,6 +20,8 @@ public class GuestResponse {
         private String name;
         private int reservationCount;
         private Boolean isEntranced;
+        private Boolean isApproved;
+        private ReservationStatus reservationStatus;
         private LocalDate depositDate;
         private MemberResponse writer;
     }
@@ -36,7 +38,16 @@ public class GuestResponse {
     @Builder
     @NoArgsConstructor
     @AllArgsConstructor
-    public static class ReservationViewDto {
+    public static class PromotionReservationDto {
+        private Long promotionId;
+        private Integer currentCount;
+        private Integer maxAudience;
+    }
+    @Data
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class GuestReservationDto {
         private Long promotionId;
         private Integer currentCount;
         private Integer maxAudience;
