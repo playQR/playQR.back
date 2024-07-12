@@ -69,6 +69,7 @@ public enum ErrorStatus implements BaseCode{
     MANAGER_ONLY_CAN_BE_TOUCHED_BY_SELF(FORBIDDEN, 4353, "매니저 본인만 접근할 수 있습니다.");
 
 
+
     private final HttpStatus httpStatus;
     private final Integer code;
     private final String message;
