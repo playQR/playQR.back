@@ -69,13 +69,6 @@ public enum ErrorStatus implements BaseCode{
     MANAGER_ONLY_CAN_BE_TOUCHED_BY_SELF(FORBIDDEN, 4353, "매니저 본인만 접근할 수 있습니다.");
 
 
-<<<<<<< HEAD
-=======
-    //매니저 관련 오류(4301 ~ 4350)
-    MANAGER_NOT_FOUND(NOT_FOUND, 4301, "존재하지 않는 매니저입니다."),
-    MANAGER_ALREADY_EXISTS(BAD_REQUEST, 4302, "이미 존재하는 매니저입니다.");
->>>>>>> 72d2028 ( #54 Resolve merge conflict)
-
     private final HttpStatus httpStatus;
     private final Integer code;
     private final String message;

@@ -7,6 +7,7 @@ import com.bandit.domain.comment.repository.CommentRepository;
 import com.bandit.domain.image.entity.Image;
 import com.bandit.domain.image.repository.ImageRepository;
 import com.bandit.domain.like.repository.LikePromotionRepository;
+import com.bandit.domain.manager.repository.ManagerRepository;
 import com.bandit.domain.member.entity.Member;
 import com.bandit.domain.music.entity.Music;
 import com.bandit.domain.music.repository.MusicRepository;
@@ -38,6 +39,7 @@ public class PromotionCommandServiceImpl implements PromotionCommandService {
     private final TicketRepository ticketRepository;
     private final CommentRepository commentRepository;
     private final LikePromotionRepository likePromotionRepository;
+    private final ManagerRepository managerRepository;
     private final AwsS3Service awsS3Service;
 
     @Override
@@ -88,6 +90,7 @@ public class PromotionCommandServiceImpl implements PromotionCommandService {
         commentRepository.deleteByPromotionId(promotionId);
         musicRepository.deleteWithRelations(promotionId);
         likePromotionRepository.deleteByPromotionId(promotionId);
+        managerRepository.deleteByPromotionId(promotionId);
         promotionRepository.delete(removePromotion);
     }
 
