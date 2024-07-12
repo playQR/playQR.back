@@ -24,10 +24,10 @@ public class ManagerQueryServiceImpl implements ManagerQueryService {
 
     @Override
     public List<Member> getManagers(Long promotionId) {
-        Promotion promotion = promotionRepository.findById(promotionId)
-                .orElseThrow(() -> new ManagerHandler(ErrorStatus.PROMOTION_NOT_FOUND));
-        List<Manager> managers = managerRepository.findByPromotion(promotion);
-        return managers.stream().map(Manager::getMember).collect(Collectors.toList());
+        List<Manager> managers = managerRepository.findByPromotionId(promotionId);
+        return managers.stream()
+                .map(Manager::getMember)
+                .collect(Collectors.toList());
     }
 
 }
