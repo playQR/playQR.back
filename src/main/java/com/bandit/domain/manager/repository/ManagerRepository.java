@@ -1,5 +1,6 @@
 package com.bandit.domain.manager.repository;
 
+
 import com.bandit.domain.board.entity.Promotion;
 import com.bandit.domain.manager.entity.Manager;
 import com.bandit.domain.member.entity.Member;
