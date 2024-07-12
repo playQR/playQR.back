@@ -1,6 +1,7 @@
 package com.bandit.domain.manager.entity;
 
 import com.bandit.domain.board.entity.Board;
+import com.bandit.domain.board.entity.Promotion;
 import com.bandit.domain.member.entity.Member;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -21,16 +22,23 @@ public class Manager {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "promotion_id")
+    private Promotion promotion;
+
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id", nullable = false)
     private Member member;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "board_id", nullable = false)
-    private Board board;
-
-    public Manager(Member member, Board board) {
+    public Manager(Promotion promotion, Member member) {
+        this.promotion = promotion;
         this.member = member;
-        this.board = board;
+    }
+
+    public static Manager of(Promotion promotion, Member member) {
+        return Manager.builder()
+                .promotion(promotion)
+                .member(member)
+                .build();
     }
 
 }
