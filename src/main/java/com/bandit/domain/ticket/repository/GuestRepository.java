@@ -23,4 +23,5 @@ public interface GuestRepository extends JpaRepository<Guest, Long>, GuestQueryR
     void deleteByPromotionId(Long promotionId);
 
     boolean existsByPromotionIdAndMember(Long promotionId, Member member);
+
 }

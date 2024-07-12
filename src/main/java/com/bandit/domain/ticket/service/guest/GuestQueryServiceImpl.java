@@ -34,6 +34,12 @@ public class GuestQueryServiceImpl implements GuestQueryService{
     }
 
     @Override
+    public Guest findByPromotionAndMember(Promotion promotion, Member member) {
+        return guestRepository.findByMemberAndPromotion(member, promotion)
+                .orElseThrow(() -> new GuestHandler(ErrorStatus.GUEST_NOT_FOUND));
+    }
+
+    @Override
     public List<Guest> findGuestsByPromotionId(Long promotionId, Member member) {
         validateHost(promotionId, member);
         return guestRepository.findByPromotionId(promotionId);

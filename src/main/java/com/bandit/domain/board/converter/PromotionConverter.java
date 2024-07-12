@@ -1,12 +1,15 @@
 package com.bandit.domain.board.converter;
 
+import com.bandit.domain.board.dto.promotion.PromotionResponse.GuestPromotionSummaryDto;
 import com.bandit.domain.board.dto.promotion.PromotionResponse.PromotionDetailDto;
 import com.bandit.domain.board.dto.promotion.PromotionResponse.PromotionListDto;
 import com.bandit.domain.board.dto.promotion.PromotionResponse.PromotionSummaryDto;
 import com.bandit.domain.board.entity.Promotion;
 import com.bandit.domain.member.converter.MemberConverter;
-import com.bandit.global.util.ImageUtil;
 import com.bandit.domain.music.converter.MusicConverter;
+import com.bandit.domain.ticket.converter.GuestConverter;
+import com.bandit.domain.ticket.entity.Guest;
+import com.bandit.global.util.ImageUtil;
 import org.springframework.data.domain.Page;
 
 import java.util.stream.Collectors;
@@ -56,6 +59,14 @@ public class PromotionConverter {
                 .promotionList(paginationPromotion.getContent().stream()
                         .map(PromotionConverter::toSummaryDto)
                         .collect(Collectors.toList()))
+
+                .build();
+    }
+
+    public static GuestPromotionSummaryDto toGuestPromotionSummaryDto(Promotion promotion, Guest guest) {
+        return GuestPromotionSummaryDto.builder()
+                .promotion(toSummaryDto(promotion))
+                .guest(GuestConverter.toViewDto(guest))
                 .build();
     }
 }
