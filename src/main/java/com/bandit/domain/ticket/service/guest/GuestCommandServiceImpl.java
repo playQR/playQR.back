@@ -44,6 +44,14 @@ public class GuestCommandServiceImpl implements GuestCommandService {
         guest.entrance();
     }
 
+    @Override
+    public void approve(Long guestId, Member member) {
+        Guest guest = guestRepository.findById(guestId)
+                .orElseThrow(() -> new GuestHandler(ErrorStatus.GUEST_NOT_FOUND));
+        validateCreator(guest.getPromotion().getWriter(), member);
+        guest.approve();
+    }
+
     @Override       //TODO remove this method
     public Long updateGuest(Long guestId, Member member, GuestRequest request) {
         Guest guest = guestRepository.findById(guestId)
