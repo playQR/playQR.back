@@ -33,16 +33,12 @@ public class ManagerCommandServiceImpl implements ManagerCommandService {
             throw new ManagerHandler(ErrorStatus.MANAGER_ALREADY_EXISTS);
         }
 
-        Manager manager = Manager.of(promotion, member);
-        managerRepository.save(manager);
+        managerRepository.save(Manager.of(promotion, member));
     }
 
     @Override
     public void deleteManager(Long promotionId,  Member member) {
-        Promotion promotion = promotionRepository.findById(promotionId)
-                .orElseThrow(() -> new PromotionHandler(ErrorStatus.PROMOTION_NOT_FOUND));
-
-        Manager manager = managerRepository.findByPromotionAndMember(promotion, member)
+        Manager manager = managerRepository.findByPromotionIdAndMember(promotionId, member)
                 .orElseThrow(() -> new ManagerHandler(ErrorStatus.MANAGER_NOT_FOUND));
 
         managerRepository.delete(manager);
