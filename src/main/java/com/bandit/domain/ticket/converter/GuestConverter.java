@@ -18,8 +18,6 @@ public class GuestConverter {
                 .guestId(guest.getId())
                 .name(guest.getName())
                 .depositDate(guest.getDepositDate())
-                .isEntranced(guest.getIsEntered())
-                .isApproved(guest.getIsApproved())
                 .reservationStatus(getStatus(guest))
                 .reservationCount(guest.getReservationCount())
                 .writer(MemberConverter.toResponse(guest.getMember()))

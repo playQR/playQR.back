@@ -49,6 +49,7 @@ public class Guest extends BaseTimeEntity {
                 .promotion(promotion)
                 .member(member)
                 .isEntered(false)
+                .isApproved(false)
                 .name(request.getName())
                 .depositDate(request.getDepositDate())
                 .reservationCount(request.getReservationCount())
