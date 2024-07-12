@@ -24,7 +24,7 @@ public class ManagerCommandServiceImpl implements ManagerCommandService {
     private final GuestRepository guestRepository;
 
     @Override
-    public void createManager(Long promotionId, Member member) {
+    public Long createManager(Long promotionId, Member member) {
         Promotion promotion = promotionRepository.findById(promotionId)
                 .orElseThrow(() -> new PromotionHandler(ErrorStatus.PROMOTION_NOT_FOUND));
 
@@ -33,7 +33,8 @@ public class ManagerCommandServiceImpl implements ManagerCommandService {
             throw new ManagerHandler(ErrorStatus.MANAGER_ALREADY_EXISTS);
         }
 
-        managerRepository.save(Manager.of(promotion, member));
+        Manager save = managerRepository.save(Manager.of(promotion, member));
+        return save.getId();
     }
 
     @Override
@@ -56,7 +57,7 @@ public class ManagerCommandServiceImpl implements ManagerCommandService {
     public void cancelReservation(Long guestId, Member member) {
         Guest guest = guestRepository.findById(guestId)
                 .orElseThrow(() -> new IllegalArgumentException("Guest not found"));
-        guest.cancelReservation();
+//        guest.cancelReservation();
         guestRepository.save(guest);
     }
 
@@ -64,7 +65,7 @@ public class ManagerCommandServiceImpl implements ManagerCommandService {
     public void confirmReservation(Long guestId, Member member) {
         Guest guest = guestRepository.findById(guestId)
                 .orElseThrow(() -> new IllegalArgumentException("Guest not found"));
-        guest.confirmReservation();
+        guest.approve();
         guestRepository.save(guest);
     }
 }

@@ -2,7 +2,7 @@ package com.bandit.domain.ticket.service.guest;
 
 import com.bandit.domain.board.entity.Promotion;
 import com.bandit.domain.board.repository.PromotionRepository;
-import com.bandit.domain.manager.service.ManagerQueryService;
+import com.bandit.domain.manager.repository.ManagerRepository;
 import com.bandit.domain.member.entity.Member;
 import com.bandit.domain.ticket.dto.guest.GuestResponse.PromotionReservationDto;
 import com.bandit.domain.ticket.entity.Guest;
@@ -25,7 +25,7 @@ public class GuestQueryServiceImpl implements GuestQueryService{
 
     private final GuestRepository guestRepository;
     private final PromotionRepository promotionRepository;
-    private final ManagerQueryService managerQueryService;
+    private final ManagerRepository managerRepository;
 
     @Override
     public Guest findGuestById(Long guestId, Member member) {
@@ -73,7 +73,7 @@ public class GuestQueryServiceImpl implements GuestQueryService{
         Promotion promotion = promotionRepository.findById(promotionId)
                 .orElseThrow(() -> new PromotionHandler(ErrorStatus.PROMOTION_NOT_FOUND));
         boolean isHost = promotion.getWriter().equals(member);
-        boolean isManager = managerQueryService.isManager(promotionId, member);
+        boolean isManager = managerRepository.existsByPromotionAndMember(promotion, member);
 
         if (!isHost && !isManager) {
             throw new GuestHandler(ErrorStatus.GUEST_ONLY_CAN_BE_TOUCHED_BY_CREATOR);
