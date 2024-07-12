@@ -42,7 +42,6 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
     protected OAuth2User processOAuth2User(OAuth2User oAuth2User, OAuth2AccessToken oAuth2AccessToken) {
         //OAuth2 로그인 플랫폼 구분 과정 생략, 카카오에서 필요한 정보 가져오기(이메일)
         KakaoOAuth2User oAuth2UserInfo = OAuth2UserInfoFactory.getOAuth2UserInfo(oAuth2User.getAttributes());
-        log.info("nickname = {}",oAuth2UserInfo.getNickname());
         if (!StringUtils.hasText(oAuth2UserInfo.getEmail())) {
             throw new OAuth2Exception(ErrorStatus.AUTH_OAUTH2_EMAIL_NOT_FOUND_FROM_PROVIDER);
         }
@@ -58,6 +57,7 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
                 .username(generateRandomName(USERNAME))
                 .nickname(generateRandomName(NICKNAME))
                 .name(oAuth2UserInfo.getNickname())
+                .profileImg(oAuth2UserInfo.getProfileImg())
                 .role(Role.USER)           //회원가입시에만 guest로 두고 이후 사용에는 user로 돌린다
                 .build();
 
