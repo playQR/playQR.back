@@ -131,8 +131,7 @@ public class GuestApiController {
     }
 
     @Operation(summary = "게스트의 프로모션 페이징 조회 🔑", description = "로그인한 유저가 게스트로서 자신이 예매한 프로모션을 조회합니다.")
-    @ApiErrorCodeExample(
-            {ErrorStatus._INTERNAL_SERVER_ERROR})
+    @ApiErrorCodeExample(status = AUTH)
     @GetMapping("/guest/page")
     public ApiResponseDto<PromotionListDto> getPromotionsAsGuest(
             @AuthUser Member member,
@@ -142,9 +141,20 @@ public class GuestApiController {
         return ApiResponseDto.onSuccess(PromotionConverter.toListDto(promotionPage));
     }
 
+    @Operation(summary = "게스트 예매 승인 🔑", description = "로그인 한 호스트가 게스트의 예매 승인 처리를 합니다.")
+    @ApiErrorCodeExample(value = {
+            ErrorStatus.GUEST_NOT_FOUND,
+            ErrorStatus.GUEST_ONLY_CAN_BE_TOUCHED_BY_CREATOR
+    }, status = AUTH)
+    @PostMapping("/{guestId}/reservation/confirmation")
+    public ApiResponseDto<Boolean> confirmationReservation(@AuthUser Member member,
+                                                           @PathVariable Long guestId) {
+        guestCommandService.approve(guestId, member);
+        return ApiResponseDto.onSuccess(true);
+    }
+
     @Operation(summary = "프로모션 예약 현황조회", description = "프로모션의 예매 현황을 알려줍니다.")
-    @ApiErrorCodeExample(
-            {ErrorStatus._INTERNAL_SERVER_ERROR})
+    @ApiErrorCodeExample({ErrorStatus.PROMOTION_NOT_FOUND})
     @GetMapping("/{promotionId}/reservation/count")
     public ApiResponseDto<ReservationViewDto> getReservationInfo(@PathVariable Long promotionId) {
         return ApiResponseDto.onSuccess(guestQueryService.getReservationInfo(promotionId));
