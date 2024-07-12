@@ -13,6 +13,5 @@ public interface ManagerRepository extends JpaRepository<Manager, Long> {
     Optional<Manager> findByPromotionAndMember(Promotion promotion, Member member);
 
     List<Manager> findByPromotion(Promotion promotion);
-
 }
 
