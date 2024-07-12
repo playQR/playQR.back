@@ -2,6 +2,7 @@ package com.bandit.domain.board.dto.promotion;
 
 import com.bandit.domain.member.dto.MemberResponse;
 import com.bandit.domain.music.dto.MusicResponse;
+import com.bandit.domain.ticket.dto.guest.GuestResponse.GuestViewDto;
 import com.bandit.domain.ticket.dto.ticket.TicketResponse;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -60,6 +61,15 @@ public class PromotionResponse {
         private PromotionSummaryDto promotion;
         private TicketResponse ticket;
     }
+
+    @Data
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class GuestPromotionSummaryDto{
+        private PromotionSummaryDto promotion;
+        private GuestViewDto guest;
+    }
     @Data
     @Builder
     @NoArgsConstructor
@@ -73,6 +83,14 @@ public class PromotionResponse {
     @AllArgsConstructor
     public static class MyPromotionListDto{
         private List<MyPromotionSummaryDto> promotionList;
+        private long totalCount;
+    }
+    @Data
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class GuestPromotionListDto{
+        private List<GuestPromotionSummaryDto> promotionList;
         private long totalCount;
     }
 }
