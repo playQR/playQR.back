@@ -54,6 +54,7 @@ public enum ErrorStatus implements BaseCode{
     GUEST_RESERVATION_EXCEEDS_THE_AVAILABLE_CAPACITY(BAD_REQUEST,4202,"시도 중인 예약은 총 예약 정원을 초과하는 시도입니다"),
     GUEST_ALREADY_EXIST(BAD_REQUEST, 4203, "이미 존재하는 예매 내역입니다"),
     GUEST_ALREADY_ENTRNACED(BAD_REQUEST, 4204, "이미 입장처리 되었습니다"),
+    GUEST_RESERVATION_TYPE_IS_NOT_AVAILABLE(BAD_REQUEST, 4205, "잘못된 status입니다. 입장 처리 완료 & 호스트 승인 전 상황"),
     //티켓 관련 오류(4250 ~ 4299)
     TICKET_NOT_FOUND(NOT_FOUND, 4400, "존재하지 않는 티켓입니다."),
     TICKET_CAN_ONLY_BE_TOUCHED_BY_HOST_AND_MANAGERS(FORBIDDEN, 4401, "티켓은 호스트나 매니저만 접근할 수 있습니다."),

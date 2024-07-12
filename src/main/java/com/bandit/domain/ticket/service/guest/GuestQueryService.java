@@ -1,7 +1,7 @@
 package com.bandit.domain.ticket.service.guest;
 
 import com.bandit.domain.member.entity.Member;
-import com.bandit.domain.ticket.dto.guest.GuestResponse.ReservationViewDto;
+import com.bandit.domain.ticket.dto.guest.GuestResponse.PromotionReservationDto;
 import com.bandit.domain.ticket.entity.Guest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -16,5 +16,5 @@ public interface GuestQueryService {
 
     Page<Guest> findGuestsByPromotionId(Long promotionId, Member member, Pageable pageable);
 
-    ReservationViewDto getReservationInfo(Long promotionId);
+    PromotionReservationDto getReservationInfo(Long promotionId);
 }
