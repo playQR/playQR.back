@@ -42,6 +42,8 @@ public class Guest extends BaseTimeEntity {
 
     private Boolean isEntered;
 
+    private Boolean isApproved;
+
     public static Guest of(Promotion promotion, Member member, GuestRequest request) {
         return Guest.builder()
                 .promotion(promotion)
@@ -61,5 +63,9 @@ public class Guest extends BaseTimeEntity {
 
     public void entrance() {
         this.isEntered = true;
+    }
+
+    public void approve() {
+        this.isApproved = true;
     }
 }
