@@ -12,6 +12,7 @@ import com.bandit.presentation.payload.exception.GuestHandler;
 import com.bandit.presentation.payload.exception.PromotionHandler;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -59,6 +60,11 @@ public class GuestQueryServiceImpl implements GuestQueryService{
         Promotion promotion = promotionRepository.findById(promotionId)
                 .orElseThrow(() -> new PromotionHandler(ErrorStatus.PROMOTION_NOT_FOUND));
         return builderReservationDto(promotionId, promotion);
+    }
+
+    @Override
+    public Page<Guest> findGuestByMember(Member member, PageRequest pageable) {
+        return guestRepository.findAllByMember(member, pageable);
     }
 
     private PromotionReservationDto builderReservationDto(Long promotionId, Promotion promotion) {

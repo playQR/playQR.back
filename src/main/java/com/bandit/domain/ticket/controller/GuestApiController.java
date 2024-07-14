@@ -1,8 +1,7 @@
 package com.bandit.domain.ticket.controller;
 
 import com.bandit.domain.board.converter.PromotionConverter;
-import com.bandit.domain.board.dto.promotion.PromotionResponse.GuestPromotionSummaryDto;
-import com.bandit.domain.board.entity.Promotion;
+import com.bandit.domain.board.dto.promotion.PromotionResponse.GuestPromotionListDto;
 import com.bandit.domain.board.service.promotion.PromotionQueryService;
 import com.bandit.domain.member.entity.Member;
 import com.bandit.domain.ticket.converter.GuestConverter;
@@ -27,7 +26,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static com.bandit.global.annotation.api.PredefinedErrorStatus.AUTH;
@@ -135,19 +133,13 @@ public class GuestApiController {
     @Operation(summary = "게스트의 프로모션 페이징 조회 🔑", description = "로그인한 유저가 게스트로서 자신이 예매한 프로모션을 조회합니다.")
     @ApiErrorCodeExample(status = AUTH)
     @GetMapping("/guest/page")
-    public ApiResponseDto<List<GuestPromotionSummaryDto>> getPromotionsAsGuest(
+    public ApiResponseDto<GuestPromotionListDto> getPromotionsAsGuest(
             @AuthUser Member member,
             @RequestParam(defaultValue = "0") int currentPage) {
         //TODO QUERYDSL로 최적화하기
         PageRequest pageable = PageRequest.of(currentPage, PageUtil.PROMOTION_SIZE);
-        Page<Promotion> promotionPage = promotionQueryService.getPaginationPromotionAsGuest(member, pageable);
-        List<GuestPromotionSummaryDto> responseDtoList = new ArrayList<>();
-        promotionPage.getContent()
-                .forEach(promotion -> {
-                    Guest guest = guestQueryService.findByPromotionAndMember(promotion, member);
-                    responseDtoList.add(PromotionConverter.toGuestPromotionSummaryDto(promotion, guest));
-                });
-        return ApiResponseDto.onSuccess(responseDtoList);
+        Page<Guest> paginationGuest = guestQueryService.findGuestByMember(member, pageable);
+        return ApiResponseDto.onSuccess(PromotionConverter.toGuestPromotionListDto(paginationGuest));
     }
 
     @Operation(summary = "게스트 예매 승인 🔑", description = "로그인 한 호스트가 게스트의 예매 승인 처리를 합니다.")

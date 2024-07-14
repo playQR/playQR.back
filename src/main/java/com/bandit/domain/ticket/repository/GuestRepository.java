@@ -5,6 +5,7 @@ import com.bandit.domain.member.entity.Member;
 import com.bandit.domain.ticket.entity.Guest;
 import com.bandit.domain.ticket.repository.querydsl.GuestQueryRepository;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
@@ -24,4 +25,5 @@ public interface GuestRepository extends JpaRepository<Guest, Long>, GuestQueryR
 
     boolean existsByPromotionIdAndMember(Long promotionId, Member member);
 
+    Page<Guest> findAllByMember(Member member, PageRequest pageable);
 }

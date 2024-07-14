@@ -1,9 +1,6 @@
 package com.bandit.domain.board.converter;
 
-import com.bandit.domain.board.dto.promotion.PromotionResponse.GuestPromotionSummaryDto;
-import com.bandit.domain.board.dto.promotion.PromotionResponse.PromotionDetailDto;
-import com.bandit.domain.board.dto.promotion.PromotionResponse.PromotionListDto;
-import com.bandit.domain.board.dto.promotion.PromotionResponse.PromotionSummaryDto;
+import com.bandit.domain.board.dto.promotion.PromotionResponse.*;
 import com.bandit.domain.board.entity.Promotion;
 import com.bandit.domain.member.converter.MemberConverter;
 import com.bandit.domain.music.converter.MusicConverter;
@@ -63,10 +60,18 @@ public class PromotionConverter {
                 .build();
     }
 
-    public static GuestPromotionSummaryDto toGuestPromotionSummaryDto(Promotion promotion, Guest guest) {
+    public static GuestPromotionSummaryDto toGuestPromotionSummaryDto(Guest guest) {
         return GuestPromotionSummaryDto.builder()
-                .promotion(toSummaryDto(promotion))
+                .promotion(toSummaryDto(guest.getPromotion()))
                 .guest(GuestConverter.toViewDto(guest))
+                .build();
+    }
+    public static GuestPromotionListDto toGuestPromotionListDto(Page<Guest> paginationGuest) {
+        return GuestPromotionListDto.builder()
+                .promotionList(paginationGuest.getContent().stream()
+                        .map(PromotionConverter::toGuestPromotionSummaryDto)
+                        .collect(Collectors.toList()))
+                .totalCount(paginationGuest.getTotalElements())
                 .build();
     }
 }
