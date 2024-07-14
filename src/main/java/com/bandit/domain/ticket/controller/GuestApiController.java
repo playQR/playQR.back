@@ -126,8 +126,8 @@ public class GuestApiController {
     public ApiResponseDto<GuestListDto> getGuestsByPromotionIdPaged(
             @PathVariable Long promotionId,
             @AuthUser Member member,
-            @RequestParam(defaultValue = "0") int page) {
-        PageRequest pageable = PageRequest.of(page, PageUtil.GUEST_SIZE);
+            @RequestParam(defaultValue = "0") int currentPage) {
+        PageRequest pageable = PageRequest.of(currentPage, PageUtil.GUEST_SIZE);
         Page<Guest> guestPage = guestQueryService.findGuestsByPromotionId(promotionId, member, pageable);
         return ApiResponseDto.onSuccess(GuestConverter.toListDto(guestPage));
     }
@@ -137,9 +137,9 @@ public class GuestApiController {
     @GetMapping("/guest/page")
     public ApiResponseDto<List<GuestPromotionSummaryDto>> getPromotionsAsGuest(
             @AuthUser Member member,
-            @RequestParam(defaultValue = "0") int page) {
+            @RequestParam(defaultValue = "0") int currentPage) {
         //TODO QUERYDSL로 최적화하기
-        PageRequest pageable = PageRequest.of(page, PageUtil.PROMOTION_SIZE);
+        PageRequest pageable = PageRequest.of(currentPage, PageUtil.PROMOTION_SIZE);
         Page<Promotion> promotionPage = promotionQueryService.getPaginationPromotionAsGuest(member, pageable);
         List<GuestPromotionSummaryDto> responseDtoList = new ArrayList<>();
         promotionPage.getContent()
