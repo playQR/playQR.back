@@ -79,15 +79,26 @@ public class GuestApiController {
         return ApiResponseDto.onSuccess(guestCommandService.updateGuest(guestId, member, request));
     }
 
-    @Operation(summary = "게스트 삭제 🔑", description = "게스트 ID를 받아 해당 게스트를 삭제합니다.")
+    @Operation(summary = "호스트의 게스트 강제 삭제 🔑", description = "호스트가 게스트 ID를 받아 해당 게스트(예약)를 삭제합니다.")
+    @ApiErrorCodeExample(value = {
+            ErrorStatus.GUEST_NOT_FOUND,
+            ErrorStatus.GUEST_NOT_AUTHORIZED_AS_HOST
+    }, status = AUTH)
+    @DeleteMapping("/host/{guestId}")
+    public ApiResponseDto<Boolean> deleteGuest(@PathVariable Long guestId,
+                                               @AuthUser Member member) {
+        guestCommandService.deleteGuestByHost(guestId, member);
+        return ApiResponseDto.onSuccess(true);
+    }
+    @Operation(summary = "게스트의 게스트 삭제 🔑", description = "게스트 ID를 받아 게스트 자기자신이 해당 게스트(예약)를 삭제합니다.")
     @ApiErrorCodeExample(value = {
             ErrorStatus.GUEST_NOT_FOUND,
             ErrorStatus.GUEST_ONLY_CAN_BE_TOUCHED_BY_CREATOR
     }, status = AUTH)
-    @DeleteMapping("/{guestId}")
-    public ApiResponseDto<Boolean> deleteGuest(@PathVariable Long guestId,
-                                               @AuthUser Member member) {
-        guestCommandService.deleteGuest(guestId, member);
+    @DeleteMapping("/guest/{guestId}")
+    public ApiResponseDto<Boolean> deleteGuestByMyself(@PathVariable Long guestId,
+                                                       @AuthUser Member member) {
+        guestCommandService.deleteGuestByMyself(guestId, member);
         return ApiResponseDto.onSuccess(true);
     }
 

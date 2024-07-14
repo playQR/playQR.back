@@ -56,7 +56,6 @@ public class GuestCommandServiceImpl implements GuestCommandService {
     public Long updateGuest(Long guestId, Member member, GuestRequest request) {
         Guest guest = guestRepository.findById(guestId)
                 .orElseThrow(() -> new GuestHandler(ErrorStatus.GUEST_NOT_FOUND));
-
         validateCreator(guest.getMember(), member);
 
         guest.updateGuestDetails(request);
@@ -64,7 +63,17 @@ public class GuestCommandServiceImpl implements GuestCommandService {
     }
 
     @Override
-    public void deleteGuest(Long guestId, Member member) {
+    public void deleteGuestByHost(Long guestId, Member member) {
+        Guest guest = guestRepository.findById(guestId)
+                .orElseThrow(() -> new GuestHandler(ErrorStatus.GUEST_NOT_FOUND));
+        validateHost(guest, member);
+
+        guestRepository.delete(guest);
+    }
+
+
+    @Override
+    public void deleteGuestByMyself(Long guestId, Member member) {
         Guest guest = guestRepository.findById(guestId)
                 .orElseThrow(() -> new GuestHandler(ErrorStatus.GUEST_NOT_FOUND));
         validateCreator(guest.getMember(), member);
@@ -94,6 +103,12 @@ public class GuestCommandServiceImpl implements GuestCommandService {
     private static void validateEntrance(Guest guest) {
         if (guest.getIsEntered()) {
             throw new GuestHandler(ErrorStatus.GUEST_ALREADY_ENTRNACED);
+        }
+    }
+
+    private void validateHost(Guest guest, Member member) {
+        if (!guest.getPromotion().getWriter().equals(member)) {
+            throw new GuestHandler(ErrorStatus.GUEST_NOT_AUTHORIZED_AS_HOST);
         }
     }
 }
