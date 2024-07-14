@@ -11,5 +11,7 @@ public interface GuestCommandService {
 
     void approve(Long guestId, Member member);
     Long updateGuest(Long guestId, Member member, GuestRequest request);
-    void deleteGuest(Long guestId, Member member);
+    void deleteGuestByHost(Long guestId, Member member);
+
+    void deleteGuestByMyself(Long guestId, Member member);
 }
