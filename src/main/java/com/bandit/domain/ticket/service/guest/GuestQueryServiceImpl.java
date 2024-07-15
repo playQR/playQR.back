@@ -67,6 +67,11 @@ public class GuestQueryServiceImpl implements GuestQueryService{
         return guestRepository.findAllByMember(member, pageable);
     }
 
+    @Override
+    public Boolean checkReservation(Long promotionId, Member member) {
+        return guestRepository.existsByPromotionIdAndMember(promotionId, member);
+    }
+
     private PromotionReservationDto builderReservationDto(Long promotionId, Promotion promotion) {
         return PromotionReservationDto.builder()
                 .currentCount(guestRepository.findTotalReservationCountByPromotionId(promotionId))

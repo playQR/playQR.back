@@ -171,4 +171,13 @@ public class GuestApiController {
     public ApiResponseDto<PromotionReservationDto> getReservationInfoAsPromotion(@PathVariable Long promotionId) {
         return ApiResponseDto.onSuccess(guestQueryService.getReservationInfo(promotionId));
     }
+
+    @Operation(summary = "게스트 프로모션 예약 체크🔑", description = "로그인한 유저가 해당 프로모션을 예약했는지 확인합니다.(낱개)")
+    @ApiErrorCodeExample(status = AUTH)
+    @GetMapping("/{promotionId}/reservation/check")
+    public ApiResponseDto<Boolean> checkReservationOfPromotion(@AuthUser Member member,
+                                                               @PathVariable Long promotionId) {
+        return ApiResponseDto.onSuccess(guestQueryService.checkReservation(promotionId, member));
+    }
+
 }
