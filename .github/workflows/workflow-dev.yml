@@ -3,7 +3,7 @@ name: play-barcode dev CI/CD
 on:
   push:
     branches:
-      - prod
+      - dev
 
 jobs:
   build:
