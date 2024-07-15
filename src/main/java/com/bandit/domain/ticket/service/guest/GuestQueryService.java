@@ -23,4 +23,6 @@ public interface GuestQueryService {
     PromotionReservationDto getReservationInfo(Long promotionId);
 
     Page<Guest> findGuestByMember(Member member, PageRequest pageable);
+
+    Boolean checkReservation(Long promotionId, Member member);
 }
