@@ -31,7 +31,7 @@ jobs:
         uses: aws-actions/amazon-ecr-login@v2
 
       - name: Build with Gradle & Upload Image to ECR
-        run: ./gradlew -Pdev clean jib
+        run: ./gradlew -Pprod clean jib
 
       - name: Get current time
         uses: josStorer/get-current-time@v2
