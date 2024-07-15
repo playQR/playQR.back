@@ -1,6 +1,7 @@
 package com.bandit.domain.board.controller;
 
 import com.bandit.domain.board.converter.PromotionConverter;
+import com.bandit.domain.board.dto.promotion.BankType;
 import com.bandit.domain.board.dto.promotion.PromotionRequest;
 import com.bandit.domain.board.dto.promotion.PromotionResponse.PromotionListDto;
 import com.bandit.domain.board.service.promotion.PromotionCommandService;
@@ -21,6 +22,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -139,5 +141,12 @@ public class PromotionApiController {
                                                    @PathVariable Long promotionId) {
         promotionCommandService.removePromotion(member, promotionId);
         return ApiResponseDto.onSuccess(true);
+    }
+
+    @Operation(summary = "은행 종류 조회", description = "입력할 은행의 종류를 모두 조회합니다")
+    @ApiErrorCodeExample
+    @GetMapping("/bank/type")
+    public ApiResponseDto<List<BankType>> getBankTypeList() {
+        return ApiResponseDto.onSuccess(Arrays.stream(BankType.values()).toList());
     }
 }
