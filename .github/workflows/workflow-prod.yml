@@ -53,8 +53,8 @@ jobs:
         with:
           aws_access_key: ${{ secrets.PROD_AWS_ACCESS_KEY_ID }}
           aws_secret_key: ${{ secrets.PROD_AWS_SECRET_ACCESS_KEY }}
-          application_name: playqr-prod
-          environment_name: playqr-prod-env
+          application_name: play-qr
+          environment_name: play-qr-env
           version_label: play-qr-${{steps.current-time.outputs.formattedTime}}
           region: ${{ secrets.PROD_AWS_REGION }}
           deployment_package: deploy/deploy.zip
