@@ -27,7 +27,7 @@ import java.util.List;
 
 import static org.springframework.security.web.util.matcher.AntPathRequestMatcher.antMatcher;
 
-@Profile({"local","dev"})
+@Profile({"local","dev", "prod"})
 @RequiredArgsConstructor
 @Configuration
 @EnableWebSecurity
