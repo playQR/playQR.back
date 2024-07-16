@@ -11,7 +11,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 
 @Slf4j
-@Profile({"local","dev"})
+@Profile({"local", "dev", "prod"})
 @Configuration
 public class AmazonS3Config {
     @Value("${cloud.aws.credentials.access-key}")
