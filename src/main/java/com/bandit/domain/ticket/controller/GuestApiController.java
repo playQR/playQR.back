@@ -2,7 +2,6 @@ package com.bandit.domain.ticket.controller;
 
 import com.bandit.domain.board.converter.PromotionConverter;
 import com.bandit.domain.board.dto.promotion.PromotionResponse.GuestPromotionListDto;
-import com.bandit.domain.board.service.promotion.PromotionQueryService;
 import com.bandit.domain.member.entity.Member;
 import com.bandit.domain.ticket.converter.GuestConverter;
 import com.bandit.domain.ticket.dto.guest.GuestRequest;
@@ -39,7 +38,6 @@ public class GuestApiController {
 
     private final GuestCommandService guestCommandService;
     private final GuestQueryService guestQueryService;
-    private final PromotionQueryService promotionQueryService;
 
     @Operation(summary = "게스트 생성 🔑", description = "프로모션 ID와 멤버 정보, 이름을 받아 새로운 게스트를 생성합니다.")
     @ApiErrorCodeExample(value = {
@@ -114,7 +112,7 @@ public class GuestApiController {
         return ApiResponseDto.onSuccess(GuestConverter.toViewDto(guestQueryService.findGuestById(guestId, member)));
     }
 
-    @Operation(summary = "프로모션 ID로 게스트 조회 🔑", description = "프로모션 ID를 받아 해당 프로모션에 속한 모든 게스트 정보를 조회합니다.")
+    @Operation(summary = "프로모션 ID로 게스트 조회(host) 🔑", description = "프로모션 ID를 받아 해당 프로모션에 속한 모든 게스트 정보를 조회합니다.")
     @ApiErrorCodeExample(value = {
             ErrorStatus.PROMOTION_NOT_FOUND,
             ErrorStatus.GUEST_ONLY_CAN_BE_TOUCHED_BY_CREATOR
@@ -126,7 +124,7 @@ public class GuestApiController {
         return ApiResponseDto.onSuccess(GuestConverter.toListDto(guests));
     }
 
-    @Operation(summary = "프로모션 ID로 게스트 페이징 조회 🔑", description = "프로모션 ID를 받아 해당 프로모션에 속한 게스트 정보를 페이지별로 조회합니다.")
+    @Operation(summary = "프로모션 ID로 게스트 페이징 조회(host) 🔑", description = "프로모션 ID를 받아 해당 프로모션에 속한 게스트 정보를 페이지별로 조회합니다.")
     @ApiErrorCodeExample(value = {
             ErrorStatus.PROMOTION_NOT_FOUND,
             ErrorStatus.GUEST_ONLY_CAN_BE_TOUCHED_BY_CREATOR
@@ -141,7 +139,7 @@ public class GuestApiController {
         return ApiResponseDto.onSuccess(GuestConverter.toListDto(guestPage));
     }
 
-    @Operation(summary = "게스트의 프로모션 페이징 조회 🔑", description = "로그인한 유저가 게스트로서 자신이 예매한 프로모션을 조회합니다.")
+    @Operation(summary = "게스트의 프로모션 페이징 조회(guest) 🔑", description = "로그인한 유저가 게스트로서 자신이 예매한 프로모션을 조회합니다.")
     @ApiErrorCodeExample(status = AUTH)
     @GetMapping("/guest/page")
     public ApiResponseDto<GuestPromotionListDto> getPromotionsAsGuest(
