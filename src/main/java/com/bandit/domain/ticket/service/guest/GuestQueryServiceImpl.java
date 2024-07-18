@@ -32,14 +32,8 @@ public class GuestQueryServiceImpl implements GuestQueryService{
     public Guest findGuestById(Long guestId, Member member) {
         Guest guest = guestRepository.findById(guestId)
                 .orElseThrow(() -> new GuestHandler(ErrorStatus.GUEST_NOT_FOUND));
-        validateHostOrManager(guest.getPromotion().getId(), member);
+        validateAccess(guest, member);
         return guest;
-    }
-
-    @Override
-    public Guest findByPromotionAndMember(Promotion promotion, Member member) {
-        return guestRepository.findByMemberAndPromotion(member, promotion)
-                .orElseThrow(() -> new GuestHandler(ErrorStatus.GUEST_NOT_FOUND));
     }
 
     @Override
@@ -89,5 +83,14 @@ public class GuestQueryServiceImpl implements GuestQueryService{
         if (!isHost && !isManager) {
             throw new GuestHandler(ErrorStatus.GUEST_ONLY_CAN_BE_TOUCHED_BY_CREATOR);
         }
+    }
+    private void validateAccess(Guest guest, Member member) {
+        boolean isHost = guest.getPromotion().getWriter().equals(member);
+        boolean isManager = managerRepository.existsByPromotionAndMember(guest.getPromotion(), member);
+        boolean isMine = guest.getMember().equals(member);
+        if (isHost || isManager || isMine) {
+            return;
+        }
+        throw new GuestHandler(ErrorStatus.GUEST_ONLY_CAN_BE_TOUCHED_BY_CREATOR);
     }
 }
