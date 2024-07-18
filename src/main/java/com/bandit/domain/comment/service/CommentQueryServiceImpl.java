@@ -8,6 +8,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 
 @RequiredArgsConstructor
 @Service
@@ -19,7 +21,7 @@ public class CommentQueryServiceImpl implements CommentQueryService{
     }
 
     @Override
-    public Page<Comment> getPaginationCommentsByWriter(Member member, Pageable pageable) {
-        return commentRepository.findByWriter(member, pageable);
+    public List<Comment> getPaginationCommentsByWriter(Member member) {
+        return commentRepository.findByWriter(member);
     }
 }
