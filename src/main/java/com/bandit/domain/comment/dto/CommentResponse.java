@@ -45,7 +45,5 @@ public class CommentResponse {
     @AllArgsConstructor
     public static class MyCommentListDto{
         private List<MyCommentViewDto> commentList;
-        private int nextPageParam;
-        private long totalCount;
     }
 }
