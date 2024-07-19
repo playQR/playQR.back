@@ -30,6 +30,7 @@ public class GuestCommandServiceImpl implements GuestCommandService {
         validateAlreadyBooked(promotionId, member);
         Promotion promotion = promotionRepository.findById(promotionId)
                 .orElseThrow(() -> new GuestHandler(ErrorStatus.PROMOTION_NOT_FOUND));
+        validateReserveMine(member, promotion);
         validateReservationCount(promotion, request.getReservationCount());
         return guestRepository.save(Guest.of(promotion, member, request)).getId();
     }
@@ -112,6 +113,12 @@ public class GuestCommandServiceImpl implements GuestCommandService {
     private void validateHost(Guest guest, Member member) {
         if (!guest.getPromotion().getWriter().equals(member)) {
             throw new GuestHandler(ErrorStatus.GUEST_NOT_AUTHORIZED_AS_HOST);
+        }
+    }
+
+    private static void validateReserveMine(Member member, Promotion promotion) {
+        if (promotion.getWriter().equals(member)) {
+            throw new GuestHandler(ErrorStatus.GUEST_HOST_CANNOT_RESERVE_MYSELF);
         }
     }
 }
