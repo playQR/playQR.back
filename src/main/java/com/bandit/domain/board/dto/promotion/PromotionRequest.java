@@ -17,6 +17,7 @@ import java.util.List;
 public class PromotionRequest {
     @Min(1)
     private int maxAudience;
+    @Min(0)
     private int entranceFee;
     private String content;
     private String title;
