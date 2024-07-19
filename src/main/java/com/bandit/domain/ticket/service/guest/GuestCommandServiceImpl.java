@@ -101,6 +101,9 @@ public class GuestCommandServiceImpl implements GuestCommandService {
     }
 
     private static void validateEntrance(Guest guest) {
+        if (!guest.getIsApproved()) {
+            throw new GuestHandler(ErrorStatus.GUEST_WAS_NOT_APPROVED);
+        }
         if (guest.getIsEntered()) {
             throw new GuestHandler(ErrorStatus.GUEST_ALREADY_ENTRNACED);
         }
