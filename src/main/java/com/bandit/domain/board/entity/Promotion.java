@@ -32,6 +32,8 @@ public class Promotion extends Board {
     private String bankName;
     private String account;
     private String accountHolder;
+    @Lob
+    @Column(columnDefinition = "LONGTEXT")
     private String refundInfo;
 
     @OneToOne(mappedBy = "promotion")
