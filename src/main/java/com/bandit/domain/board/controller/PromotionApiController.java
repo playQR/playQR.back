@@ -20,6 +20,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Arrays;
@@ -44,7 +45,7 @@ public class PromotionApiController {
     @ApiErrorCodeExample(status = AUTH)
     @PostMapping
     public ApiResponseDto<Long> createPromotion(@AuthUser Member member,
-                                                @RequestBody PromotionRequest promotionRequest) {
+                                                @RequestBody @Validated PromotionRequest promotionRequest) {
         List<String> imageList = promotionRequest.getImageList().stream()
                 .map(ImageUtil::removePrefix)
                 .filter(Objects::nonNull)
@@ -64,7 +65,7 @@ public class PromotionApiController {
     @PutMapping("/{promotionId}")
     public ApiResponseDto<Long> modifyPromotion(@AuthUser Member member,
                                                 @PathVariable Long promotionId,
-                                                @RequestBody PromotionRequest promotionRequest) {
+                                                @RequestBody @Validated PromotionRequest promotionRequest) {
         List<String> imageList = promotionRequest.getImageList().stream()
                 .map(ImageUtil::removePrefix)
                 .filter(Objects::nonNull)

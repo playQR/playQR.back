@@ -24,6 +24,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -48,7 +49,7 @@ public class GuestApiController {
     @PostMapping("/{promotionId}")
     public ApiResponseDto<Long> createGuest(
             @PathVariable Long promotionId,
-            @RequestBody GuestRequest request,
+            @RequestBody @Validated GuestRequest request,
             @AuthUser Member member) {
         Long guestId = guestCommandService.createGuest(promotionId, member, request);
         return ApiResponseDto.onSuccess(guestId);
