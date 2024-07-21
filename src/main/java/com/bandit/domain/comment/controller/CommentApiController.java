@@ -67,10 +67,8 @@ public class CommentApiController {
             ErrorStatus._INTERNAL_SERVER_ERROR
     })
     @GetMapping("/my")
-    public ApiResponseDto<MyCommentListDto> getMyComments(@AuthUser Member member,
-                                                          @RequestParam(defaultValue = "0") int currentPage) {
-        Pageable pageable = PageRequest.of(currentPage, PageUtil.COMMENT_SIZE);
-        return ApiResponseDto.onSuccess(CommentConverter.toMyListDto(
-                commentQueryService.getPaginationCommentsByWriter(member, pageable)));
+    public ApiResponseDto<MyCommentListDto> getMyComments(@AuthUser Member member) {
+        return ApiResponseDto.onSuccess(CommentConverter
+                .toMyListDto(commentQueryService.getPaginationCommentsByWriter(member)));
     }
 }

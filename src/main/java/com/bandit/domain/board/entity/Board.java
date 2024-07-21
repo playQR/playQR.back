@@ -33,7 +33,7 @@ public abstract class Board extends BaseTimeEntity {
 
 
     @Lob
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "LONGTEXT")
     protected String content;
 
     protected String title;

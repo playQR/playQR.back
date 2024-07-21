@@ -16,6 +16,16 @@ spring:
     active: ${spring.profiles.active}
     include: security
 
+  servlet:
+    multipart:
+      max-file-size: 5MB
+      max-request-size: 5MB
+
+server:
+  tomcat:
+    max-http-form-post-size: 5MB
+
+
 
 springdoc:
   swagger-ui:

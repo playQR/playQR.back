@@ -1,6 +1,7 @@
 package com.bandit.domain.board.dto.promotion;
 
 import com.bandit.domain.music.dto.MusicRequest;
+import jakarta.validation.constraints.Min;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -14,7 +15,9 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class PromotionRequest {
+    @Min(1)
     private int maxAudience;
+    @Min(0)
     private int entranceFee;
     private String content;
     private String title;

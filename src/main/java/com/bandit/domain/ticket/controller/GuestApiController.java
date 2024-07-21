@@ -24,6 +24,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -43,12 +44,15 @@ public class GuestApiController {
 
     @Operation(summary = "게스트 생성 🔑", description = "프로모션 ID와 멤버 정보, 이름을 받아 새로운 게스트를 생성합니다.")
     @ApiErrorCodeExample(value = {
-            ErrorStatus.PROMOTION_NOT_FOUND
+            ErrorStatus.PROMOTION_NOT_FOUND,
+            ErrorStatus.GUEST_ALREADY_EXIST,
+            ErrorStatus.GUEST_HOST_CANNOT_RESERVE_MYSELF,
+            ErrorStatus.GUEST_RESERVATION_EXCEEDS_THE_AVAILABLE_CAPACITY
     }, status = AUTH)
     @PostMapping("/{promotionId}")
     public ApiResponseDto<Long> createGuest(
             @PathVariable Long promotionId,
-            @RequestBody GuestRequest request,
+            @RequestBody @Validated GuestRequest request,
             @AuthUser Member member) {
         Long guestId = guestCommandService.createGuest(promotionId, member, request);
         return ApiResponseDto.onSuccess(guestId);
@@ -57,7 +61,9 @@ public class GuestApiController {
     @Operation(summary = "게스트 입장 🔑", description = "프로모션의 티켓 uuid를 통해 게스트를 입장 처리해줍니다.")
     @ApiErrorCodeExample(value = {
             ErrorStatus.TICKET_NOT_FOUND,
-            ErrorStatus.GUEST_NOT_FOUND
+            ErrorStatus.GUEST_NOT_FOUND,
+            ErrorStatus.GUEST_WAS_NOT_APPROVED,
+            ErrorStatus.GUEST_ALREADY_ENTRNACED
     }, status = AUTH)
     @PostMapping("/entrance")
     public ApiResponseDto<Boolean> entranceGuest(@RequestParam String uuid,

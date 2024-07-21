@@ -42,15 +42,13 @@ public class CommentConverter {
                 .totalCount(commentPage.getTotalElements())
                 .build();
     }
-    public static MyCommentListDto toMyListDto(Page<Comment> commentPage) {
+    public static MyCommentListDto toMyListDto(List<Comment> commentList) {
         //TODO custom for other field (request from front-end)
-        List<MyCommentViewDto> collect = commentPage.getContent().stream()
+        List<MyCommentViewDto> collect = commentList.stream()
                 .map(CommentConverter::toMyViewDto)
                 .collect(Collectors.toList());
         return MyCommentListDto.builder()
                 .commentList(collect)
-                .nextPageParam(PageUtil.getNextPageParam(commentPage))
-                .totalCount(commentPage.getTotalElements())
                 .build();
     }
 
