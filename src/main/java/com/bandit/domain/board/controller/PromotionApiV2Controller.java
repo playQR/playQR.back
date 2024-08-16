@@ -99,6 +99,56 @@ public class PromotionApiV2Controller {
         return ApiResponseDto.onSuccess(listDto);
     }
 
+    @Operation(summary = "프로모션 페이징 검색(비인증)", description = "프로모션을 키워드를 통해 조회합니다." +
+            "한페이지당 사이즈는 10개입니다.")
+    @ApiErrorCodeExample
+    @GetMapping("/search")
+    public ApiResponseDto<PromotionListDto> searchPromotionList(
+            @RequestParam(defaultValue = "0") int currentPage,
+            @RequestParam(required = false) String keyword) {
+        Pageable pageable = PageRequest.of(currentPage, PageUtil.PROMOTION_SIZE);
+        PromotionListDto listDto = PromotionConverter.toListDto(
+                promotionQueryService.searchPaginationPromotion(keyword, pageable)
+        );
+        listDto.getPromotionList().forEach(dto -> PromotionConverter.setPromotionLikeInDto(dto,
+                likePromotionQueryService.countLike(dto.getPromotionId()),
+                false));
+        return ApiResponseDto.onSuccess(listDto);
+    }
+    @Operation(summary = "프로모션 페이징 검색(인증🔑)", description = "프로모션을 키워드를 통해 조회합니다." +
+            "한페이지당 사이즈는 10개입니다.")
+    @ApiErrorCodeExample
+    @GetMapping("/search/auth")
+    public ApiResponseDto<PromotionListDto> searchPromotionList_auth(
+            @AuthUser Member member,
+            @RequestParam(defaultValue = "0") int currentPage,
+            @RequestParam(required = false) String keyword) {
+        Pageable pageable = PageRequest.of(currentPage, PageUtil.PROMOTION_SIZE);
+        PromotionListDto listDto = PromotionConverter.toListDto(
+                promotionQueryService.searchPaginationPromotion(keyword, pageable)
+        );
+        listDto.getPromotionList().forEach(dto -> PromotionConverter.setPromotionLikeInDto(dto,
+                likePromotionQueryService.countLike(dto.getPromotionId()),
+                likePromotionQueryService.isLiked(dto.getPromotionId(), member)));
+        return ApiResponseDto.onSuccess(listDto);
+    }
 
-
+    @Operation(summary = "마이 프로모션 페이징 조회 🔑", description = "사용자가 소유하는 프로모션을 페이징 조회합니다." +
+            "한페이지당 사이즈는 10개입니다.")
+    @ApiErrorCodeExample(value = {
+            ErrorStatus.PROMOTION_NOT_FOUND
+    }, status = AUTH)
+    @GetMapping("/my")
+    public ApiResponseDto<PromotionListDto> getMyPromotionList(
+            @AuthUser Member member,
+            @RequestParam(defaultValue = "0") int currentPage) {
+        Pageable pageable = PageRequest.of(currentPage, PageUtil.PROMOTION_SIZE);
+        PromotionListDto listDto = PromotionConverter.toListDto(
+                promotionQueryService.getMyPaginationPromotion(member, pageable)
+        );
+        listDto.getPromotionList().forEach(dto -> PromotionConverter.setPromotionLikeInDto(dto,
+                likePromotionQueryService.countLike(dto.getPromotionId()),
+                likePromotionQueryService.isLiked(dto.getPromotionId(), member)));
+        return ApiResponseDto.onSuccess(listDto);
+    }
 }
