@@ -1,7 +1,6 @@
 package com.bandit.domain.board.controller;
 
 import com.bandit.domain.board.converter.PromotionConverter;
-import com.bandit.domain.board.dto.promotion.PromotionResponse;
 import com.bandit.domain.board.dto.promotion.PromotionResponse.PromotionDetailDto;
 import com.bandit.domain.board.dto.promotion.PromotionResponse.PromotionListDto;
 import com.bandit.domain.board.service.promotion.PromotionCommandService;
@@ -19,9 +18,9 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
-@Tag(name = "Promotion API", description = "프로모션 API")
+@Tag(name = "Promotion API V2", description = "프로모션 API V2")
 @ApiResponse(responseCode = "2000", description = "성공")
-@RequestMapping("/api/promotions/v2")
+@RequestMapping("/api/v2/promotions")
 @RequiredArgsConstructor
 @RestController
 public class PromotionApiV2Controller {
@@ -43,8 +42,8 @@ public class PromotionApiV2Controller {
     @ApiErrorCodeExample({
             ErrorStatus.PROMOTION_NOT_FOUND
     })
-    @GetMapping("/{promotionId}")
-    public ApiResponseDto<PromotionDetailDto> getPromotionById(@PathVariable Long promotionId) {
+    @GetMapping("/{promotionId}/auth")
+    public ApiResponseDto<PromotionDetailDto> getPromotionById_auth(@PathVariable Long promotionId) {
         PromotionDetailDto detailDto = PromotionConverter.toDetailDto(promotionQueryService.getPromotionById(promotionId));
         likeMusicQueryService.countLike(detailDto);
         return ApiResponseDto.onSuccess(detailDto);
@@ -65,8 +64,8 @@ public class PromotionApiV2Controller {
     @Operation(summary = "프로모션 페이징 조회(인증🔑)", description = "프로모션의 리스트를 페이징을 통해 조회합니다." +
             "한페이지당 사이즈는 10개입니다.")
     @ApiErrorCodeExample
-    @GetMapping
-    public ApiResponseDto<PromotionListDto> getPromotionList(@RequestParam(defaultValue = "0") int currentPage) {
+    @GetMapping("/auth")
+    public ApiResponseDto<PromotionListDto> getPromotionList_auth(@RequestParam(defaultValue = "0") int currentPage) {
         Pageable pageable = PageRequest.of(currentPage, PageUtil.PROMOTION_SIZE);
         return ApiResponseDto.onSuccess(
                 PromotionConverter.toListDto(
