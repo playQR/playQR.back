@@ -3,7 +3,6 @@ package com.bandit.domain.board.controller;
 import com.bandit.domain.board.converter.PromotionConverter;
 import com.bandit.domain.board.dto.promotion.PromotionResponse.PromotionDetailDto;
 import com.bandit.domain.board.dto.promotion.PromotionResponse.PromotionListDto;
-import com.bandit.domain.board.service.promotion.PromotionCommandService;
 import com.bandit.domain.board.service.promotion.PromotionQueryService;
 import com.bandit.domain.like.service.like_music.LikeMusicQueryService;
 import com.bandit.domain.like.service.like_promotion.LikePromotionQueryService;
@@ -27,7 +26,6 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 @RestController
 public class PromotionApiV2Controller {
-    private final PromotionCommandService promotionCommandService;
     private final PromotionQueryService promotionQueryService;
     private final LikeMusicQueryService likeMusicQueryService;
     private final LikePromotionQueryService likePromotionQueryService;
@@ -38,7 +36,13 @@ public class PromotionApiV2Controller {
     })
     @GetMapping("/{promotionId}")
     public ApiResponseDto<PromotionDetailDto> getPromotionById(@PathVariable Long promotionId) {
-        PromotionDetailDto detailDto = PromotionConverter.toDetailDto(promotionQueryService.getPromotionById(promotionId));
+        PromotionDetailDto detailDto = PromotionConverter
+                .toDetailDto(promotionQueryService.getPromotionById(promotionId));
+        PromotionConverter.setPromotionLikeInDto(
+                detailDto,
+                likePromotionQueryService.countLike(promotionId),
+                false
+        );
         likeMusicQueryService.countLike(detailDto);
         return ApiResponseDto.onSuccess(detailDto);
     }
@@ -47,8 +51,16 @@ public class PromotionApiV2Controller {
             ErrorStatus.PROMOTION_NOT_FOUND
     })
     @GetMapping("/{promotionId}/auth")
-    public ApiResponseDto<PromotionDetailDto> getPromotionById_auth(@PathVariable Long promotionId) {
-        PromotionDetailDto detailDto = PromotionConverter.toDetailDto(promotionQueryService.getPromotionById(promotionId));
+    public ApiResponseDto<PromotionDetailDto> getPromotionById_auth(@AuthUser Member member,
+                                                                    @PathVariable Long promotionId) {
+        PromotionDetailDto detailDto = PromotionConverter
+                .toDetailDto(promotionQueryService.getPromotionById(promotionId));
+        PromotionConverter.setPromotionLikeInDto(
+                detailDto,
+                likePromotionQueryService.countLike(promotionId),
+                likePromotionQueryService.isLiked(promotionId, member)
+        );
+        likeMusicQueryService.isLiked(detailDto, member);
         likeMusicQueryService.countLike(detailDto);
         return ApiResponseDto.onSuccess(detailDto);
     }
