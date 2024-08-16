@@ -20,6 +20,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
+import static com.bandit.global.annotation.api.PredefinedErrorStatus.AUTH;
+
 @Tag(name = "Promotion API V2", description = "프로모션 API V2")
 @ApiResponse(responseCode = "2000", description = "성공")
 @RequestMapping("/api/v2/promotions")
@@ -46,10 +48,11 @@ public class PromotionApiV2Controller {
         likeMusicQueryService.countLike(detailDto);
         return ApiResponseDto.onSuccess(detailDto);
     }
+
     @Operation(summary = "프로모션 조회(인증🔑)", description = "로그인한 유저가 프로모션의 PK를 통해 글을 조회합니다.")
-    @ApiErrorCodeExample({
+    @ApiErrorCodeExample(value = {
             ErrorStatus.PROMOTION_NOT_FOUND
-    })
+    }, status = AUTH)
     @GetMapping("/{promotionId}/auth")
     public ApiResponseDto<PromotionDetailDto> getPromotionById_auth(@AuthUser Member member,
                                                                     @PathVariable Long promotionId) {
@@ -79,9 +82,10 @@ public class PromotionApiV2Controller {
                 false));
         return ApiResponseDto.onSuccess(listDto);
     }
+
     @Operation(summary = "프로모션 페이징 조회(인증🔑)", description = "프로모션의 리스트를 페이징을 통해 조회합니다." +
             "한페이지당 사이즈는 10개입니다.")
-    @ApiErrorCodeExample
+    @ApiErrorCodeExample(status = AUTH)
     @GetMapping("/auth")
     public ApiResponseDto<PromotionListDto> getPromotionList_auth(@AuthUser Member member,
                                                                   @RequestParam(defaultValue = "0") int currentPage) {
