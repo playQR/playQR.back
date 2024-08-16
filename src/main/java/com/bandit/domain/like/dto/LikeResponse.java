@@ -12,7 +12,8 @@ public class LikeResponse {
     @AllArgsConstructor
     public static class BoardLikeDto{
         private long count;
-        private boolean isLiked;
+        @Builder.Default
+        private boolean isLiked = false;
     }
     @Data
     @Builder
@@ -20,6 +21,7 @@ public class LikeResponse {
     @AllArgsConstructor
     public static class MusicLikeDto{
         private long count;
-        private boolean isLiked;
+        @Builder.Default
+        private boolean isLiked = false;
     }
 }

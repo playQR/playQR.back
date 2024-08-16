@@ -79,4 +79,8 @@ public class PromotionConverter {
         dto.getBoardLikeDto().setCount(count);
         dto.getBoardLikeDto().setLiked(isLiked);
     }
+    public static void setPromotionLikeInDto(PromotionDetailDto dto, long count, boolean isLiked) {
+        dto.getBoardLikeDto().setCount(count);
+        dto.getBoardLikeDto().setLiked(isLiked);
+    }
 }
