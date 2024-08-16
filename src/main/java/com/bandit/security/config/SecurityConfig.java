@@ -133,6 +133,12 @@ public class SecurityConfig {
                 antMatcher("/api/kakao/**")
         );
         return requestMatchers.toArray(RequestMatcher[]::new);
+    }private RequestMatcher[] permitAllRequestV2() {
+        List<RequestMatcher> requestMatchers = List.of(
+                antMatcher("/api/v2/promotions"),
+                antMatcher("/api/v2/promotions/{promotionId}")
+        );
+        return requestMatchers.toArray(RequestMatcher[]::new);
     }
     private RequestMatcher[] additionalSwaggerRequests() {
         List<RequestMatcher> requestMatchers = List.of(
