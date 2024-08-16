@@ -137,7 +137,8 @@ public class SecurityConfig {
     }private RequestMatcher[] permitAllRequestV2() {
         List<RequestMatcher> requestMatchers = List.of(
                 antMatcher("/api/v2/promotions"),
-                antMatcher("/api/v2/promotions/{promotionId}")
+                antMatcher("/api/v2/promotions/{promotionId}"),
+                antMatcher("/api/v2/promotions/search")
         );
         return requestMatchers.toArray(RequestMatcher[]::new);
     }
