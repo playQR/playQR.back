@@ -1,5 +1,6 @@
 package com.bandit.domain.music.dto;
 
+import com.bandit.domain.like.dto.LikeResponse.MusicLikeDto;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -17,4 +18,5 @@ public class MusicResponse {
     private long count;
     @JsonProperty(value = "isOpen")
     private boolean isOpen;
+    private MusicLikeDto musicLikeDto;
 }
