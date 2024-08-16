@@ -34,7 +34,8 @@ public class PromotionResponse {
         private String accountHolder;
         private String refundInfo;
         private MemberResponse writer;
-        private BoardLikeDto boardLikeDto;
+        @Builder.Default
+        private BoardLikeDto boardLikeDto = new BoardLikeDto();
 
         private List<MusicResponse> musicList;
         private List<String> imageList;
@@ -54,7 +55,8 @@ public class PromotionResponse {
         private String endTime;
         private int entranceFee;
         private MemberResponse writer;
-        private BoardLikeDto boardLikeDto;
+        @Builder.Default
+        private BoardLikeDto boardLikeDto = new BoardLikeDto();
     }
     @Data
     @Builder

@@ -17,5 +17,6 @@ public class MusicResponse {
     private String artist;
     @JsonProperty(value = "isOpen")
     private boolean isOpen;
-    private MusicLikeDto musicLikeDto;
+    @Builder.Default
+    private MusicLikeDto musicLikeDto = new MusicLikeDto();
 }

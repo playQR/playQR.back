@@ -82,6 +82,7 @@ public class SecurityConfig {
                             .requestMatchers(permitAllRequest()).permitAll()
                             .requestMatchers(additionalSwaggerRequests()).permitAll()
                             .requestMatchers(authRelatedEndpoints()).permitAll()
+                            .requestMatchers(permitAllRequestV2()).permitAll()
                             .anyRequest().authenticated();
 //                            .requestMatchers(authorizationAdmin()).hasRole("ADMIN")
 //                            .requestMatchers(authorizationDormant()).hasRole("DORMANT")
