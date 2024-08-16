@@ -6,7 +6,10 @@ import com.bandit.domain.board.dto.promotion.PromotionResponse.PromotionListDto;
 import com.bandit.domain.board.service.promotion.PromotionCommandService;
 import com.bandit.domain.board.service.promotion.PromotionQueryService;
 import com.bandit.domain.like.service.like_music.LikeMusicQueryService;
+import com.bandit.domain.like.service.like_promotion.LikePromotionQueryService;
+import com.bandit.domain.member.entity.Member;
 import com.bandit.global.annotation.api.ApiErrorCodeExample;
+import com.bandit.global.annotation.auth.AuthUser;
 import com.bandit.global.util.PageUtil;
 import com.bandit.presentation.payload.code.ErrorStatus;
 import com.bandit.presentation.payload.dto.ApiResponseDto;
@@ -27,6 +30,7 @@ public class PromotionApiV2Controller {
     private final PromotionCommandService promotionCommandService;
     private final PromotionQueryService promotionQueryService;
     private final LikeMusicQueryService likeMusicQueryService;
+    private final LikePromotionQueryService likePromotionQueryService;
 
     @Operation(summary = "프로모션 조회(비인증)", description = "로그인하지 않은 유저가 프로모션의 PK를 통해 글을 조회합니다.")
     @ApiErrorCodeExample({
@@ -55,23 +59,30 @@ public class PromotionApiV2Controller {
     @GetMapping
     public ApiResponseDto<PromotionListDto> getPromotionList(@RequestParam(defaultValue = "0") int currentPage) {
         Pageable pageable = PageRequest.of(currentPage, PageUtil.PROMOTION_SIZE);
-        return ApiResponseDto.onSuccess(
-                PromotionConverter.toListDto(
-                        promotionQueryService.getPaginationPromotion(pageable)
-                )
+        PromotionListDto listDto = PromotionConverter.toListDto(
+                promotionQueryService.getPaginationPromotion(pageable)
         );
+        listDto.getPromotionList().forEach(dto -> PromotionConverter.setPromotionLikeInDto(dto,
+                likePromotionQueryService.countLike(dto.getPromotionId()),
+                false));
+        return ApiResponseDto.onSuccess(listDto);
     }
     @Operation(summary = "프로모션 페이징 조회(인증🔑)", description = "프로모션의 리스트를 페이징을 통해 조회합니다." +
             "한페이지당 사이즈는 10개입니다.")
     @ApiErrorCodeExample
     @GetMapping("/auth")
-    public ApiResponseDto<PromotionListDto> getPromotionList_auth(@RequestParam(defaultValue = "0") int currentPage) {
+    public ApiResponseDto<PromotionListDto> getPromotionList_auth(@AuthUser Member member,
+                                                                  @RequestParam(defaultValue = "0") int currentPage) {
         Pageable pageable = PageRequest.of(currentPage, PageUtil.PROMOTION_SIZE);
-        return ApiResponseDto.onSuccess(
-                PromotionConverter.toListDto(
-                        promotionQueryService.getPaginationPromotion(pageable)
-                )
+        PromotionListDto listDto = PromotionConverter.toListDto(
+                promotionQueryService.getPaginationPromotion(pageable)
         );
+        listDto.getPromotionList().forEach(dto -> PromotionConverter.setPromotionLikeInDto(dto,
+                likePromotionQueryService.countLike(dto.getPromotionId()),
+                likePromotionQueryService.isLiked(dto.getPromotionId(), member)));
+        return ApiResponseDto.onSuccess(listDto);
     }
+
+
 
 }

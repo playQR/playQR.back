@@ -74,4 +74,9 @@ public class PromotionConverter {
                 .totalCount(paginationGuest.getTotalElements())
                 .build();
     }
+
+    public static void setPromotionLikeInDto(PromotionSummaryDto dto, long count, boolean isLiked) {
+        dto.getBoardLikeDto().setCount(count);
+        dto.getBoardLikeDto().setLiked(isLiked);
+    }
 }
