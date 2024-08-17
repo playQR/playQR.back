@@ -66,6 +66,12 @@ public class GuestQueryServiceImpl implements GuestQueryService{
         return guestRepository.existsByPromotionIdAndMember(promotionId, member);
     }
 
+    @Override
+    public List<Guest> findGuestsByName(Long promotionId, String name, Member member) {
+        //TODO validation using member
+        return guestRepository.searchByName(promotionId, name);
+    }
+
     private PromotionReservationDto builderReservationDto(Long promotionId, Promotion promotion) {
         return PromotionReservationDto.builder()
                 .currentCount(guestRepository.findTotalReservationCountByPromotionId(promotionId))
