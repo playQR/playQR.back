@@ -68,7 +68,7 @@ public class GuestQueryServiceImpl implements GuestQueryService{
 
     @Override
     public List<Guest> findGuestsByName(Long promotionId, String name, Member member) {
-        //TODO validation using member
+        validateHostOrManager(promotionId, member);
         return guestRepository.searchByName(promotionId, name);
     }
 
