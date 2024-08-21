@@ -33,7 +33,7 @@ public class GuestApiV2Controller {
     @GetMapping("/{promotionId}/reservation/search")
     public ApiResponseDto<GuestListDto> searchReservation(@AuthUser Member member,
                                                           @PathVariable Long promotionId,
-                                                          @RequestParam String name) {
+                                                          @RequestParam(required = false) String name) {
         List<Guest> guests = guestQueryService.findGuestsByName(promotionId, name, member);
         return ApiResponseDto.onSuccess(GuestConverter.toListDto(guests));
     }
