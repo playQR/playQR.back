@@ -1,6 +1,6 @@
 package com.bandit.domain.music.dto;
 
-import com.bandit.domain.like.dto.LikeResponse.MusicLikeDto;
+import com.bandit.domain.like.dto.LikeResponse.MusicLikeInfo;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -18,5 +18,5 @@ public class MusicResponse {
     @JsonProperty(value = "isOpen")
     private boolean isOpen;
     @Builder.Default
-    private MusicLikeDto musicLikeDto = new MusicLikeDto();
+    private MusicLikeInfo musicLikeInfo = new MusicLikeInfo();
 }

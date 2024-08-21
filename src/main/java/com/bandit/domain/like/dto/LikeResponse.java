@@ -10,7 +10,7 @@ public class LikeResponse {
     @Builder
     @NoArgsConstructor
     @AllArgsConstructor
-    public static class BoardLikeDto{
+    public static class BoardLikeInfo{
         private long count;
         @Builder.Default
         private boolean isLiked = false;
@@ -19,7 +19,7 @@ public class LikeResponse {
     @Builder
     @NoArgsConstructor
     @AllArgsConstructor
-    public static class MusicLikeDto{
+    public static class MusicLikeInfo{
         private long count;
         @Builder.Default
         private boolean isLiked = false;

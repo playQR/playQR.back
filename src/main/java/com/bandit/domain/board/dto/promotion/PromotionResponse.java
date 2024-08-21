@@ -1,6 +1,6 @@
 package com.bandit.domain.board.dto.promotion;
 
-import com.bandit.domain.like.dto.LikeResponse.BoardLikeDto;
+import com.bandit.domain.like.dto.LikeResponse.BoardLikeInfo;
 import com.bandit.domain.member.dto.MemberResponse;
 import com.bandit.domain.music.dto.MusicResponse;
 import com.bandit.domain.ticket.dto.guest.GuestResponse.GuestViewDto;
@@ -35,7 +35,7 @@ public class PromotionResponse {
         private String refundInfo;
         private MemberResponse writer;
         @Builder.Default
-        private BoardLikeDto boardLikeDto = new BoardLikeDto();
+        private BoardLikeInfo boardLikeInfo = new BoardLikeInfo();
 
         private List<MusicResponse> musicList;
         private List<String> imageList;
@@ -56,7 +56,7 @@ public class PromotionResponse {
         private int entranceFee;
         private MemberResponse writer;
         @Builder.Default
-        private BoardLikeDto boardLikeDto = new BoardLikeDto();
+        private BoardLikeInfo boardLikeInfo = new BoardLikeInfo();
     }
     @Data
     @Builder

@@ -21,7 +21,7 @@ public class LikeMusicQueryServiceImpl implements LikeMusicQueryService {
     @Override
     public void isLiked(PromotionDetailDto response, Member member) {
         response.getMusicList().forEach(musicResponse -> {
-            musicResponse.getMusicLikeDto().setLiked(
+            musicResponse.getMusicLikeInfo().setLiked(
                     likeMusicRepository.existsByMusicIdAndMember(musicResponse.getId(), member)
             );
         });
@@ -35,7 +35,7 @@ public class LikeMusicQueryServiceImpl implements LikeMusicQueryService {
     @Override
     public void countLike(PromotionDetailDto response) {
         response.getMusicList().forEach(musicResponse ->
-            musicResponse.getMusicLikeDto().setCount(
+            musicResponse.getMusicLikeInfo().setCount(
                     likeMusicRepository.countByMusicId(musicResponse.getId())
             )
         );
