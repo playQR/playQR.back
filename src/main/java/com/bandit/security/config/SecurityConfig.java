@@ -82,6 +82,7 @@ public class SecurityConfig {
                             .requestMatchers(permitAllRequest()).permitAll()
                             .requestMatchers(additionalSwaggerRequests()).permitAll()
                             .requestMatchers(authRelatedEndpoints()).permitAll()
+                            .requestMatchers(permitAllRequestV2()).permitAll()
                             .anyRequest().authenticated();
 //                            .requestMatchers(authorizationAdmin()).hasRole("ADMIN")
 //                            .requestMatchers(authorizationDormant()).hasRole("DORMANT")
@@ -131,6 +132,13 @@ public class SecurityConfig {
                 antMatcher(HttpMethod.GET,"/api/tokens/login"),
                 antMatcher(HttpMethod.POST, "/api/images"),
                 antMatcher("/api/kakao/**")
+        );
+        return requestMatchers.toArray(RequestMatcher[]::new);
+    }private RequestMatcher[] permitAllRequestV2() {
+        List<RequestMatcher> requestMatchers = List.of(
+                antMatcher("/api/v2/promotions"),
+                antMatcher("/api/v2/promotions/{promotionId}"),
+                antMatcher("/api/v2/promotions/search")
         );
         return requestMatchers.toArray(RequestMatcher[]::new);
     }

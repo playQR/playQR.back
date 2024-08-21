@@ -19,6 +19,15 @@ public class LikeMusicQueryServiceImpl implements LikeMusicQueryService {
     }
 
     @Override
+    public void isLiked(PromotionDetailDto response, Member member) {
+        response.getMusicList().forEach(musicResponse -> {
+            musicResponse.getMusicLikeInfo().setLiked(
+                    likeMusicRepository.existsByMusicIdAndMember(musicResponse.getId(), member)
+            );
+        });
+    }
+
+    @Override
     public long countLike(Long musicId) {
         return likeMusicRepository.countByMusicId(musicId);
     }
@@ -26,7 +35,9 @@ public class LikeMusicQueryServiceImpl implements LikeMusicQueryService {
     @Override
     public void countLike(PromotionDetailDto response) {
         response.getMusicList().forEach(musicResponse ->
-            musicResponse.setCount(likeMusicRepository.countByMusicId(musicResponse.getId()))
+            musicResponse.getMusicLikeInfo().setCount(
+                    likeMusicRepository.countByMusicId(musicResponse.getId())
+            )
         );
     }
 }
