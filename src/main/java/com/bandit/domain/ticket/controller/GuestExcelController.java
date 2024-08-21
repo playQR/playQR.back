@@ -4,6 +4,7 @@ import com.bandit.domain.member.entity.Member;
 import com.bandit.domain.ticket.converter.GuestConverter;
 import com.bandit.domain.ticket.dto.guest.GuestResponse;
 import com.bandit.domain.ticket.dto.guest.GuestResponse.GuestListDto;
+import com.bandit.domain.ticket.dto.guest.ReservationStatus;
 import com.bandit.domain.ticket.entity.Guest;
 import com.bandit.domain.ticket.service.guest.GuestQueryService;
 import com.bandit.global.annotation.api.ApiErrorCodeExample;
@@ -60,7 +61,7 @@ public class GuestExcelController {
             Row row = sheet.createRow(rowNum++);
             row.createCell(0).setCellValue(guestViewDto.getName());
             row.createCell(1).setCellValue(guestViewDto.getReservationCount());
-            row.createCell(2).setCellValue(guestViewDto.getReservationStatus().toString());
+            row.createCell(2).setCellValue(getReservationStatusToKorean(guestViewDto.getReservationStatus()));
         }
 
         //파일 이름
@@ -75,5 +76,22 @@ public class GuestExcelController {
         workbook.write(outputStream);
         workbook.close();
         outputStream.close();
+    }
+
+    private String getReservationStatusToKorean(ReservationStatus status) {
+        switch (status) {
+            case CHECKED_IN -> {
+                return "입장완료";
+            }
+            case AFTER_CONFIRMATION -> {
+                return "예매승인";
+            }
+            case BEFORE_CONFIRMATION -> {
+                return "예매승인대기중";
+            }
+            default -> {
+                return "예외";
+            }
+        }
     }
 }
