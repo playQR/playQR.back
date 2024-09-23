@@ -1,0 +1,45 @@
+name: CI / CD
+
+on:
+  push:
+    branches: [release]
+
+jobs:
+  CI:
+    runs-on: ubuntu-latest
+
+    env:
+      GCP_PROJECT_ID: ${{ secrets.GCE_PROJECT_ID }}
+      IMAGE_NAME: play-qr-be
+      IMAGE_TAG: ${{ github.sha }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Set up JDK
+        uses: actions/setup-java@v3
+        with:
+          java-version: 17
+          distribution: 'adopt'
+
+      - name: Google Cloud SDK 설정
+        uses: "google-github-actions/auth@v2"
+        with:
+          credentials_json: ${{ secrets.GCP_SA_KEY }}
+
+      - name: Docker를 위한 gcloud 인증 설정
+        run: gcloud auth configure-docker --quiet
+
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+
+      - name: Build with Gradle
+        uses: gradle/gradle-build-action@v2
+        with:
+          arguments: clean build -x test
+
+      - name: Docker 이미지 빌드 및 푸시
+        run: |
+          docker build --build-arg SPRING_PROFILE=prod -t ${{ env.GCP_PROJECT_ID }}//${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }} .
+          docker push gcr.io/${{ env.GCP_PROJECT_ID }}/${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}

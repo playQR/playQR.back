@@ -1,0 +1,13 @@
+name: release-workflow.yml
+on:
+  branches:
+    - release
+jobs:
+  ci:
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout
+        uses: actions/checkout@v3
+      - name: setup JDK 17
+  cd:
+    depends-on: ci
