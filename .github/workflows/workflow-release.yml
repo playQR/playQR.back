@@ -65,17 +65,16 @@ jobs:
           key: ${{ secrets.DEPLOY_SSH_KEY }}
           envs: GCP_PROJECT_ID, IMAGE_NAME, IMAGE_TAG, DEPLOY_PATH
           script: |
-             cd ${DEPLOY_PATH}
-              # Google Cloud 인증
-              echo '${{ secrets.GCP_SA_KEY }}' > gcloud-key.json
-              gcloud auth activate-service-account --key-file=gcloud-key.json
-              gcloud config set project ${GCP_PROJECT_ID}
-              
-              gcloud secrets versions access latest --secret="env-be" > .env
-              
-              sudo docker stop ${IMAGE_NAME}
-              sudo docker rm ${IMAGE_NAME}
-              sudo docker login -u _json_key --password-stdin https://gcr.io <<< '${{ secrets.GCP_SA_KEY }}'
-              sudo docker pull gcr.io/${GCP_PROJECT_ID}/${IMAGE_NAME}:${IMAGE_TAG}
-              sudo docker run -d --name ${IMAGE_NAME} --env-file .env -p 8080:8080 gcr.io/${GCP_PROJECT_ID}/${IMAGE_NAME}:${IMAGE_TAG}
-              sudo docker network connect compose_backend-network ${IMAGE_NAME}
+                cd ${DEPLOY_PATH}
+                echo '${{ secrets.GCP_SA_KEY }}' > gcloud-key.json
+                gcloud auth activate-service-account --key-file=gcloud-key.json
+                gcloud config set project ${GCP_PROJECT_ID}
+                
+                gcloud secrets versions access latest --secret="env-be" > .env
+                
+                sudo docker stop ${IMAGE_NAME}
+                sudo docker rm ${IMAGE_NAME}
+                sudo docker login -u _json_key --password-stdin https://gcr.io <<< '${{ secrets.GCP_SA_KEY }}'
+                sudo docker pull gcr.io/${GCP_PROJECT_ID}/${IMAGE_NAME}:${IMAGE_TAG}
+                sudo docker run -d --name ${IMAGE_NAME} --env-file .env -p 8080:8080 gcr.io/${GCP_PROJECT_ID}/${IMAGE_NAME}:${IMAGE_TAG}
+                sudo docker network connect compose_backend-network ${IMAGE_NAME}
