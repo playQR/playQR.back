@@ -31,8 +31,14 @@ jobs:
       - name: Docker를 위한 gcloud 인증 설정
         run: gcloud auth configure-docker --quiet
 
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v3
+
       - name: Build with Gradle
-        uses: ./gradlew build
+        run: ./gradlew build
 
       - name: Docker 이미지 빌드 및 푸시
         run: |
