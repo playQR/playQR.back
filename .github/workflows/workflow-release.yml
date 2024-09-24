@@ -39,6 +39,9 @@ jobs:
 
       - name: Build with Gradle(Test 제외)
         run: ./gradlew build --exclude-task test
+      
+      - name: Verify JAR file
+        run: ls -la build/libs/
 
       - name: Docker 이미지 빌드 및 푸시
         run: |
