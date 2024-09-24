@@ -42,5 +42,5 @@ jobs:
 
       - name: Docker 이미지 빌드 및 푸시
         run: |
-          docker build --build-arg SPRING_PROFILE=prod -t ${{ env.GCP_PROJECT_ID }}/${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }} .
+          docker build --build-arg SPRING_PROFILE=prod -t gcr.io/${{ env.GCP_PROJECT_ID }}/${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }} .
           docker push gcr.io/${{ env.GCP_PROJECT_ID }}/${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}
