@@ -35,7 +35,7 @@ jobs:
         uses: gradle/actions/setup-gradle@v3
 
       - name: Build with Gradle
-        uses: ./gradlew build
+        uses: gradlew build
 
       - name: Docker 이미지 빌드 및 푸시
         run: |
