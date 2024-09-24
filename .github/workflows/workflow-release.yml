@@ -86,5 +86,5 @@ jobs:
             echo ${{ steps.secrets.outputs.env }} > .env
             sudo docker login -u _json_key --password-stdin https://gcr.io <<< '${{ secrets.GCP_SA_KEY }}'
             sudo docker pull gcr.io/${GCP_PROJECT_ID}/${IMAGE_NAME}:${IMAGE_TAG}
-            sudo docker run -d --name ${IMAGE_NAME} -p --env-file .env 8080:8080 gcr.io/${GCP_PROJECT_ID}/${IMAGE_NAME}:${IMAGE_TAG}
+            sudo docker run -d --name ${IMAGE_NAME} --env-file .env -p 8080:8080 gcr.io/${GCP_PROJECT_ID}/${IMAGE_NAME}:${IMAGE_TAG}
             sudo docker network connect compose_backend-network ${IMAGE_NAME}
