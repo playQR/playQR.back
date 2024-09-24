@@ -2,4 +2,4 @@ FROM openjdk:17-jdk-slim-buster
 WORKDIR /usr/src/app
 COPY **/build/libs/play-barcode-0.0.1-SNAPSHOT.jar app.jar
 EXPOSE 8080
-ENTRYPOINT ["sudo","java", "-jar", "app.jar"]
+ENTRYPOINT ["java", "-jar", "app.jar"]
